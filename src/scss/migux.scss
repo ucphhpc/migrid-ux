@@ -55,6 +55,8 @@
     --bs-table-active-bg: rgba(var(--bs-emphasis-color-rgb), 0.1);
     --bs-table-hover-color: var(--bs-emphasis-color);
     --bs-table-hover-bg: rgba(var(--bs-emphasis-color-rgb), 0.075);
+    --migux-table-padding: 8px;
+
     width: 100%;
     margin-bottom: 1rem;
     vertical-align: top;
@@ -64,9 +66,12 @@
       border-bottom: var(--bs-table-border-color) solid var(--bs-border-width);
     }
 
+    tr {
+      height: 40px;
+    }
+
     td,
     th {
-      padding: 0.5rem 0.5rem;
       color: var(
         --bs-table-color-state,
         var(--bs-table-color-type, var(--bs-table-color))
@@ -77,6 +82,8 @@
           --bs-table-bg-state,
           var(--bs-table-bg-type, var(--bs-table-accent-bg))
         );
+      padding: var(--migux-table-padding);
+      padding-top: calc(var(--migux-table-padding) - 1px);
     }
 
     &--striped {
