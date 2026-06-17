@@ -1,6 +1,7 @@
 /* globals global */
 
 import { JSDOM } from "jsdom";
+import { setMaxListeners } from "node:events";
 
 function defineBrowserGlobals() {
   const jsdom = new JSDOM("<!DOCTYPE html><html></html>");
@@ -9,9 +10,15 @@ function defineBrowserGlobals() {
   global.document = global.window.document;
   global.Document = JSDOM;
   global.DOMParser = global.window.DOMParser;
+
+  // do not limit listener when running browser code
+  setMaxListeners(Infinity);
 }
 
 function undefineBrowserGlobals() {
+  // reset the listener limit to the node default
+  setMaxListeners(10);
+
   delete global.window;
   delete global.document;
   delete global.Document;

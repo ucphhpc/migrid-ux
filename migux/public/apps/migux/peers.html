@@ -396,7 +396,8 @@
               data-bind-css="{ TabsPanel--active: $() === 2 }"
               data-bind-css-watch="selected_tab_index"
             >
-              <h5>Fill out the fields below to create a new peer</h5>
+              <h5 data-bind-hide="_is_editing">Fill out the fields below to create a new peer</h5>
+              <h5 data-bind-show="_is_editing">Editing peer; save changes or change tab to reset.</h5>
               <p></p>
               <div class="fields-grid">
                 <input
@@ -414,6 +415,7 @@
                     id="peers_add_label"
                     name="peers_add_label"
                     placeholder="Peers name or label"
+                    data-bind-disabled="_is_editing"
                     data-bind-observe="label"
                     data-bind-onchange="newPeerFieldChange"
                   />
@@ -429,6 +431,7 @@
                     aria-label="Kind"
                     id="peers_add_kind"
                     name="peers_add_kind"
+                    data-bind-disabled="_is_editing"
                     data-bind-observe="kind"
                     data-bind-onchange="newPeerFieldChange"
                   >
@@ -447,6 +450,7 @@
                     <span
                       class="fakelink"
                       id="migux_apps_peers__create_expire"
+                      data-bind-disabled="_is_editing"
                       data-bind-onclick="show_info_modal"
                       data-bind-onclick-argument="Expire: For security reasons peer accounts should be closedwhen no longer required. Expire is used to limit account access time for that purpose, and you can always extend it later if needed. For courses and workshops a few weeks or months should usually suffice, while projects and long-term collaboration often extend to months or years. Peer accounts still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided expire date."
                     >
@@ -480,6 +484,7 @@
                       id="peers_add_full_name"
                       name="peers_add_full_name"
                       placeholder="Full name"
+                      data-bind-disabled="_is_editing"
                       data-bind-observe="full_name"
                       data-bind-onchange="newPeerFieldChange"
                     />
@@ -498,6 +503,7 @@
                     id="peers_add_organization"
                     name="peers_add_organization"
                     placeholder="Organization"
+                    data-bind-disabled="_is_editing"
                     data-bind-observe="organization"
                     data-bind-onchange="newPeerFieldChange"
                   />
@@ -515,6 +521,7 @@
                     id="peers_add_email"
                     name="peers_add_email"
                     placeholder="Email at organization"
+                    data-bind-disabled="_is_editing"
                     data-bind-observe="email"
                     data-bind-onchange="newPeerFieldChange"
                   />
@@ -530,6 +537,7 @@
                     aria-label="Country (ISO 3166)"
                     id="peers_add_country"
                     name="peers_add_country"
+                    data-bind-disabled="_is_editing"
                     data-bind-observe="country"
                     data-bind-onchange="newPeerFieldChange"
                   >
@@ -832,7 +840,7 @@
                   data-bind-observe="_error_string"
                 ></span>
                 <div class="tab-actions__controls">
-                  <div class="form-check form-switch">
+                  <div class="form-check form-switch" data-bind-hide="_is_editing">
                     <label>
                       <input
                         type="checkbox"
@@ -848,8 +856,23 @@
                   <button
                     class="btn btn-primary"
                     data-bind-onclick="newPeerCreate"
+                    data-bind-hide="_is_editing"
                   >
                     Create
+                  </button>
+                  <button
+                    class="btn btn-secondary"
+                    data-bind-onclick="editPeerCancel"
+                    data-bind-show="_is_editing"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    class="btn btn-primary"
+                    data-bind-onclick="editPeerSave"
+                    data-bind-show="_is_editing"
+                  >
+                    Save
                   </button>
                 </div>
               </div>

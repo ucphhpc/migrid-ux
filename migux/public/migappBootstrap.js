@@ -206,6 +206,7 @@
 
         const instance = module.bootstrap(rootEl, appOptions);
         const appRecord = window.MiG.applications[appname] || {};
+        window.MiG.applications[appname] = appRecord;
         appRecord.instance = instance;
       })
       .catch((error) => {

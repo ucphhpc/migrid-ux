@@ -3,6 +3,7 @@ import { Tabs } from "../../components/Tabs.js";
 import {
   NO_VALUE,
   anyChangeValue,
+  asObservable,
   computedValue,
   observedArray,
   observedHtml,
@@ -30,6 +31,15 @@ export class PeersApp extends AppBase {
 
     // app specifics
     this._tooltipElementsByParentId = {};
+
+    const _changeTabBound = this._changeTab.bind(this);
+    const selectedTabIndexObservable = asObservable(
+      this.state.namespace("__app__").selected_tab_index,
+    );
+    selectedTabIndexObservable._addEventListenerSilent(
+      "change",
+      _changeTabBound,
+    );
   }
 
   onDestroy() {
@@ -46,6 +56,26 @@ export class PeersApp extends AppBase {
   }
 
   /* app wide functions */
+
+  changeTab(nextTabIndex) {
+    const appState = this.state.namespace("__app__");
+    const previousValue = appState.selected_tab_index();
+
+    appState.selected_tab_index(nextTabIndex);
+
+    this._changeTab({ detail: { value: nextTabIndex, previousValue } });
+  }
+
+  _changeTab(ev) {
+    const { previousValue: currentTabIndex } = ev.detail;
+
+    if (currentTabIndex === 2) {
+      const newPeersNamespace = this.state.formState("peers_new");
+      if (newPeersNamespace._is_editing()) {
+        this.editPeerCancel();
+      }
+    }
+  }
 
   summaryRequest() {
     const acceptedState = this.state.formState("peers_accepted");
@@ -150,7 +180,6 @@ export class PeersApp extends AppBase {
 
   async importAction(_, namespace) {
     const fieldNames = Object.keys(PeersApp.CONST_ACCEPTED_IMPORT_FIELDS);
-    const appState = this.state.namespace("__app__");
 
     const payload = {};
     for (const fieldName of fieldNames) {
@@ -179,7 +208,7 @@ export class PeersApp extends AppBase {
 
       await this.searchAcceptedQuery();
       this.importClear();
-      appState.selected_tab_index(0);
+      this.changeTab(0);
     } catch (e) {
       const errorsMap = (e.data || {}).errors_map;
       if (errorsMap) {
@@ -262,7 +291,6 @@ export class PeersApp extends AppBase {
   /* search requested functions */
 
   searchRequestedAccept(_, namespace) {
-    const appState = this.state.namespace("__app__");
     const acceptedNamespace = this.state.formState("peers_accepted");
 
     const resultsRows = namespace.results_rows();
@@ -302,7 +330,7 @@ export class PeersApp extends AppBase {
           acceptedNamespace.total() + distinguished_names_for_accept.length;
         acceptedNamespace.total(acceptedCount);
 
-        appState.selected_tab_index(0);
+        this.changeTab(0);
 
         // ensure the newly added peer wll be loaded
         acceptedNamespace.query("*");
@@ -394,7 +422,6 @@ export class PeersApp extends AppBase {
   /* new peer functions */
 
   newPeerCreate(ev, namespace) {
-    const appState = this.state.namespace("__app__");
     const values = this.state.serializeNamespace(namespace);
 
     if (!values.state) {
@@ -409,7 +436,7 @@ export class PeersApp extends AppBase {
       .then(async () => {
         await this.searchRequestedQuery();
         this.newPeerClear();
-        appState.selected_tab_index(1);
+        this.changeTab(1);
       })
       .catch((error) => {
         namespace._error_string(error.message);
@@ -430,7 +457,7 @@ export class PeersApp extends AppBase {
   }
 
   newPeerClear() {
-    const newPeerNamespace = this.state.namespace("form__peers_new");
+    const newPeerNamespace = this.state.formState("peers_new");
     this.state.resetNamespace(newPeerNamespace);
   }
 
@@ -441,6 +468,75 @@ export class PeersApp extends AppBase {
     // clear it
     errObserved("");
   }
+
+  // edit peer functions
+
+  editPeerOpen(_, entry) {
+    const newPeerNamespace = this.state.formState("peers_new");
+    const peer_dn = entry.peer_dn();
+
+    return this.request("/accepted/fetch", {
+      method: "POST",
+      data: {
+        peer_dn,
+      },
+    }).then(async (res) => {
+      const result = await res.json();
+      const peer = result.data;
+
+      // Set edit mode (i.e. disable any fields we do not allow editing)
+      newPeerNamespace._is_editing(true);
+      newPeerNamespace._editing_dn(peer_dn);
+
+      // Atempt to fill in the peers fields
+      for (const fieldName of Object.keys(PeersApp.CONST_NEW_PEERS_FIELDS)) {
+        if (Object.prototype.hasOwnProperty.call(peer, fieldName)) {
+          const observed = newPeerNamespace[fieldName];
+          observed(peer[fieldName]);
+        }
+      }
+
+      // Switch to the peer fields tab
+      this.changeTab(2);
+    });
+  }
+
+  editPeerCancel() {
+    const newPeerNamespace = this.state.formState("peers_new");
+    this.newPeerClear();
+    newPeerNamespace._is_editing(false);
+    newPeerNamespace._editing_dn(NO_VALUE);
+  }
+
+  editPeerSave() {
+    const newPeerNamespace = this.state.formState("peers_new");
+    const peerDnBeingEdited = newPeerNamespace._editing_dn();
+
+    if (peerDnBeingEdited === NO_VALUE) {
+      return;
+    }
+
+    const values = {};
+    for (const fieldName of PeersApp.CONST_EDIT_PEER_FIELD_NAMES) {
+      values[fieldName] = newPeerNamespace[fieldName]();
+    }
+    values["peer_dn"] = peerDnBeingEdited;
+
+    return this.request(
+      "/accepted/update",
+      {
+        method: "POST",
+        data: values,
+      },
+      newPeerNamespace,
+    ).then(async () => {
+      this.editPeerCancel();
+      this.changeTab(0);
+      await this.searchAcceptedQuery();
+    });
+  }
+
+  /* other */
 
   _fieldNameToFieldError(fieldName) {
     return `_${fieldName}_err`;
@@ -455,8 +551,6 @@ export class PeersApp extends AppBase {
       errObservable(`<p>${errValue}</p>`);
     }
   }
-
-  /* other */
 
   /**
    *
@@ -505,6 +599,8 @@ PeersApp.CONST_ACCEPTED_IMPORT_FIELDS = {
   kind: "",
   label: "",
 };
+
+PeersApp.CONST_EDIT_PEER_FIELD_NAMES = ["expire"];
 
 PeersApp.CONST_NEW_PEERS_FIELDS = {
   full_name: "",
@@ -614,6 +710,8 @@ export const App = PeersApp;
           PeersApp.CONST_NEW_PEERS_FIELDS,
         ),
         invite_on_email: true,
+        _is_editing: false,
+        _editing_dn: NO_VALUE,
         _error_string: "",
       },
       peers_import: {

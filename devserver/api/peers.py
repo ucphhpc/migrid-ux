@@ -168,6 +168,80 @@ def migux_apps_peers__POST_accepted_import():
     ]
 
 
+def migux_apps_peers__POST_accepted_fetch():
+    """
+    Request handler: POST /peers/accepted/fetch
+    """
+
+    payload = request.json
+    peer_dn = payload.get("peer_dn", None)
+
+    example_data = EXAMPLE_DATA["GET /accepted"]
+
+    found_peer = None
+    for item in example_data:
+        if item["distinguished_name"] == peer_dn:
+            found_peer = item
+            break
+
+    if found_peer is None:
+        return [
+            {
+                "object_type": "objects",
+                "objects": {
+                    "status": 404,
+                    "error": "no such peer",
+                    "data": {},
+                },
+            }
+        ]
+
+    return [
+        {
+            "object_type": "objects",
+            "objects": {"status": 200, "error": None, "data": found_peer},
+        }
+    ]
+
+
+def migux_apps_peers__POST_accepted_update():
+    """
+    Request handler: POST /peers/accepted/update
+    """
+
+    payload = request.json
+    peer_dn = payload.pop("peer_dn", None)
+
+    example_data = EXAMPLE_DATA["GET /accepted"]
+
+    found_peer = None
+    for item in example_data:
+        if item["distinguished_name"] == peer_dn:
+            found_peer = item
+            break
+
+    if found_peer is None:
+        return [
+            {
+                "object_type": "objects",
+                "objects": {
+                    "status": 404,
+                    "error": "no such peer",
+                    "data": {},
+                },
+            }
+        ]
+
+    found_peer.update(payload)
+
+    return [
+        {
+            "object_type": "objects",
+            "objects": {"status": 200, "error": None, "data": found_peer},
+        }
+    ]
+
+
 def migux_apps_peers__POST_requested_accept():
     """
     Request handler: GET /peers/requested/accept
@@ -289,7 +363,9 @@ ROUTES = {
     "POST /requested/delete": migux_apps_peers__POST_requested_delete,
     "GET /accepted": migux_apps_peers__GET_accepted,
     "POST /accepted/delete": migux_apps_peers__POST_accepted_delete,
+    "POST /accepted/fetch": migux_apps_peers__POST_accepted_fetch,
     "POST /accepted/import": migux_apps_peers__POST_accepted_import,
+    "POST /accepted/update": migux_apps_peers__POST_accepted_update,
     "POST /new": migux_apps_peers__POST_new,
 }
 
