@@ -78,7 +78,7 @@ def list_peers_accepted(request, data=None):
         "template_args": {
             "peers_listing": FieldObjectListing(data, field_names),
         },
-        "template_name": "search_result",
+        "template_name": "search_result--accepted",
     }
 
 

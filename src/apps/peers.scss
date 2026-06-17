@@ -209,6 +209,16 @@
       box-sizing: border-box;
       width: 30px;
     }
+
+    .sel-edit {
+      cursor: pointer;
+      display: block;
+      transform: rotate(135deg);
+
+      &::before {
+        content: "\270F";
+      }
+    }
   }
 
   form.peers_requested {
