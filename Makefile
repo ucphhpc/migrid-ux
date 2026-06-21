@@ -26,6 +26,7 @@ clean:
 	@rm -rf ./public/build
 	@rm -rf ./node_modules
 	@rm -rf ./coverage
+	@rm -rf ./migux.egg-info
 
 .PHONY: coverage
 coverage:
@@ -61,7 +62,8 @@ build-css: ./envhelp/local.depends
 	@echo "building stylesheets"
 	@$(NPM_BIN) exec -- sass --quiet \
 		./src/scss/reset.scss:./public/build/reset.css \
-		./src/scss/main.scss:./public/build/main.css
+		./src/scss/main.scss:./public/build/main.css \
+		./src/apps/peers.scss:./migux/public/apps/migux/peers.css
 
 .PHONY: development
 development: ./envhelp/local.depends build-css
@@ -104,7 +106,7 @@ lint-js: ./envhelp/local.depends
 lint-py: ./envhelp/local.depends
 	@$(LOCAL_PYTHON_BIN) -m black . --check
 	@$(LOCAL_PYTHON_BIN) -m isort . --check-only
-	@$(LOCAL_PYTHON_BIN) -m pylint `find ./devserver -name '*.py'`
+	@$(LOCAL_PYTHON_BIN) -m pylint `find ./migux ./devserver -name '*.py'`
 
 local__bail:
 	@echo "The GNU parallel utility was not detected therefore this"
@@ -136,4 +138,5 @@ local-frontend: ./envhelp/local.depends
 watch-css: ./envhelp/local.depends
 	@$(NPM_BIN) exec -- sass --watch \
 		./src/scss/reset.scss:./public/build/reset.css \
-		./src/scss/main.scss:./public/build/main.css
+		./src/scss/main.scss:./public/build/main.css \
+		./src/apps/peers.scss:./migux/public/apps/migux/peers.css

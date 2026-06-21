@@ -29,7 +29,7 @@ jobs:
       - run: pip install -r local-requirements.txt
       - run: black . --check
       - run: isort . --check-only
-      - run: pylint `find ./devserver -name '*.py'`
+      - run: pylint `find ./migux ./devserver -name '*.py'`
 
   test:
     runs-on: ubuntu-latest

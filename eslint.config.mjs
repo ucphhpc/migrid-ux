@@ -14,6 +14,7 @@ export default defineConfig([
   {
     files: [
       "lib/**/*.js",
+      "migux/**/*.js",
       "public/**/*.js",
       "test/apps/**/*.js",
       "test/public/**/*/js",

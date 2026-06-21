@@ -13,8 +13,10 @@
 
 # build
 __pycache__/
+/migux/public/apps/**/*.css
+/migux/public/apps/**/*.css.map
 /public/build/
 /public/coverage/
-/*.egg-info/
+/migux.egg-info/
 /packages.lst
 

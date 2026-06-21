@@ -1,0 +1,33 @@
+/*
+ * Styles to counteract over-broad classes in MiG.
+ */
+
+[data-migrole="app"] {
+  font-family: var(--bs-font-sans-serif);
+
+  .form-check-input {
+    position: unset;
+    margin-left: unset;
+  }
+
+  table th {
+    font-weight: bold;
+  }
+
+  /* undo unilaterally added input padding on hover */
+  [type="button"]:not(:disabled):hover,
+  [type="reset"]:not(:disabled):hover,
+  [type="submit"]:not(:disabled):hover,
+  button:not(:disabled):hover {
+    padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
+  }
+
+  /* restore font sizing to semantic header elements */
+  h1 {
+    font-size: calc(1.375rem + 1.5vw);
+  }
+
+  h5 {
+    font-size: 1.25rem;
+  }
+}

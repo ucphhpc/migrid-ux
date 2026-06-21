@@ -1,0 +1,30 @@
+[
+  {
+    "comment": "accepted_1@example.com",
+    "country": "DK",
+    "created": 1727434813.0792377,
+    "distinguished_name": "/C=DK/ST=NA/L=NA/O=Test Org/OU=NA/CN=Test User/emailAddress=accepted_1@example.com",
+    "email": "accepted_1@example.com",
+    "expire": null,
+    "full_name": "Accepted Peer User 1",
+    "locality": "",
+    "openid_names": [],
+    "organization": "Test Org",
+    "organizational_unit": "",
+    "state": "NA"
+  },
+  {
+    "comment": "accepted_2@example.com",
+    "country": "DK",
+    "created": 1727434813.0792377,
+    "distinguished_name": "/C=DK/ST=NA/L=NA/O=Test Org/OU=NA/CN=Test User/emailAddress=accepted_2@example.com",
+    "email": "accepted_2@example.com",
+    "expire": null,
+    "full_name": "Accepted Peer User 2",
+    "locality": "",
+    "openid_names": [],
+    "organization": "Test Org",
+    "organizational_unit": "",
+    "state": "NA"
+  }
+]

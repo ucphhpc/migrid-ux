@@ -1,47 +1,3 @@
-async function loadAppMarkup(appname, baseUrl) {
-  const res = await fetch(`${baseUrl}/apps/${appname}.html`);
-  const text = await res.text();
-
-  const bodyIndex = text.indexOf("<body");
-  let appHtml = text.slice(
-    text.indexOf(">", bodyIndex) + 1,
-    text.indexOf("</body>"),
-  );
-
-  // remove trailing script
-  const scriptIndex = appHtml.indexOf("<script>");
-  if (scriptIndex > 1) {
-    appHtml = appHtml.slice(0, scriptIndex);
-  }
-
-  appHtml = appHtml.trim();
-
-  console.log(`loaded markup: ${appname}`);
-
-  return appHtml;
-}
-
-async function loadAppScript(appname, baseUrl) {
-  const module = await import(`${baseUrl}/apps/${appname}.js`);
-
-  console.log(`loaded script: ${appname}`);
-
-  return module;
-}
-
-function loadAppStyles(appname, baseUrl) {
-  loadStylesheet(`${baseUrl}/apps/${appname}.css`);
-
-  console.log(`loaded styles: ${appname}`);
-}
-
-function loadStylesheet(stylesheetUrl) {
-  const styleEl = document.createElement("LINK");
-  styleEl.rel = "stylesheet";
-  styleEl.href = stylesheetUrl;
-  document.head.appendChild(styleEl);
-}
-
 async function populateAppList(appSelectEl, baseUrl) {
   try {
     const res = await fetch(`${baseUrl}/apps`);
@@ -61,14 +17,16 @@ async function populateAppList(appSelectEl, baseUrl) {
   const formSelectEl = formEl.querySelector("select");
   let rootEl = null;
 
+  await import("./migappBootstrap.js");
+
   function performAppLoad(appname, rootEl, appOptions) {
     const urlOptions = appOptions.urlOptions || {};
     const baseUrl = urlOptions.baseUrl;
 
     return Promise.all([
-      loadAppMarkup(appname, baseUrl),
-      loadAppScript(appname, baseUrl),
-      loadAppStyles(appname, baseUrl),
+      GLOBAL.MiG.loadAppMarkup(appname, baseUrl),
+      GLOBAL.MiG.loadAppScript(appname, baseUrl),
+      GLOBAL.MiG.loadAppStyles(appname, baseUrl),
     ])
       .then(([htmlString, module]) => {
         const { App } = module;
@@ -104,6 +62,7 @@ async function populateAppList(appSelectEl, baseUrl) {
     const urlOptions = {
       apiUrl: `${apiUrl}/api`,
       baseUrl: "",
+      processResponse: GLOBAL.MiG.migResponse,
     };
     performAppLoad(appname, rootEl, { urlOptions });
   });

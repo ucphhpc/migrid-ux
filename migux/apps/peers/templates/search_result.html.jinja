@@ -1,0 +1,14 @@
+<table>
+  {% for entry in peers_listing %}
+  <tr>
+    <td>
+      <input type="hidden" name="peers" value="{{ entry.distinguished_name }}" data-bind-observe="peer_dn">
+      <input type="checkbox" data-bind-checked="selected">
+    </td>
+    {% for field_content in entry %}
+    <td>{{ field_content }}</td>
+    {% endfor %}
+    <td></td>
+  </tr>
+  {% endfor %}
+</table>

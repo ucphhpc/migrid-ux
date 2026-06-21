@@ -7,6 +7,7 @@ import os
 from flask import Flask
 from flask_cors import CORS as cors
 
+from devserver.api.peers import BLUEPRINT as peers
 from devserver.templating import load_templates_for_package
 
 SCRIPT_DIR = os.path.dirname(__file__)
@@ -49,5 +50,7 @@ def create_app():
         return fragment.render(appnames=appnames)
 
     # register any blueprints providing mock APIs here
+
+    app.register_blueprint(peers, url_prefix="/api/peers")
 
     return app

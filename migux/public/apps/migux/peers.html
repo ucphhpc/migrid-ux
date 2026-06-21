@@ -1,0 +1,1059 @@
+<!doctype html>
+<html>
+  <head>
+    <title>apps/peers</title>
+    <link href="../build/reset.css" rel="stylesheet" />
+    <link href="../build/main.css" rel="stylesheet" />
+    <link href="./peers.css" rel="stylesheet" />
+  </head>
+  <body data-migrole="app" data-migapp="peers">
+    <div
+      class="modal fade show"
+      tabindex="-1"
+      id="peers-modal"
+      aria-labelledby="peers-modal-label"
+      style="display: block"
+      aria-modal="true"
+      role="dialog"
+    >
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title" id="peers-modal-label">Peers</h1>
+            <button
+              class="CloseButton"
+              data-bind-disabled="disable_close"
+              data-bind-onclick="onClose"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="peers-modal-body">
+            <ul
+              class="Tabs"
+              data-bind-component="Tabs"
+              data-bind-component-observe="selected_tab_index"
+            >
+              <li class="TabsItem">Accepted Peers</li>
+              <li class="TabsItem">Requested Peers</li>
+              <li class="TabsItem">New Peer</li>
+              <li class="TabsItem">Import Peers</li>
+            </ul>
+            <form
+              name="peers_accepted"
+              data-bind-form="DEFINED"
+              data-bind-css="{ TabsPanel--active: $() === 0 }"
+              data-bind-css-watch="selected_tab_index"
+              class="peers_accepted TabsPanel"
+              id="peers_accepted"
+              aria-labelledby="peers_accepted-tab"
+            >
+              <h5>
+                Accepted Peers (<span data-bind-observe="count"></span> of
+                <span data-bind-observe="total"></span>)
+                <span
+                  class="fakelink"
+                  id="migux_apps_peers__accepted_peers"
+                  data-bind-onclick="show_info_modal"
+                  data-bind-onclick-argument="Accepted Peers: Accepted peers are people that you have vouched for to get an account on UCPH ERDA because they need it for a particular course/workshop, research project or for general long term collaboration with you. The site admins will use this information to accept account requests and extensions from your peers until the given time of expiry."
+                >
+                  <i>&quest;</i>
+                </span>
+                <p></p>
+              </h5>
+              <input
+                type="text"
+                class="form-control"
+                id="peers_search_accepted"
+                name="query"
+                list="peers_search_options"
+                placeholder="Type to search..."
+                data-bind-observe="query"
+                data-bind-onenter="searchAcceptedQuery"
+              />
+              <input
+                type="hidden"
+                data-bind-observe="changed_column"
+                data-bind-onchange="peersListingColumnChange"
+              />
+              <table
+                class="migux-table migux-table--striped fields-table"
+                id="peers_accepted_table"
+              >
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        data-bind-checked="all"
+                        data-bind-onchange="searchAcceptedSelectAll"
+                      />
+                    </th>
+                    <th scope="col">Full Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col" data-bind-show="col_organization">
+                      Organization
+                    </th>
+                    <th scope="col" data-bind-show="col_country">Country</th>
+                    <th scope="col" data-bind-show="col_state">State</th>
+                    <th scope="col" data-bind-show="col_kind">Kind</th>
+                    <th scope="col" data-bind-show="col_label">Label</th>
+                    <th scope="col" data-bind-show="col_expire">Expire</th>
+                    <th
+                      class="col-settings settings-aid"
+                      data-bind-onclick="peersListingSettingsToggle"
+                    >
+                      <span class="settings-aid_button"></span>
+                      <div
+                        class="settings-aid_toggles"
+                        data-bind-show="show_toggles"
+                        data-bind-onhide="searchAcceptedSettingsHide"
+                      >
+                        <label
+                          ><input type="checkbox" checked disabled />Full
+                          name</label
+                        >
+                        <label
+                          ><input
+                            type="checkbox"
+                            checked
+                            disabled
+                          />Email</label
+                        >
+                        <label
+                          ><input
+                            type="checkbox"
+                            data-bind-checked="col_organization"
+                          />Organization</label
+                        >
+                        <label
+                          ><input
+                            type="checkbox"
+                            data-bind-checked="col_country"
+                          />Country</label
+                        >
+                        <label
+                          ><input
+                            type="checkbox"
+                            data-bind-checked="col_state"
+                          />State</label
+                        >
+                        <label
+                          ><input
+                            type="checkbox"
+                            data-bind-checked="col_kind"
+                          />Kind</label
+                        >
+                        <label
+                          ><input
+                            type="checkbox"
+                            data-bind-checked="col_label"
+                          />Label</label
+                        >
+                        <label
+                          ><input
+                            type="checkbox"
+                            data-bind-checked="col_expire"
+                          />Expire</label
+                        >
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  data-bind-observe="results"
+                  data-bind-array="results_rows"
+                  data-bind-array-each="tr"
+                ></tbody>
+              </table>
+              <div
+                data-bind-observe="results_placeholder"
+                data-bind-show="results_placeholder"
+              ></div>
+              <div class="tab-actions">
+                <span class="tab-actions__grabheight"></span>
+                <span
+                  class="tab-actions__error"
+                  data-bind-observe="_error_string"
+                ></span>
+                <div class="tab-actions__controls">
+                  <button
+                    class="btn btn-primary"
+                    data-bind-onclick="searchAcceptedRemove"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </form>
+            <form
+              name="peers_requested"
+              data-bind-form="DEFINED"
+              data-bind-css="{ TabsPanel--active: $() === 1 }"
+              data-bind-css-watch="selected_tab_index"
+              id="peers_requested"
+              class="peers_requested TabsPanel"
+              aria-labelledby="peers_requested-tab"
+            >
+              <h5>
+                Requested Peers (<span data-bind-observe="count"></span> of
+                <span data-bind-observe="total"></span>)
+                <span
+                  class="fakelink"
+                  id="migux_apps_peers__requested_peers"
+                  data-bind-onclick="show_info_modal"
+                  data-bind-onclick-argument="If someone requests an external user account on UCPH ERDA and explicitly references you as sponsor or contact person the site admins will generally forward the request, so that it shows up here for you to confirm. You can then accept or reject the individual requests below to let the site admins proceed with account creation or rejection. Please select an expire date to provide limited but sufficiently long account access - it can always be extended later."
+                >
+                  <i>&quest;</i>
+                </span>
+                <p></p>
+              </h5>
+              <div class="fields-horizontal">
+                <input
+                  type="hidden"
+                  id="peers_request_format"
+                  name="peers_request_format"
+                  value="userid"
+                />
+                <label class="form-label">
+                  Label
+                  <input
+                    type="text"
+                    class="form-control"
+                    aria-label="Label for peers"
+                    placeholder="Peers name or label"
+                    data-bind-observe="query"
+                    data-bind-onenter="searchRequestedQuery"
+                  />
+                </label>
+                <label class="form-label">
+                  Kind
+                  <select
+                    class="form-select peers_kind"
+                    aria-label="Kind"
+                    id="peers_request_kind"
+                    name="peers_request_kind"
+                    data-bind-observe="kind"
+                    data-bind-onchange="searchRequestedQuery"
+                  >
+                    <option value=""></option>
+                    <option value="course">Course</option>
+                    <option value="project">Project</option>
+                    <option value="collaboration">Collaboration</option>
+                  </select>
+                </label>
+                <label class="form-label">
+                  Expire
+                  <span
+                    class="fakelink"
+                    id="migux_apps_peers__requested_expire"
+                    data-bind-onclick="show_info_modal"
+                    data-bind-onclick-argument='Expire: For security reasons peer accounts should be closedwhen no longer required. Expire is used to limit account access time for that purpose, and you can always extend it later if needed. For courses and workshops a few weeks or months should usually suffice, while projects and long-term collaboration often extend to months or years. Peer accounts still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided expire date."'
+                  >
+                    <i>&quest;</i>
+                  </span>
+                  <input
+                    type="date"
+                    class="form-control peers_expire"
+                    aria-label="Access expiry date"
+                    id="peers_request_expire"
+                    name="peers_request_expire"
+                    placeholder="Expire date"
+                    pattern="[0-9/-]+"
+                    data-bind-observe="expire"
+                    data-bind-onchange="searchRequestedQuery"
+                  />
+                </label>
+              </div>
+              <input
+                type="hidden"
+                data-bind-observe="changed_column"
+                data-bind-onchange="peersListingColumnChange"
+              />
+              <!-- TODO: unindent -->
+              <table
+                class="migux-table migux-table--striped fields-table"
+                id="peers_requested_table"
+              >
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        data-bind-checked="all"
+                        data-bind-onchange="searchRequestedSelectAll"
+                      />
+                    </th>
+                    <th scope="col">Full Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col" data-bind-show="col_organization">
+                      Organization
+                    </th>
+                    <th scope="col" data-bind-show="col_country">Country</th>
+                    <th scope="col" data-bind-show="col_state">State</th>
+                    <th scope="col" data-bind-show="col_kind">Kind</th>
+                    <th scope="col" data-bind-show="col_label">Label</th>
+                    <th scope="col" data-bind-show="col_expire">Expire</th>
+                    <th
+                      class="col-settings settings-aid"
+                      data-bind-onclick="peersListingSettingsToggle"
+                    >
+                      <span class="settings-aid_button"></span>
+                      <div
+                        class="settings-aid_toggles"
+                        data-bind-show="show_toggles"
+                        data-bind-onhide="searchRequestedSettingsHide"
+                      >
+                        <label
+                          ><input type="checkbox" checked disabled />Full
+                          name</label
+                        >
+                        <label
+                          ><input
+                            type="checkbox"
+                            checked
+                            disabled
+                          />Email</label
+                        >
+                        <label
+                          ><input
+                            type="checkbox"
+                            data-bind-checked="col_organization"
+                          />Organization</label
+                        >
+                        <label
+                          ><input
+                            type="checkbox"
+                            data-bind-checked="col_country"
+                          />Country</label
+                        >
+                        <label
+                          ><input
+                            type="checkbox"
+                            data-bind-checked="col_state"
+                          />State</label
+                        >
+                        <label
+                          ><input
+                            type="checkbox"
+                            data-bind-checked="col_kind"
+                          />Kind</label
+                        >
+                        <label
+                          ><input
+                            type="checkbox"
+                            data-bind-checked="col_label"
+                          />Label</label
+                        >
+                        <label
+                          ><input
+                            type="checkbox"
+                            data-bind-checked="col_expire"
+                          />Expire</label
+                        >
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  data-bind-observe="results"
+                  data-bind-array="results_rows"
+                  data-bind-array-each="tr"
+                ></tbody>
+              </table>
+              <div
+                data-bind-observe="results_placeholder"
+                data-bind-show="results_placeholder"
+              ></div>
+              <div class="tab-actions">
+                <span class="tab-actions__grabheight"></span>
+                <span
+                  class="tab-actions__error"
+                  data-bind-observe="_error_string"
+                ></span>
+                <div class="tab-actions__controls">
+                  <button
+                    class="btn btn-secondary"
+                    data-bind-onclick="searchRequestedRemove"
+                  >
+                    Remove
+                  </button>
+                  <button
+                    class="btn btn-primary"
+                    data-bind-onclick="searchRequestedAccept"
+                  >
+                    Accept
+                  </button>
+                </div>
+              </div>
+            </form>
+            <form
+              class="peers_new TabsPanel"
+              name="peers_new"
+              aria-labelledby="peers_new-tab"
+              data-bind-form="DEFINED"
+              data-bind-css="{ TabsPanel--active: $() === 2 }"
+              data-bind-css-watch="selected_tab_index"
+            >
+              <h5>Fill out the fields below to create a new peer</h5>
+              <p></p>
+              <div class="fields-grid">
+                <input
+                  type="hidden"
+                  id="peers_add_format"
+                  name="peers_add_format"
+                  value="userid"
+                />
+                <label class="form-label">
+                  Label
+                  <input
+                    type="text"
+                    class="form-control peers_label"
+                    aria-label="Label for peers"
+                    id="peers_add_label"
+                    name="peers_add_label"
+                    placeholder="Peers name or label"
+                    data-bind-observe="label"
+                    data-bind-onchange="newPeerFieldChange"
+                  />
+                  <span
+                    class="form-label__error"
+                    data-bind-observe="_label_err"
+                  ></span>
+                </label>
+                <div>
+                  <label class="form-label">Kind</label>
+                  <select
+                    class="form-select peers_kind"
+                    aria-label="Kind"
+                    id="peers_add_kind"
+                    name="peers_add_kind"
+                    data-bind-observe="kind"
+                    data-bind-onchange="newPeerFieldChange"
+                  >
+                    <option value="course">Course</option>
+                    <option value="project">Project</option>
+                    <option value="collaboration">Collaboration</option>
+                  </select>
+                  <span
+                    class="form-label__error form-label__error--compensate"
+                    data-bind-observe="_kind_err"
+                  ></span>
+                </div>
+                <div>
+                  <label class="form-label"
+                    >Expire
+                    <span
+                      class="fakelink"
+                      id="migux_apps_peers__create_expire"
+                      data-bind-onclick="show_info_modal"
+                      data-bind-onclick-argument="Expire: For security reasons peer accounts should be closedwhen no longer required. Expire is used to limit account access time for that purpose, and you can always extend it later if needed. For courses and workshops a few weeks or months should usually suffice, while projects and long-term collaboration often extend to months or years. Peer accounts still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided expire date."
+                    >
+                      <i>&quest;</i>
+                    </span>
+                  </label>
+                  <div>
+                    <input
+                      type="date"
+                      class="form-control peers_expire"
+                      aria-label="Access expiry date"
+                      id="peers_add_expire"
+                      name="peers_add_expire"
+                      placeholder="Expire date"
+                      data-bind-observe="expire"
+                      data-bind-onchange="newPeerFieldChange"
+                    />
+                    <span
+                      class="form-label__error"
+                      data-bind-observe="_expire_err"
+                    ></span>
+                  </div>
+                </div>
+                <div>
+                  <label class="form-label">
+                    Full Name
+                    <input
+                      type="text"
+                      class="form-control peers_full_name"
+                      aria-label="Full Name"
+                      id="peers_add_full_name"
+                      name="peers_add_full_name"
+                      placeholder="Full name"
+                      data-bind-observe="full_name"
+                      data-bind-onchange="newPeerFieldChange"
+                    />
+                    <span
+                      class="form-label__error"
+                      data-bind-observe="_full_name_err"
+                    ></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="form-label">Organization</label>
+                  <input
+                    type="text"
+                    class="form-control peers_org"
+                    aria-label="Organization"
+                    id="peers_add_organization"
+                    name="peers_add_organization"
+                    placeholder="Organization"
+                    data-bind-observe="organization"
+                    data-bind-onchange="newPeerFieldChange"
+                  />
+                  <span
+                    class="form-label__error form-label__error--compensate"
+                    data-bind-observe="_organization_err"
+                  ></span>
+                </div>
+                <div>
+                  <label class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control peers_email"
+                    aria-label="Email"
+                    id="peers_add_email"
+                    name="peers_add_email"
+                    placeholder="Email at organization"
+                    data-bind-observe="email"
+                    data-bind-onchange="newPeerFieldChange"
+                  />
+                  <span
+                    class="form-label__error form-label__error--compensate"
+                    data-bind-observe="_email_err"
+                  ></span>
+                </div>
+                <div>
+                  <label class="form-label">Country</label>
+                  <select
+                    class="form-select peers_country"
+                    aria-label="Country (ISO 3166)"
+                    id="peers_add_country"
+                    name="peers_add_country"
+                    data-bind-observe="country"
+                    data-bind-onchange="newPeerFieldChange"
+                  >
+                    <option value=""></option>
+                    <option value="AF">Afghanistan</option>
+                    <option value="AX">Åland Islands</option>
+                    <option value="AL">Albania</option>
+                    <option value="DZ">Algeria</option>
+                    <option value="AS">American Samoa</option>
+                    <option value="AD">Andorra</option>
+                    <option value="AO">Angola</option>
+                    <option value="AI">Anguilla</option>
+                    <option value="AQ">Antarctica</option>
+                    <option value="AG">Antigua and Barbuda</option>
+                    <option value="AR">Argentina</option>
+                    <option value="AM">Armenia</option>
+                    <option value="AW">Aruba</option>
+                    <option value="AU">Australia</option>
+                    <option value="AT">Austria</option>
+                    <option value="AZ">Azerbaijan</option>
+                    <option value="BS">Bahamas</option>
+                    <option value="BH">Bahrain</option>
+                    <option value="BD">Bangladesh</option>
+                    <option value="BB">Barbados</option>
+                    <option value="BY">Belarus</option>
+                    <option value="BE">Belgium</option>
+                    <option value="BZ">Belize</option>
+                    <option value="BJ">Benin</option>
+                    <option value="BM">Bermuda</option>
+                    <option value="BT">Bhutan</option>
+                    <option value="BO">Bolivia, Plurinational State of</option>
+                    <option value="BQ">Bonaire, Sint Eustatius and Saba</option>
+                    <option value="BA">Bosnia and Herzegovina</option>
+                    <option value="BW">Botswana</option>
+                    <option value="BV">Bouvet Island</option>
+                    <option value="BR">Brazil</option>
+                    <option value="IO">British Indian Ocean Territory</option>
+                    <option value="BN">Brunei Darussalam</option>
+                    <option value="BG">Bulgaria</option>
+                    <option value="BF">Burkina Faso</option>
+                    <option value="BI">Burundi</option>
+                    <option value="KH">Cambodia</option>
+                    <option value="CM">Cameroon</option>
+                    <option value="CA">Canada</option>
+                    <option value="CV">Cabo Verde</option>
+                    <option value="KY">Cayman Islands</option>
+                    <option value="CF">Central African Republic</option>
+                    <option value="TD">Chad</option>
+                    <option value="CL">Chile</option>
+                    <option value="CN">China</option>
+                    <option value="CX">Christmas Island</option>
+                    <option value="CC">Cocos (Keeling) Islands</option>
+                    <option value="CO">Colombia</option>
+                    <option value="KM">Comoros</option>
+                    <option value="CG">Congo</option>
+                    <option value="CD">
+                      Congo, Democratic Republic of the
+                    </option>
+                    <option value="CK">Cook Islands</option>
+                    <option value="CR">Costa Rica</option>
+                    <option value="CI">Côte d'Ivoire</option>
+                    <option value="HR">Croatia</option>
+                    <option value="CU">Cuba</option>
+                    <option value="CW">Curaçao</option>
+                    <option value="CY">Cyprus</option>
+                    <option value="CZ">Czechia</option>
+                    <option value="DK">Denmark</option>
+                    <option value="DJ">Djibouti</option>
+                    <option value="DM">Dominica</option>
+                    <option value="DO">Dominican Republic</option>
+                    <option value="EC">Ecuador</option>
+                    <option value="EG">Egypt</option>
+                    <option value="SV">El Salvador</option>
+                    <option value="GQ">Equatorial Guinea</option>
+                    <option value="ER">Eritrea</option>
+                    <option value="EE">Estonia</option>
+                    <option value="ET">Ethiopia</option>
+                    <option value="FK">Falkland Islands (Malvinas)</option>
+                    <option value="FO">Faroe Islands</option>
+                    <option value="FJ">Fiji</option>
+                    <option value="FI">Finland</option>
+                    <option value="FR">France</option>
+                    <option value="GF">French Guiana</option>
+                    <option value="PF">French Polynesia</option>
+                    <option value="TF">French Southern Territories</option>
+                    <option value="GA">Gabon</option>
+                    <option value="GM">Gambia</option>
+                    <option value="GE">Georgia</option>
+                    <option value="DE">Germany</option>
+                    <option value="GH">Ghana</option>
+                    <option value="GI">Gibraltar</option>
+                    <option value="GR">Greece</option>
+                    <option value="GL">Greenland</option>
+                    <option value="GD">Grenada</option>
+                    <option value="GP">Guadeloupe</option>
+                    <option value="GU">Guam</option>
+                    <option value="GT">Guatemala</option>
+                    <option value="GG">Guernsey</option>
+                    <option value="GN">Guinea</option>
+                    <option value="GW">Guinea-Bissau</option>
+                    <option value="GY">Guyana</option>
+                    <option value="HT">Haiti</option>
+                    <option value="HM">
+                      Heard Island and McDonald Islands
+                    </option>
+                    <option value="VA">Holy See</option>
+                    <option value="HN">Honduras</option>
+                    <option value="HK">Hong Kong</option>
+                    <option value="HU">Hungary</option>
+                    <option value="IS">Iceland</option>
+                    <option value="IN">India</option>
+                    <option value="ID">Indonesia</option>
+                    <option value="IR">Iran, Islamic Republic of</option>
+                    <option value="IQ">Iraq</option>
+                    <option value="IE">Ireland</option>
+                    <option value="IM">Isle of Man</option>
+                    <option value="IL">Israel</option>
+                    <option value="IT">Italy</option>
+                    <option value="JM">Jamaica</option>
+                    <option value="JP">Japan</option>
+                    <option value="JE">Jersey</option>
+                    <option value="JO">Jordan</option>
+                    <option value="KZ">Kazakhstan</option>
+                    <option value="KE">Kenya</option>
+                    <option value="KI">Kiribati</option>
+                    <option value="KP">
+                      Korea, Democratic People's Republic of
+                    </option>
+                    <option value="KR">Korea, Republic of</option>
+                    <option value="XK">Kosovo</option>
+                    <option value="KW">Kuwait</option>
+                    <option value="KG">Kyrgyzstan</option>
+                    <option value="LA">Lao People's Democratic Republic</option>
+                    <option value="LV">Latvia</option>
+                    <option value="LB">Lebanon</option>
+                    <option value="LS">Lesotho</option>
+                    <option value="LR">Liberia</option>
+                    <option value="LY">Libya</option>
+                    <option value="LI">Liechtenstein</option>
+                    <option value="LT">Lithuania</option>
+                    <option value="LU">Luxembourg</option>
+                    <option value="MO">Macao</option>
+                    <option value="MK">North Macedonia</option>
+                    <option value="MG">Madagascar</option>
+                    <option value="MW">Malawi</option>
+                    <option value="MY">Malaysia</option>
+                    <option value="MV">Maldives</option>
+                    <option value="ML">Mali</option>
+                    <option value="MT">Malta</option>
+                    <option value="MH">Marshall Islands</option>
+                    <option value="MQ">Martinique</option>
+                    <option value="MR">Mauritania</option>
+                    <option value="MU">Mauritius</option>
+                    <option value="YT">Mayotte</option>
+                    <option value="MX">Mexico</option>
+                    <option value="FM">Micronesia, Federated States of</option>
+                    <option value="MD">Moldova, Republic of</option>
+                    <option value="MC">Monaco</option>
+                    <option value="MN">Mongolia</option>
+                    <option value="ME">Montenegro</option>
+                    <option value="MS">Montserrat</option>
+                    <option value="MA">Morocco</option>
+                    <option value="MZ">Mozambique</option>
+                    <option value="MM">Myanmar</option>
+                    <option value="NA">Namibia</option>
+                    <option value="NR">Nauru</option>
+                    <option value="NP">Nepal</option>
+                    <option value="NL">Netherlands</option>
+                    <option value="NC">New Caledonia</option>
+                    <option value="NZ">New Zealand</option>
+                    <option value="NI">Nicaragua</option>
+                    <option value="NE">Niger</option>
+                    <option value="NG">Nigeria</option>
+                    <option value="NU">Niue</option>
+                    <option value="NF">Norfolk Island</option>
+                    <option value="MP">Northern Mariana Islands</option>
+                    <option value="NO">Norway</option>
+                    <option value="OM">Oman</option>
+                    <option value="PK">Pakistan</option>
+                    <option value="PW">Palau</option>
+                    <option value="PS">Palestine, State of</option>
+                    <option value="PA">Panama</option>
+                    <option value="PG">Papua New Guinea</option>
+                    <option value="PY">Paraguay</option>
+                    <option value="PE">Peru</option>
+                    <option value="PH">Philippines</option>
+                    <option value="PN">Pitcairn</option>
+                    <option value="PL">Poland</option>
+                    <option value="PT">Portugal</option>
+                    <option value="PR">Puerto Rico</option>
+                    <option value="QA">Qatar</option>
+                    <option value="RE">Réunion</option>
+                    <option value="RO">Romania</option>
+                    <option value="RU">Russian Federation</option>
+                    <option value="RW">Rwanda</option>
+                    <option value="BL">Saint Barthélemy</option>
+                    <option value="SH">
+                      Saint Helena, Ascension and Tristan da Cunha
+                    </option>
+                    <option value="KN">Saint Kitts and Nevis</option>
+                    <option value="LC">Saint Lucia</option>
+                    <option value="MF">Saint Martin (French part)</option>
+                    <option value="PM">Saint Pierre and Miquelon</option>
+                    <option value="VC">Saint Vincent and the Grenadines</option>
+                    <option value="WS">Samoa</option>
+                    <option value="SM">San Marino</option>
+                    <option value="ST">Sao Tome and Principe</option>
+                    <option value="SA">Saudi Arabia</option>
+                    <option value="SN">Senegal</option>
+                    <option value="RS">Serbia</option>
+                    <option value="SC">Seychelles</option>
+                    <option value="SL">Sierra Leone</option>
+                    <option value="SG">Singapore</option>
+                    <option value="SX">Sint Maarten (Dutch part)</option>
+                    <option value="SK">Slovakia</option>
+                    <option value="SI">Slovenia</option>
+                    <option value="SB">Solomon Islands</option>
+                    <option value="SO">Somalia</option>
+                    <option value="ZA">South Africa</option>
+                    <option value="GS">
+                      South Georgia and the South Sandwich Islands
+                    </option>
+                    <option value="SS">South Sudan</option>
+                    <option value="ES">Spain</option>
+                    <option value="LK">Sri Lanka</option>
+                    <option value="SD">Sudan</option>
+                    <option value="SR">Suriname</option>
+                    <option value="SJ">Svalbard and Jan Mayen</option>
+                    <option value="SZ">Eswatini</option>
+                    <option value="SE">Sweden</option>
+                    <option value="CH">Switzerland</option>
+                    <option value="SY">Syrian Arab Republic</option>
+                    <option value="TW">Taiwan, Province of China</option>
+                    <option value="TJ">Tajikistan</option>
+                    <option value="TZ">Tanzania, United Republic of</option>
+                    <option value="TH">Thailand</option>
+                    <option value="TL">Timor-Leste</option>
+                    <option value="TG">Togo</option>
+                    <option value="TK">Tokelau</option>
+                    <option value="TO">Tonga</option>
+                    <option value="TT">Trinidad and Tobago</option>
+                    <option value="TN">Tunisia</option>
+                    <option value="TR">Turkey</option>
+                    <option value="TM">Turkmenistan</option>
+                    <option value="TC">Turks and Caicos Islands</option>
+                    <option value="TV">Tuvalu</option>
+                    <option value="UG">Uganda</option>
+                    <option value="UA">Ukraine</option>
+                    <option value="AE">United Arab Emirates</option>
+                    <option value="GB">
+                      United Kingdom of Great Britain and Northern Ireland
+                    </option>
+                    <option value="US">United States of America</option>
+                    <option value="UM">
+                      United States Minor Outlying Islands
+                    </option>
+                    <option value="UY">Uruguay</option>
+                    <option value="UZ">Uzbekistan</option>
+                    <option value="VU">Vanuatu</option>
+                    <option value="VE">
+                      Venezuela, Bolivarian Republic of
+                    </option>
+                    <option value="VN">Viet Nam</option>
+                    <option value="VG">Virgin Islands, British</option>
+                    <option value="VI">Virgin Islands, U.S.</option>
+                    <option value="WF">Wallis and Futuna</option>
+                    <option value="EH">Western Sahara</option>
+                    <option value="YE">Yemen</option>
+                    <option value="ZM">Zambia</option>
+                    <option value="ZW">Zimbabwe</option>
+                  </select>
+                  <span
+                    class="form-label__error form-label__error--compensate"
+                    data-bind-observe="_country_err"
+                  ></span>
+                </div>
+                <div>
+                  <label class="form-label">State (if applicable)</label>
+                  <input
+                    type="text"
+                    class="form-control peers_state"
+                    aria-label="State"
+                    id="peers_add_state"
+                    name="peers_add_state"
+                    placeholder="2-Letter state code"
+                    disabled=""
+                    data-bind-observe="state"
+                    data-bind-onchange="newPeerFieldChange"
+                  />
+                  <span
+                    class="form-label__error form-label__error--compensate"
+                    data-bind-observe="_state_err"
+                  ></span>
+                </div>
+              </div>
+              <div class="tab-actions">
+                <span class="tab-actions__grabheight"></span>
+                <span
+                  class="tab-actions__error"
+                  data-bind-observe="_error_string"
+                ></span>
+                <div class="tab-actions__controls">
+                  <div class="form-check form-switch">
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="form-check-input peers_invite"
+                        role="switch"
+                        id="peers_add_invite"
+                        name="peers_add_invite"
+                        data-bind-checked="invite_on_email"
+                      />
+                      Invite on email
+                    </label>
+                  </div>
+                  <button
+                    class="btn btn-primary"
+                    data-bind-onclick="newPeerCreate"
+                  >
+                    Create
+                  </button>
+                </div>
+              </div>
+            </form>
+            <form
+              name="peers_import"
+              class="peers_import TabsPanel"
+              aria-labelledby="peers_import-tab"
+              data-bind-form="DEFINED"
+              data-bind-css="{ TabsPanel--active: $() === 3 }"
+              data-bind-css-watch="selected_tab_index"
+            >
+              <h5>
+                Import peers
+                <span class="fakelink">
+                  <i>&quest;</i>
+                </span>
+                <p></p>
+              </h5>
+              <div class="fields-grid">
+                <input
+                  type="hidden"
+                  id="peers_import_format"
+                  name="peers_import_format"
+                  value="csvform"
+                />
+                <label class="form-label">
+                  Label
+                  <input
+                    type="text"
+                    class="form-control peers_label"
+                    aria-label="Label for peers"
+                    id="peers_import_label"
+                    name="peers_import_label"
+                    placeholder="Peers name or label"
+                    pattern="[^ ]*"
+                    data-bind-observe="label"
+                  />
+                  <span
+                    class="form-label__error"
+                    data-bind-observe="_label_err"
+                  ></span>
+                </label>
+                <label class="form-label">
+                  Kind
+                  <select
+                    class="form-select peers_kind"
+                    aria-label="Kind"
+                    id="peers_import_kind"
+                    name="peers_import_kind"
+                    data-bind-observe="kind"
+                  >
+                    <option value="course">Course</option>
+                    <option value="project">Project</option>
+                    <option value="collaboration">Collaboration</option>
+                  </select>
+                  <span
+                    class="form-label__error"
+                    data-bind-observe="_kind_err"
+                  ></span>
+                </label>
+                <label class="form-label">
+                  Expire
+                  <span
+                    class="fakelink"
+                    id="migux_apps_peers__import_expire"
+                    data-bind-onclick="show_info_modal"
+                    data-bind-onclick-argument='Expire: For security reasons peer accounts should be closedwhen no longer required. Expire is used to limit account access time for that purpose, and you can always extend it later if needed. For courses and workshops a few weeks or months should usually suffice, while projects and long-term collaboration often extend to months or years. Peer accounts still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided expire date."'
+                  >
+                    <i>&quest;</i>
+                  </span>
+                  <input
+                    type="date"
+                    class="form-control peers_expire"
+                    aria-label="Access expiry date"
+                    id="peers_import_expire"
+                    name="peers_import_expire"
+                    placeholder="Expire date"
+                    pattern="[0-9/-]+"
+                    data-bind-observe="expire"
+                  />
+                  <span
+                    class="form-label__error"
+                    data-bind-observe="_expire_err"
+                  ></span>
+                </label>
+                <div class="peers_import_container">
+                  <textarea
+                    class="form-control peers_import_content"
+                    id="peers_import_content"
+                    name="peers_import_content"
+                    rows="10"
+                    placeholder="Paste or enter CSV-formatted list of peers ..."
+                    data-bind-observe="csvtext"
+                  ></textarea>
+                  <span
+                    class="form-label__error"
+                    data-bind-observe="_kind_err"
+                  ></span>
+                  <div class="form-check form-switch">
+                    <!-- TODO: move inline style to css files -->
+                    <input
+                      type="checkbox"
+                      class="form-check-input peers_invite"
+                      role="switch"
+                      style="left: 3rem"
+                      id="peers_import_invite"
+                      name="peers_import_invite"
+                      checked=""
+                    />
+                    <label class="form-label">Invite on email</label>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-actions">
+                <span class="tab-actions__grabheight"></span>
+                <span
+                  class="tab-actions__error"
+                  data-bind-observe="_error_string"
+                ></span>
+                <div class="tab-actions__controls">
+                  <button
+                    class="btn btn-primary"
+                    data-bind-onclick="importAction"
+                  >
+                    Import
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer" id="peers-modal-footer">
+            <button
+              class="btn btn-light"
+              data-bind-disabled="disable_close"
+              data-bind-onclick="onClose"
+              type="button"
+            >
+              Close
+            </button>
+            <button
+              class="btn btn-primary"
+              type="submit"
+              style="display: none"
+              id="peer_create_button"
+              onclick="
+                peers_action_submitform('add');
+                return false;
+              "
+            >
+              Create
+            </button>
+            <button
+              class="btn btn-primary"
+              type="submit"
+              style="display: none"
+              id="peers_import_button"
+              onclick="
+                peers_action_submitform('import');
+                return false;
+              "
+            >
+              Import
+            </button>
+            <button
+              class="btn btn-primary"
+              type="submit"
+              style="display: none"
+              id="peers_reject_button"
+              onclick="
+                peers_action_submitform('request', 'reject');
+                return false;
+              "
+            >
+              Reject
+            </button>
+            <button
+              class="btn btn-primary"
+              type="submit"
+              style="display: none"
+              id="peers_accept_button"
+              onclick="
+                peers_action_submitform('request', 'accept');
+                return false;
+              "
+            >
+              Accept
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (async () => {
+        const rootEl = document.querySelector("[data-migrole=app]");
+        const appName = rootEl.dataset.migapp;
+        const { bootstrap } = await import(`./${appName}.js`);
+        bootstrap(rootEl, {
+          urlOptions: {
+            apiUrl: "http://localhost:8881/api/peers",
+          },
+        });
+      })();
+    </script>
+  </body>
+</html>

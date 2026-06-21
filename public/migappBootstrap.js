@@ -1,0 +1,1 @@
+../migux/public/migappBootstrap.js
