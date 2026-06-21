@@ -7,16 +7,12 @@ from types import SimpleNamespace
 
 from flask import request
 
-import migux.apps.peers as migux_apps_peers
 import devserver.common as server_common
+import migux.apps.peers as migux_apps_peers
 
 EXAMPLE_DATA = {
-    "GET /accepted": server_common.import_example_data(
-        "peers/accepted.json"
-    ),
-    "GET /requested": server_common.import_example_data(
-        "peers/requested.json"
-    ),
+    "GET /accepted": server_common.import_example_data("peers/accepted.json"),
+    "GET /requested": server_common.import_example_data("peers/requested.json"),
 }
 MIGUX_APPS_PEERS_TEMPLATE_FOLDER = os.path.join(
     os.path.dirname(migux_apps_peers.__file__), "templates"
