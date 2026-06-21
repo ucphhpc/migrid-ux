@@ -91,9 +91,7 @@
                     </th>
                     <th>Full Name</th>
                     <th>Email</th>
-                    <th data-bind-show="col_organization">
-                      Organization
-                    </th>
+                    <th data-bind-show="col_organization">Organization</th>
                     <th data-bind-show="col_country">Country</th>
                     <th data-bind-show="col_state">State</th>
                     <th data-bind-show="col_kind">Kind</th>
@@ -287,9 +285,7 @@
                     </th>
                     <th>Full Name</th>
                     <th>Email</th>
-                    <th data-bind-show="col_organization">
-                      Organization
-                    </th>
+                    <th data-bind-show="col_organization">Organization</th>
                     <th data-bind-show="col_country">Country</th>
                     <th data-bind-show="col_state">State</th>
                     <th data-bind-show="col_kind">Kind</th>
@@ -396,8 +392,12 @@
               data-bind-css="{ TabsPanel--active: $() === 2 }"
               data-bind-css-watch="selected_tab_index"
             >
-              <h5 data-bind-hide="_is_editing">Fill out the fields below to create a new peer</h5>
-              <h5 data-bind-show="_is_editing">Editing peer; save changes or change tab to reset.</h5>
+              <h5 data-bind-hide="_is_editing">
+                Fill out the fields below to create a new peer
+              </h5>
+              <h5 data-bind-show="_is_editing">
+                Editing peer; save changes or change tab to reset.
+              </h5>
               <p></p>
               <div class="fields-grid">
                 <input
@@ -840,7 +840,10 @@
                   data-bind-observe="_error_string"
                 ></span>
                 <div class="tab-actions__controls">
-                  <div class="form-check form-switch" data-bind-hide="_is_editing">
+                  <div
+                    class="form-check form-switch"
+                    data-bind-hide="_is_editing"
+                  >
                     <label>
                       <input
                         type="checkbox"
