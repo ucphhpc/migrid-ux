@@ -63,6 +63,7 @@ build-css: ./envhelp/local.depends
 	@$(NPM_BIN) exec -- sass --quiet \
 		./src/scss/reset.scss:./public/build/reset.css \
 		./src/scss/main.scss:./public/build/main.css \
+		./src/components:./public/components \
 		./src/apps/peers.scss:./migux/public/apps/migux/peers.css
 
 .PHONY: development
@@ -139,4 +140,5 @@ watch-css: ./envhelp/local.depends
 	@$(NPM_BIN) exec -- sass --watch \
 		./src/scss/reset.scss:./public/build/reset.css \
 		./src/scss/main.scss:./public/build/main.css \
+		./src/components:./public/components \
 		./src/apps/peers.scss:./migux/public/apps/migux/peers.css

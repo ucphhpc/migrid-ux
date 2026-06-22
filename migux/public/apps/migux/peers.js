@@ -573,7 +573,7 @@ export class PeersApp extends AppBase {
       this._tooltipElementsByParentId[associatedElId] = null;
     } else {
       const tooltipEl = document.createElement("SPAN");
-      tooltipEl.className = "tooltip";
+      tooltipEl.className = "MiguxTooltip";
       tooltipEl.textContent = tooltipText;
 
       this._tooltipElementsByParentId[associatedElId] = tooltipEl;

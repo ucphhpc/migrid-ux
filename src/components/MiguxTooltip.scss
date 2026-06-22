@@ -1,0 +1,16 @@
+.MiguxTooltip {
+  --tooltip-height: 106px;
+  --tooltip-width: 300px;
+
+  position: absolute;
+  height: var(--tooltip-height);
+  width: var(--tooltip-width);
+  overflow: scroll;
+  z-index: 99;
+
+  border: 1px dotted black;
+  background-color: var(--bs-gray-200);
+  border-radius: 0.5rem;
+  padding: 5px;
+  font-size: 1rem;
+}

@@ -1,6 +1,7 @@
 .PeersApp {
   // Components
   @import "../components/Tabs.scss";
+  @import "../components/MiguxTooltip.scss";
 
   // Styles
   @media (min-width: 992px) {
@@ -72,26 +73,11 @@
       border-radius: 50%;
     }
 
-    .tooltip {
+    .MiguxTooltip {
       position: absolute;
       top: -50%;
       left: calc(100% + 2px);
     }
-  }
-
-  .tooltip {
-    --tooltip-width: 50px;
-
-    position: absolute;
-    height: 105px;
-    width: 300px;
-    overflow: scroll;
-
-    border: 1px dotted black;
-    background-color: var(--bs-gray-200);
-    border-radius: 0.5rem;
-    padding: 5px;
-    font-size: 1rem;
   }
 
   --mig-ux-field-margin: 0.5rem;

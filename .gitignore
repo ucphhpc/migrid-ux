@@ -16,6 +16,8 @@ __pycache__/
 /migux/public/apps/**/*.css
 /migux/public/apps/**/*.css.map
 /public/build/
+/public/components/**/*.css
+/public/components/**/*.css.map
 /public/coverage/
 /migux.egg-info/
 /packages.lst
