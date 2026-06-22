@@ -475,7 +475,7 @@ export class PeersApp extends AppBase {
     const newPeerNamespace = this.state.formState("peers_new");
     const peer_dn = entry.peer_dn();
 
-    return this.request("/accepted/fetch", {
+    return this.request("/peers/accepted/fetch", {
       method: "POST",
       data: {
         peer_dn,
@@ -523,7 +523,7 @@ export class PeersApp extends AppBase {
     values["peer_dn"] = peerDnBeingEdited;
 
     return this.request(
-      "/accepted/update",
+      "/peers/accepted/update",
       {
         method: "POST",
         data: values,
