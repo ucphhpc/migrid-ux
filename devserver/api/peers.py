@@ -50,19 +50,10 @@ def migux_apps_peers__GET_summary():
     Request handler: GET /peers/summary
     """
 
-    return [
-        {
-            "object_type": "objects",
-            "objects": {
-                "status": 200,
-                "error": None,
-                "data": {
-                    "accepted_count": len(EXAMPLE_DATA["GET /accepted"]),
-                    "requested_count": len(EXAMPLE_DATA["GET /requested"]),
-                },
-            },
-        }
-    ]
+    return {
+        "accepted_count": len(EXAMPLE_DATA["GET /accepted"]),
+        "requested_count": len(EXAMPLE_DATA["GET /requested"]),
+    }
 
 
 def migux_apps_peers__GET_accepted():
@@ -119,9 +110,7 @@ def migux_apps_peers__POST_accepted_delete():
         ]
         EXAMPLE_DATA["GET /accepted"] = filtered_example_data
 
-    return [
-        {"object_type": "objects", "objects": {"status": 200, "error": None}}
-    ]
+    return {}
 
 
 def migux_apps_peers__POST_accepted_import():
@@ -140,28 +129,11 @@ def migux_apps_peers__POST_accepted_import():
             "label": payload.get("label", ""),
         }
 
-        return [
-            {
-                "object_type": "objects",
-                "objects": {
-                    "status": 400,
-                    "error": "unable to save the form",
-                    "data": {
-                        "errors_map": errors_map,
-                    },
-                },
-            }
-        ]
+        return {
+            "errors_map": errors_map,
+        }, 404
 
-    return [
-        {
-            "object_type": "objects",
-            "objects": {
-                "status": 200,
-                "error": None,
-            },
-        }
-    ]
+    return {}
 
 
 def migux_apps_peers__POST_accepted_fetch():
@@ -181,23 +153,9 @@ def migux_apps_peers__POST_accepted_fetch():
             break
 
     if found_peer is None:
-        return [
-            {
-                "object_type": "objects",
-                "objects": {
-                    "status": 404,
-                    "error": "no such peer",
-                    "data": {},
-                },
-            }
-        ]
+        return {}, 404
 
-    return [
-        {
-            "object_type": "objects",
-            "objects": {"status": 200, "error": None, "data": found_peer},
-        }
-    ]
+    return found_peer
 
 
 def migux_apps_peers__POST_accepted_update():
@@ -217,25 +175,11 @@ def migux_apps_peers__POST_accepted_update():
             break
 
     if found_peer is None:
-        return [
-            {
-                "object_type": "objects",
-                "objects": {
-                    "status": 404,
-                    "error": "no such peer",
-                    "data": {},
-                },
-            }
-        ]
+        return 404, {}
 
     found_peer.update(payload)
 
-    return [
-        {
-            "object_type": "objects",
-            "objects": {"status": 200, "error": None, "data": found_peer},
-        }
-    ]
+    return found_peer
 
 
 def migux_apps_peers__POST_requested_accept():
@@ -264,9 +208,7 @@ def migux_apps_peers__POST_requested_accept():
     all_accepted = EXAMPLE_DATA["GET /accepted"]
     EXAMPLE_DATA["GET /accepted"] = all_accepted + accepted_dicts
 
-    return [
-        {"object_type": "objects", "objects": {"status": 200, "error": None}}
-    ]
+    return {}
 
 
 def migux_apps_peers__POST_requested_delete():
@@ -286,9 +228,7 @@ def migux_apps_peers__POST_requested_delete():
     ]
     EXAMPLE_DATA["GET /requested"] = filtered_example_data
 
-    return [
-        {"object_type": "objects", "objects": {"status": 200, "error": None}}
-    ]
+    return {}
 
 
 def migux_apps_peers__POST_new():
@@ -315,19 +255,10 @@ def migux_apps_peers__POST_new():
         }
         errors_map = {"0": simulated_errors}
 
-        return [
-            {
-                "object_type": "objects",
-                "objects": {
-                    "status": 400,
-                    "error": "unable to save the form",
-                    "data": {
-                        "success_map": success_map,
-                        "errors_map": errors_map,
-                    },
-                },
-            }
-        ]
+        return {
+            "success_map": success_map,
+            "errors_map": errors_map,
+        }, 400
 
     # simulate a valid user payload by only allowing values
     # for keys that we expect to be present in a user entry
@@ -338,18 +269,10 @@ def migux_apps_peers__POST_new():
 
     example_data.append(user_dict)
 
-    return [
-        {
-            "object_type": "objects",
-            "objects": {
-                "status": 200,
-                "data": {
-                    "success_map": success_map,
-                    "errors_map": errors_map,
-                },
-            },
-        }
-    ]
+    return {
+        "success_map": success_map,
+        "errors_map": errors_map,
+    }
 
 
 ROUTES = {

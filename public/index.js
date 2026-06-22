@@ -62,7 +62,6 @@ async function populateAppList(appSelectEl, baseUrl) {
     const urlOptions = {
       apiUrl: `${apiUrl}/api`,
       baseUrl: "",
-      processResponse: GLOBAL.MiG.migResponse,
     };
     performAppLoad(appname, rootEl, { urlOptions });
   });
