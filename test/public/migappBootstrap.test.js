@@ -1,6 +1,6 @@
 /* globals global */
 
-import { assertEqual } from "../support/assertions.js";
+import { assertEqual, assertNotEqual } from "../support/assertions.js";
 
 function asFormData(obj) {
   const formData = new global.FormData();
@@ -12,6 +12,7 @@ function asFormData(obj) {
 
 describe("bootrapping code", () => {
   let buildMigUrl;
+  let migResponse;
   let window;
 
   before(async () => {
@@ -20,6 +21,7 @@ describe("bootrapping code", () => {
 
     await import("../../migux/public/migappBootstrap.js");
     buildMigUrl = window.MiG.migBuildUrl;
+    migResponse = window.MiG.migResponse;
   });
 
   after(() => {
@@ -127,6 +129,176 @@ describe("bootrapping code", () => {
           operation: "create",
         }),
       });
+    });
+  });
+
+  describe("response processing", () => {
+    it("should throw on invalid response", async () => {
+      const payload = {};
+      const res = new Response(JSON.stringify(payload), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      let expectedError = null;
+      try {
+        await migResponse(res);
+      } catch (error) {
+        expectedError = error;
+      }
+      assertNotEqual(expectedError, null);
+      assertEqual(expectedError.message, "NOT_IMPLEMENTED");
+    });
+
+    it("should process a successful response", async () => {
+      const payload = [
+        {
+          object_type: "objects",
+          objects: {
+            status: 200,
+            error: null,
+          },
+        },
+      ];
+      const res = new Response(JSON.stringify(payload), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const migRes = await migResponse(res);
+
+      const data = await migRes.json();
+      assertEqual(data, {
+        error: null,
+      });
+    });
+
+    it("should process an error response with status (data)", async () => {
+      const payload = [
+        {
+          object_type: "objects",
+          objects: {
+            status: 400,
+            error: null,
+            data: {
+              specifics: "very specific info",
+            },
+          },
+        },
+      ];
+      const res = new Response(JSON.stringify(payload), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      let expectedError = null;
+      try {
+        await migResponse(res);
+      } catch (error) {
+        expectedError = error;
+      }
+      assertNotEqual(expectedError, null);
+
+      assertEqual(expectedError.message, "HTTP 400 Error");
+      assertEqual(expectedError.status, 400);
+      assertEqual(expectedError.data, {
+        specifics: "very specific info",
+      });
+    });
+
+    it("should process an error response with status (error null)", async () => {
+      const payload = [
+        {
+          object_type: "objects",
+          objects: {
+            status: 400,
+            error: null,
+          },
+        },
+      ];
+      const res = new Response(JSON.stringify(payload), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      let expectedError = null;
+      try {
+        await migResponse(res);
+      } catch (error) {
+        expectedError = error;
+      }
+      assertNotEqual(expectedError, null);
+
+      assertEqual(expectedError.message, "HTTP 400 Error");
+      assertEqual(expectedError.status, 400);
+      assertEqual(expectedError.data, null);
+    });
+
+    it("should process an error response with status (error empty string)", async () => {
+      const payload = [
+        {
+          object_type: "objects",
+          objects: {
+            status: 400,
+            error: "",
+          },
+        },
+      ];
+      const res = new Response(JSON.stringify(payload), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      let expectedError = null;
+      try {
+        await migResponse(res);
+      } catch (error) {
+        expectedError = error;
+      }
+      assertNotEqual(expectedError, null);
+
+      assertEqual(expectedError.message, "");
+      assertEqual(expectedError.status, 400);
+      assertEqual(expectedError.data, null);
+    });
+
+    it("should process an error response with no status", async () => {
+      const payload = [
+        {
+          object_type: "objects",
+          objects: {
+            error: "arbitrary error",
+          },
+        },
+      ];
+      const res = new Response(JSON.stringify(payload), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      let expectedError = null;
+      try {
+        await migResponse(res);
+      } catch (error) {
+        expectedError = error;
+      }
+      assertNotEqual(expectedError, null);
+
+      assertEqual(expectedError.message, "arbitrary error");
+      assertEqual(expectedError.status, 422);
+      assertEqual(expectedError.data, null);
     });
   });
 });

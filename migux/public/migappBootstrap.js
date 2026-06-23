@@ -73,10 +73,12 @@
     const json = await res.json();
 
     let found = null;
-    for (const entry of json) {
-      if (entry.object_type === "objects") {
-        found = entry;
-        break;
+    if (Array.isArray(json)) {
+      for (const entry of json) {
+        if (entry.object_type === "objects") {
+          found = entry;
+          break;
+        }
       }
     }
     if (found === null) {
@@ -86,16 +88,22 @@
     const result = found.objects;
     const migRes = new Response("", { status: result.status });
 
-    const hasErrorString = typeof result.error === "string" && !!result.error;
+    const hasDataKey = Object.prototype.hasOwnProperty.call(result, "data");
+    const hasErrorString = typeof result.error === "string";
     if (!migRes.ok) {
+      // common error path: specific status was set
       const migStatus = migRes.status;
-      const error = new Error(result.error || `HTTP ${res.status} Error`);
+      const error = new Error(
+        hasErrorString ? result.error : `HTTP ${migRes.status} Error`,
+      );
       error.status = migStatus;
-      error.data = result.data;
+      error.data = hasDataKey ? result.data : null;
       throw error;
-    } else if (hasErrorString) {
+    } else if (hasErrorString && result.error) {
+      // uncommon error path: attempt to interpret any returned error text
       const error = new Error(result.error);
       error.status = 422;
+      error.data = hasDataKey ? result.data : null;
       throw error;
     } else {
       const resultWithoutStatus = result;

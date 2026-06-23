@@ -17,7 +17,7 @@ export default defineConfig([
       "migux/**/*.js",
       "public/**/*.js",
       "test/apps/**/*.js",
-      "test/public/**/*/js",
+      "test/public/**/*.js",
     ],
     languageOptions: {
       globals: globals.browser,
