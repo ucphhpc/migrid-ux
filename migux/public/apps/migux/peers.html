@@ -840,10 +840,7 @@
                   data-bind-observe="_error_string"
                 ></span>
                 <div class="tab-actions__controls">
-                  <div
-                    class="form-check form-switch"
-                    data-bind-hide="_is_editing"
-                  >
+                  <div class="form-switch" data-bind-hide="_is_editing">
                     <label>
                       <input
                         type="checkbox"
@@ -890,7 +887,12 @@
             >
               <h5>
                 Import peers
-                <span class="fakelink">
+                <span
+                  class="fakelink"
+                  id="migux_apps_peers__import_peers"
+                  data-bind-onclick="show_info_modal"
+                  data-bind-onclick-argument="Import Peers: You can paste or enter a CSV-formatted list in the righthanded box to create or update your existing peers. The contents must start with a single header line to define the field order in the following individual user lines as shown in the example at the bottom."
+                >
                   <i>&quest;</i>
                 </span>
                 <p></p>
@@ -971,23 +973,20 @@
                     placeholder="Paste or enter CSV-formatted list of peers ..."
                     data-bind-observe="csvtext"
                   ></textarea>
+                  <p>
+                    An example of how you should format your CSV-formatted list
+                    of peers when importing them:
+                  </p>
+                  <pre>
+full_name;organization;email;country;state
+Jane Doe;Dept. of Physics at University of Aarhus;jane.doe@phys.au.dk;DK;
+...
+John Doe;DTU;john.doe@dtu.dk;DK;
+                  </pre>
                   <span
                     class="form-label__error"
                     data-bind-observe="_kind_err"
                   ></span>
-                  <div class="form-check form-switch">
-                    <!-- TODO: move inline style to css files -->
-                    <input
-                      type="checkbox"
-                      class="form-check-input peers_invite"
-                      role="switch"
-                      style="left: 3rem"
-                      id="peers_import_invite"
-                      name="peers_import_invite"
-                      checked=""
-                    />
-                    <label class="form-label">Invite on email</label>
-                  </div>
                 </div>
               </div>
               <div class="tab-actions">
@@ -997,6 +996,19 @@
                   data-bind-observe="_error_string"
                 ></span>
                 <div class="tab-actions__controls">
+                  <div class="form-switch">
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="form-check-input peers_invite"
+                        role="switch"
+                        id="peers_import_invite"
+                        name="peers_import_invite"
+                        checked=""
+                      />
+                      Invite on email
+                    </label>
+                  </div>
                   <button
                     class="btn btn-primary"
                     data-bind-onclick="importAction"

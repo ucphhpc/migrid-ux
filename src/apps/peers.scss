@@ -224,6 +224,11 @@
     .peers_import_container {
       grid-row: 1 / 4;
       grid-column: 2 / 3;
+
+      pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
     }
 
     textarea.peers_import_content {
