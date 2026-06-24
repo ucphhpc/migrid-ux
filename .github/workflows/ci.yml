@@ -1,0 +1,44 @@
+name: Continuous Integration
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint-js:
+    runs-on: ubuntu-latest
+    name: Lint JavaScript
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+      - run: npm install
+      - run: npm run lint
+
+  lint-py:
+    runs-on: ubuntu-latest
+    name: Lint Python
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+      - run: pip install -r local-requirements.txt
+      - run: black . --check
+      - run: isort . --check-only
+      - run: pylint `find ./devserver -name '*.py'`
+
+  test:
+    runs-on: ubuntu-latest
+    name: Test on latest node
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+      - run: npm install
+      - run: npm test

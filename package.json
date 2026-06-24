@@ -1,0 +1,25 @@
+{
+  "type": "module",
+  "scripts": {
+    "coverage": "c8 -r html mocha",
+    "fmt": "prettier --write '**/*.{css,html,js,scss}'",
+    "lint": "prettier --check '**/*.{css,html,js,scss}' && eslint",
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "GPL-2.0-only",
+  "private": true,
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "bootstrap": "~5.3.5",
+    "c8": "^10.1.3",
+    "eslint": "^10.2.0",
+    "eslint-plugin-mocha": "^11.2.0",
+    "globals": "^17.5.0",
+    "jsdom": "^26.1.0",
+    "mocha": "^11.1.0",
+    "prettier": "^3.5.3",
+    "sass": "^1.87.0",
+    "sinon": "^20.0.0"
+  }
+}
