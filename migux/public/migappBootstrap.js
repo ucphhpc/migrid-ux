@@ -198,12 +198,11 @@
   function performAppLoad(appname, rootEl, appOptions) {
     const urlOptions = appOptions.urlOptions || {};
     const baseUrl = urlOptions.baseUrl;
-    const miguxAppname = `migux/${appname}`;
 
     return Promise.all([
-      loadAppMarkup(miguxAppname, baseUrl),
-      loadAppScript(miguxAppname, baseUrl),
-      loadAppStyles(miguxAppname, baseUrl),
+      loadAppMarkup(appname, baseUrl),
+      loadAppScript(appname, baseUrl),
+      loadAppStyles(appname, baseUrl),
     ])
       .then(([htmlString, module]) => {
         const { App } = module;
@@ -227,6 +226,7 @@
   GLOBAL.MiG.loadAppMarkup = loadAppMarkup;
   GLOBAL.MiG.loadAppScript = loadAppScript;
   GLOBAL.MiG.loadAppStyles = loadAppStyles;
+  GLOBAL.MiG.performAppLoad = performAppLoad;
   GLOBAL.MiG.migBuildUrl = migBuildUrl;
   GLOBAL.MiG.migResponse = migResponse;
 
@@ -257,7 +257,8 @@
 
     const urlOptions = Object.assign({}, MIG_URL_OPTIONS_PARTIAL);
     urlOptions.migType = `migux_apps_${appname}`;
-    return performAppLoad(appname, rootEl, { urlOptions });
+    const miguxAppname = `migux/${appname}`;
+    return performAppLoad(miguxAppname, rootEl, { urlOptions });
   }
 
   GLOBAL.migappBootstrap = migappBootstrap;
