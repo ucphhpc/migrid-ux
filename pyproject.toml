@@ -1,6 +1,6 @@
 [project]
 name = "migux"
-version = "0.0.0"
+version = "1.0.0"
 dependencies = []
 #requires-python = ">=3.8"
 authors = [{ name = "Another person", email = "another.person@example.com" }]
