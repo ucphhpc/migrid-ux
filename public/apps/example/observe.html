@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <title>peers-modal</title>
+  </head>
+  <body data-migrole="app" data-migapp="observe">
+    <h1>hello <span data-bind-observe="who"></span></h1>
+    <br />
+    <input name="who" data-bind-observe="who" />
+
+    <script>
+      (async () => {
+        const rootEl = document.querySelector("[data-migrole=app]");
+        const appName = rootEl.dataset.migapp;
+        const { bootstrap } = await import(`./${appName}.js`);
+        bootstrap(rootEl, {
+          urlOptions: {
+            apiUrl: "http://localhost:8881/api/peers",
+          },
+        });
+      })();
+    </script>
+  </body>
+</html>

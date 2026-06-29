@@ -1,0 +1,14 @@
+# lint tools
+
+[tool.black]
+line-length = 80
+extend-exclude = '''
+    public/node_modules
+'''
+
+[tool.isort]
+line_length = 80
+profile = "black"
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = "C0103, C0209"

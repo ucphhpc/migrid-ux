@@ -1,0 +1,37 @@
+#!/bin/sh
+
+SCRIPT_PATH=$(realpath "$0")
+SCRIPT_BASE=$(dirname -- "$SCRIPT_PATH")
+
+NODE_VERSION=${NODE_VERSION:-`cat .nvmrc`}
+if [ -z "${NODE_VERSION}" ]; then
+    echo "No node version specified"
+    exit 1
+fi
+
+_NVM_IDENTITY=''
+if [ -n "$NVM_DIR" ]; then
+    _NVM_IDENTITY='system'
+else
+    NVM_DIR="$SCRIPT_BASE/nvm"
+    if [ ! -d "${NVM_DIR}" ]; then
+        echo "Local nvm directory missing - perhaps the environment was not created"
+        exit 1
+    fi
+
+    _NVM_IDENTITY='local'
+fi
+
+echo "using $_NVM_IDENTITY nvm"
+
+\. "$NVM_DIR/nvm.sh" --no-use
+
+_NVM_NODE_BIN="$NVM_DIR/versions/node/v$NODE_VERSION/bin"
+if [ ! -d "$_NVM_NODE_BIN" ]; then
+    nvm install "$NODE_VERSION"
+else
+    nvm use "$NODE_VERSION"
+fi
+
+NODE_BIN=${NODE_BIN:-'node'}
+"$NODE_BIN" "$@"

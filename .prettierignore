@@ -1,0 +1,10 @@
+/test/fixtures/
+
+# build
+/public/build/**/*.css
+/public/build/**/*.css.map
+
+# special case SASS source files
+src/scss/_root.scss
+src/scss/main.scss
+

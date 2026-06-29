@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e
+
+SCRIPT_PATH=$(realpath "$0")
+SCRIPT_BASE=$(dirname -- "$SCRIPT_PATH")
+
+NODE_BIN=npm "$SCRIPT_BASE/node" "$@"

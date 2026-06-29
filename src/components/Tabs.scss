@@ -1,0 +1,87 @@
+.Tabs {
+  --bs-nav-tabs-border-width: var(--bs-border-width);
+  --bs-nav-tabs-border-color: var(--bs-border-color);
+  --bs-nav-tabs-border-radius: var(--bs-border-radius);
+  --bs-nav-tabs-link-hover-border-color: var(--bs-secondary-bg)
+    var(--bs-secondary-bg) var(--bs-border-color);
+  --bs-nav-tabs-link-active-color: var(--bs-emphasis-color);
+  --bs-nav-tabs-link-active-bg: var(--bs-body-bg);
+  --bs-nav-tabs-link-active-border-color: var(--bs-border-color)
+    var(--bs-border-color) var(--bs-body-bg);
+  border-bottom: var(--bs-nav-tabs-border-width) solid
+    var(--bs-nav-tabs-border-color);
+
+  --bs-nav-link-padding-x: 1rem;
+  --bs-nav-link-padding-y: 0.5rem;
+  --bs-nav-link-font-weight: ;
+  --bs-nav-link-color: var(--bs-link-color);
+  --bs-nav-link-hover-color: var(--bs-link-hover-color);
+  --bs-nav-link-disabled-color: var(--bs-secondary-color);
+
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+
+  cursor: pointer;
+
+  @media (max-width: 992px) {
+    display: block;
+  }
+
+  .TabsItem {
+    border: var(--bs-nav-tabs-border-width) solid transparent;
+
+    display: block;
+    margin-bottom: calc(-1 * var(--bs-nav-tabs-border-width));
+    padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+    font-size: var(--bs-nav-link-font-size);
+    font-weight: var(--bs-nav-link-font-weight);
+    color: var(--bs-nav-link-color);
+    text-decoration: none;
+    background: none;
+
+    border-top-width: var(--bs-nav-tabs-border-width);
+    border-left-width: var(--bs-nav-tabs-border-width);
+    border-right-width: var(--bs-nav-tabs-border-width);
+
+    border-top-left-radius: var(--bs-nav-tabs-border-radius);
+    border-top-right-radius: var(--bs-nav-tabs-border-radius);
+    border-color: transparent;
+
+    transition:
+      color 0.15s ease-in-out,
+      background-color 0.15s ease-in-out,
+      border-color 0.15s ease-in-out;
+
+    &--active {
+      color: var(--bs-nav-tabs-link-active-color);
+      background-color: var(--bs-nav-tabs-link-active-bg);
+      border-bottom-color: transparent;
+      border-color: var(--bs-nav-tabs-link-active-border-color);
+    }
+
+    &:hover,
+    &--active {
+      border-color: var(--bs-nav-tabs-link-hover-border-color);
+    }
+
+    @media (max-width: 992px) {
+      border-radius: 0;
+
+      &:first-child {
+        border-top: 0;
+      }
+    }
+  }
+}
+
+.TabsPanel {
+  display: none;
+
+  &--active {
+    display: flex;
+    flex-direction: column;
+  }
+}

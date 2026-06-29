@@ -1,0 +1,9 @@
+black
+build
+flask
+flask-cors
+isort
+pylint
+jinja2
+semver
+tomlkit<0.14

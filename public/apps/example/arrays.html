@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <body data-migrole="app" data-migapp="arrays">
+    <table>
+      <tbody data-bind-array="example_items" data-bind-array-each="tr">
+        <tr>
+          <td>
+            <input type="checkbox" data-bind-checked="present" checked />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input type="checkbox" data-bind-checked="present" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <script>
+      (async () => {
+        const rootEl = document.querySelector("[data-migrole=app]");
+        const appName = rootEl.dataset.migapp;
+        const { bootstrap } = await import(`./${appName}.js`);
+        bootstrap(rootEl, {
+          urlOptions: {
+            apiUrl: "http://localhost:8881/api/peers",
+          },
+        });
+      })();
+    </script>
+  </body>
+</html>

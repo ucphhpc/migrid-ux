@@ -1,0 +1,25 @@
+#!/bin/sh
+
+set -e
+
+SCRIPT_PATH=$(realpath "$0")
+SCRIPT_BASE=$(dirname -- "$SCRIPT_PATH")
+ROOT_DIR=$(realpath "$SCRIPT_BASE/..")
+
+PYTHON_BIN=${PYTHON_BIN:-"$SCRIPT_BASE/venv/bin/python3"}
+if [ ! -f "${PYTHON_BIN}" ]; then
+    echo "No python binary found - perhaps the virtual env was not created"
+    exit 1
+fi
+
+# default PYTHONPATH such that directly executing files in the repo "just works"
+PYTHONPATH=${PYTHONPATH:-"$ROOT_DIR"}
+
+# default any variables for local development
+THE_ENV=${THE_ENV:-'local'}
+
+# arrange for an explicit python cache hierarhy - this is primarily done for
+# consistency with the dpython script where it is necessary to avoid conflict
+PYTHONPYCACHEPREFIX="$PYTHONPATH/envhelp/output/__pycache.${THE_ENV}__"
+
+PYTHONPATH="$PYTHONPATH" PYTHONPYCACHEPREFIX="$PYTHONPYCACHEPREFIX" THE_ENV="$THE_ENV" "$PYTHON_BIN" "$@"
