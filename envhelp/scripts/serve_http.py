@@ -20,7 +20,6 @@
 # --- END_HEADER ---
 
 
-
 import os
 import sys
 from http.server import HTTPServer, SimpleHTTPRequestHandler, test
