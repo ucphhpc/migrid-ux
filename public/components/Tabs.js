@@ -1,11 +1,12 @@
-// --- BEGIN_HEADER ---
-//
-// Tabs.js - dual licensed source code file
-// Copyright (C) 2025 - 2026  SCIENCE HPC Center at UCPH
-//
-// This file is part of MiGrid-UX.
-//
-// MiGrid-UX is free software: you can redistribute it and/or modify it under
+/*
+# --- BEGIN_HEADER ---
+#
+# Tabs.js - dual licensed source code file
+# Copyright (C) 2025 - 2026  SCIENCE HPC Center at UCPH
+#
+# This file is part of MiGrid-UX.
+#
+# MiGrid-UX is free software: you can redistribute it and/or modify it under
 // the terms of either
 // the MIT License (LICENSES/LICENSE.MIT or https://opensource.org/licenses/MIT)
 // OR
@@ -15,6 +16,7 @@
 // distributed except according to those terms.
 //
 // --- END_HEADER ---
+*/
 
 import { asObservable } from "../lib/observable.js";
 
