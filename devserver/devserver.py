@@ -1,3 +1,6 @@
+
+# -*- coding: utf-8 -*-
+#
 # --- BEGIN_HEADER ---
 #
 # devserver.py - dual licensed source code file

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
 # --- BEGIN_HEADER ---
 #
 # provision_npm.py - dual licensed source code file

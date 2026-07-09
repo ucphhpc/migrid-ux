@@ -1,3 +1,6 @@
+
+# -*- coding: utf-8 -*-
+#
 # --- BEGIN_HEADER ---
 #
 # __init__.py - dual licensed source code file
