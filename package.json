@@ -7,7 +7,7 @@
     "test": "mocha"
   },
   "author": "",
-  "license": "GPL-2.0-only",
+  "license": "(GPL-2.0-or-later OR MIT)",
   "private": true,
   "devDependencies": {
     "@eslint/js": "^10.0.1",
