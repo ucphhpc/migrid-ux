@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # --- BEGIN_HEADER ---
 #
 # serve_http.py - dual licensed source code file
@@ -16,7 +17,6 @@
 #
 # --- END_HEADER ---
 
-#!/usr/bin/env python3
 
 
 import os

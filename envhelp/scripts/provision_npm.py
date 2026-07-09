@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # --- BEGIN_HEADER ---
 #
 # provision_npm.py - dual licensed source code file
@@ -16,7 +17,6 @@
 #
 # --- END_HEADER ---
 
-#!/usr/bin/env python3
 
 import os
 import shutil

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # --- BEGIN_HEADER ---
 #
 # dist_version.py - dual licensed source code file
@@ -15,8 +16,6 @@
 # distributed except according to those terms.
 #
 # --- END_HEADER ---
-
-#!/usr/bin/env python3
 
 import os
 import sys
