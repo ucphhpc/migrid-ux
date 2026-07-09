@@ -13,9 +13,9 @@
 # the GNU General Public License version 2 (LICENSES/LICENSE.GPLv2 or
 # https://opensource.org/license/gpl-2.0) or any later version
 # at your option. The MiGrid-UX files may NOT be copied, modified, or
-// distributed except according to those terms.
-//
-// --- END_HEADER ---
+# distributed except according to those terms.
+#
+# --- END_HEADER ---
 */
 
 import {
