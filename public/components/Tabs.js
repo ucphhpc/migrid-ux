@@ -7,15 +7,15 @@
 # This file is part of MiGrid-UX.
 #
 # MiGrid-UX is free software: you can redistribute it and/or modify it under
-// the terms of either
-// the MIT License (LICENSES/LICENSE.MIT or https://opensource.org/licenses/MIT)
-// OR
-// the GNU General Public License version 2 (LICENSES/LICENSE.GPLv2 or
-// https://opensource.org/license/gpl-2.0) or any later version
-// at your option. The MiGrid-UX files may NOT be copied, modified, or
-// distributed except according to those terms.
-//
-// --- END_HEADER ---
+# the terms of either
+# the MIT License (LICENSES/LICENSE.MIT or https://opensource.org/licenses/MIT)
+# OR
+# the GNU General Public License version 2 (LICENSES/LICENSE.GPLv2 or
+# https://opensource.org/license/gpl-2.0) or any later version
+# at your option. The MiGrid-UX files may NOT be copied, modified, or
+# distributed except according to those terms.
+#
+# --- END_HEADER ---
 */
 
 import { asObservable } from "../lib/observable.js";
