@@ -89,4 +89,5 @@ The complete set of observed values that represent an active application.
 
 ### Licensing
 
-The source code is licensed under GPL v2. License is available [here](/LICENSE).
+The source code is licensed under GPLv2 or MIT as defined by the source in question.
+These licenses can be found under the [here]LICENSES directory.
