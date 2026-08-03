@@ -1,12 +1,10 @@
 # migrid-ux
 
-This repository contains a basic browser runtime enabling the construction of
-dynamic web applications as HTML that is bound to an observable-based state.
-
-Heavy inspiration is taken from older solutions to this problem, in particular
-Knockout, but client side templating is omitted in favour favour of the use of
-server-side rendering of HTML fragments which are handled in a fashion similar
-to the more recent htmx.
+This repository is intended as the source of truth for a series of small web
+applications and their supporting libraries which will form various portions
+of the MiGrid user-facing web interface. They are currently under extremely
+heavy development in branches whose content is subject to extensive change
+until such time as they are merged to the main branch.
 
 ## Basic principles
 
@@ -28,6 +26,16 @@ The HTML of the application is annotated with a series of binding attributes
 which are processed and e.g. any required event handlers attached. As a user
 interacts with the web page the values within the observables change, and any
 programmatic changes to observables are reflected within the browser.
+
+## Contained libraries
+
+This repository contains a basic browser runtime enabling the construction of
+dynamic web applications as HTML that is bound to an observable-based state.
+
+Heavy inspiration is taken from older solutions to this problem, in particular
+Knockout, but client side templating is omitted in favour favour of the use of
+server-side rendering of HTML fragments which are handled in a fashion similar
+to the more recent htmx.
 
 ## Supporting modules
 
