@@ -364,12 +364,20 @@ describe("apps/peers", function () {
         assertTrue(searchAcceptedQueryStub.calledOnce);
       });
 
-      it("should update the requested total", async () => {
+      it("should update the requested total and count", async () => {
         // precondition
-        assertEqual(acceptedPeersState.total(), 2);
+        assertEqual(
+          acceptedPeersState.count(),
+          TEST_SEARCH_ACCEPTED_RESULT_TOTAL,
+        );
+        assertEqual(
+          acceptedPeersState.total(),
+          TEST_SEARCH_ACCEPTED_RESULT_TOTAL,
+        );
 
         await app.searchAcceptedRemove(null, acceptedPeersState);
 
+        assertEqual(acceptedPeersState.count(), 0);
         assertEqual(acceptedPeersState.total(), 0);
       });
     });
@@ -454,13 +462,21 @@ describe("apps/peers", function () {
         assertEqual(requestedPeersState.query(), "not to be replaced");
       });
 
-      it("should update the requested total", async () => {
+      it("should update the requested total and count", async () => {
         // precondition
-        assertEqual(requestedPeersState.total(), 3);
+        assertEqual(
+          requestedPeersState.total(),
+          TEST_SEARCH_REQUESTED_RESULT_TOTAL,
+        );
+        assertEqual(
+          requestedPeersState.count(),
+          TEST_SEARCH_REQUESTED_RESULT_TOTAL,
+        );
 
         await app.searchRequestedAccept(null, requestedPeersState);
 
         assertEqual(requestedPeersState.total(), 1);
+        assertEqual(requestedPeersState.count(), 1);
       });
     });
 

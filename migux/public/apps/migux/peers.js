@@ -288,6 +288,11 @@ export class PeersApp extends AppBase {
         const currentTotal = namespace.total();
         namespace.total(currentTotal - distinguished_names_for_removal.length);
 
+        const currentCount = namespace.count();
+        namespace.count(currentCount - distinguished_names_for_removal.length);
+
+        // Ensure that the form state is also updated
+        //        this.summaryRequest()
         this.searchAcceptedQuery();
       })
       .catch((error) => {
@@ -337,15 +342,24 @@ export class PeersApp extends AppBase {
           throw error;
         }
 
-        // update requsted total
-        const requestedCount =
+        // update requsted total and count
+        const requestedTotal =
           namespace.total() - distinguished_names_for_accept.length;
-        namespace.total(requestedCount);
+        namespace.total(requestedTotal);
+
+        const requestedCount =
+          namespace.count() - distinguished_names_for_accept.length;
+        namespace.count(requestedCount);
+
+        const acceptedTotal =
+          acceptedNamespace.total() + distinguished_names_for_accept.length;
+        acceptedNamespace.total(acceptedTotal);
 
         const acceptedCount =
-          acceptedNamespace.total() + distinguished_names_for_accept.length;
-        acceptedNamespace.total(acceptedCount);
+          acceptedNamespace.count() + distinguished_names_for_accept.length;
+        acceptedNamespace.count(acceptedCount);
 
+        // Ensure that the form state is also updated
         this.changeTab(0);
 
         // ensure the newly added peer wll be loaded
@@ -393,6 +407,9 @@ export class PeersApp extends AppBase {
         // update total
         const currentTotal = namespace.total();
         namespace.total(currentTotal - distinguished_names_for_removal.length);
+
+        const currentCount = namespace.count();
+        namespace.count(currentCount - distinguished_names_for_removal.length);
 
         this.searchRequestedQuery();
       })
@@ -452,6 +469,9 @@ export class PeersApp extends AppBase {
       .then(async () => {
         await this.searchRequestedQuery();
         this.newPeerClear();
+        // Update the requested peers tab count and total state
+        // before switching to it.
+        this.summaryRequest();
         this.changeTab(1);
       })
       .catch((error) => {
