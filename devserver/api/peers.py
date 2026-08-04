@@ -137,21 +137,64 @@ def migux_apps_peers__POST_accepted_import():
 
     payload = request.json
 
+    # Global values applied to all rows
+    csvtext = payload.get("csvtext", "")
+    global_label = payload.get("label", "")
+    global_kind = payload.get("kind", "")
+    global_expire = payload.get("expire", "")
+
     input_label = payload.get("label", "")
     if input_label == "ERROR":
         errors_map = {
-            "csvtext": payload.get("csvtext", ""),
-            "expire": payload.get("expire", ""),
-            "kind": payload.get("kind", ""),
-            "label": payload.get("label", ""),
+            "csvtext": csvtext,
+            "label": global_label,
+            "kind": global_kind,
+            "expire": global_expire,
         }
 
         return {
             "errors_map": errors_map,
         }, 404
 
-    # TODO, implement the creation of new accepted peers
-    # based on the csvtext and global values
+    # Parse CSV text
+    csv_lines = _unconcatify(csvtext, "\n")
+    if not csv_lines:
+        return {}, 400
+
+    # First line is the header
+    header = [col.strip() for col in csv_lines[0].split(";")]
+
+    # Iterate each body line
+    for line in csv_lines[1:]:
+        line = line.strip()
+        if not line:
+            continue
+
+        values = [val.strip() for val in line.split(";")]
+        user_dict = {}
+        for i, col_name in enumerate(header):
+            if i < len(values):
+                user_dict[col_name] = values[i]
+
+        # Apply global values
+        if global_label:
+            user_dict["label"] = global_label
+        if global_expire:
+            user_dict["expire"] = global_expire
+        if global_kind:
+            user_dict["kind"] = global_kind
+
+        # Since this is only a dev dummy endpoint, we fill in any missing values required
+        # to make a distinguished name
+        # Fill missing fields with defaults from example data
+        example_user_dict = EXAMPLE_DATA["GET /accepted"][0]
+        for key in example_user_dict:
+            if key not in user_dict:
+                user_dict[key] = example_user_dict[key]
+
+        # Generate distinguished name
+        user_dict["distinguished_name"] = _fill_distinguished_name(user_dict)
+        EXAMPLE_DATA["GET /accepted"].append(user_dict)
     return {}
 
 

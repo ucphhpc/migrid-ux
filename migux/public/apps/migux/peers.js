@@ -224,6 +224,7 @@ export class PeersApp extends AppBase {
 
       await this.searchAcceptedQuery();
       this.importClear();
+      this.summaryRequest();
       this.changeTab(0);
     } catch (e) {
       const errorsMap = (e.data || {}).errors_map;
