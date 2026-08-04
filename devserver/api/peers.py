@@ -253,7 +253,7 @@ def migux_apps_peers__POST_new():
     Request handler: POST /peers/new
     """
 
-    example_data = EXAMPLE_DATA["GET /requested"]
+    example_data = EXAMPLE_DATA["GET /accepted"]
     example_user_dict = EXAMPLE_DATA["GET /accepted"][0]
 
     payload = request.json
@@ -283,7 +283,6 @@ def migux_apps_peers__POST_new():
         key: value for key, value in payload.items() if key in example_user_dict
     }
     user_dict.update({"distinguished_name": _fill_distinguished_name(payload)})
-
     example_data.append(user_dict)
 
     return {

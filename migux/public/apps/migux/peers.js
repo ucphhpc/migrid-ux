@@ -467,12 +467,12 @@ export class PeersApp extends AppBase {
     };
     return this.request("/peers/new", requestOptions, namespace)
       .then(async () => {
-        await this.searchRequestedQuery();
+        await this.searchAcceptedQuery();
         this.newPeerClear();
         // Update the requested peers tab count and total state
         // before switching to it.
         this.summaryRequest();
-        this.changeTab(1);
+        this.changeTab(0);
       })
       .catch((error) => {
         namespace._error_string(error.message);

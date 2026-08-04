@@ -548,8 +548,8 @@ describe("apps/peers", function () {
 
       app = new PeersApp(state, { _fetch: fakeFetch });
 
-      // set a requested peers search term
-      state.formState("peers_requested").query("show_me_peers");
+      // set a accepted peers search term
+      state.formState("peers_accepted").query("show_me_peers");
       // set new peer fields
       const newPeerNamespace = state.formState("peers_new");
       for (const [field, value] of Object.entries(EXAMPLE_PEERS_FIELDS)) {
@@ -604,22 +604,22 @@ describe("apps/peers", function () {
       }
     });
 
-    it("should reload the requested peers on success", async () => {
+    it("should reload the accepted peers on success", async () => {
       const newPeerNamespace = state.formState("peers_new");
-      const searchRequestedQueryStub = sinon.stub(app, "searchRequestedQuery");
+      const searchAcceptedQueryStub = sinon.stub(app, "searchAcceptedQuery");
 
       await app.newPeerCreate(null, newPeerNamespace);
 
-      assertTrue(searchRequestedQueryStub.calledOnce);
+      assertTrue(searchAcceptedQueryStub.calledOnce);
     });
 
-    it("should change to the requested peers tab on success", async () => {
+    it("should change to the accepted peers tab on success", async () => {
       const newPeerNamespace = state.formState("peers_new");
 
       await app.newPeerCreate(null, newPeerNamespace);
 
       const appState = state.namespace("__app__");
-      assertEqual(appState.selected_tab_index(), 1);
+      assertEqual(appState.selected_tab_index(), 0);
     });
   });
 
