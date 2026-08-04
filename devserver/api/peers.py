@@ -138,7 +138,6 @@ def migux_apps_peers__POST_accepted_import():
     payload = request.json
 
     # Global values applied to all rows
-    csvtext = payload.get("csvtext", "")
     global_label = payload.get("label", "")
     global_kind = payload.get("kind", "")
     global_expire = payload.get("expire", "")
@@ -146,7 +145,7 @@ def migux_apps_peers__POST_accepted_import():
     input_label = payload.get("label", "")
     if input_label == "ERROR":
         errors_map = {
-            "csvtext": csvtext,
+            "csvtext": payload.get("csvtext", ""),
             "label": global_label,
             "kind": global_kind,
             "expire": global_expire,
@@ -157,7 +156,7 @@ def migux_apps_peers__POST_accepted_import():
         }, 404
 
     # Parse CSV text
-    csv_lines = _unconcatify(csvtext, "\n")
+    csv_lines = _unconcatify(payload.get("csvtext", ""), "\n")
     if not csv_lines:
         return {}, 400
 
