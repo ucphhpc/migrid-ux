@@ -284,15 +284,13 @@ export class PeersApp extends AppBase {
           throw error;
         }
 
-        // update total
+        // update the total and count values
         const currentTotal = namespace.total();
         namespace.total(currentTotal - distinguished_names_for_removal.length);
 
         const currentCount = namespace.count();
         namespace.count(currentCount - distinguished_names_for_removal.length);
 
-        // Ensure that the form state is also updated
-        //        this.summaryRequest()
         this.searchAcceptedQuery();
       })
       .catch((error) => {
