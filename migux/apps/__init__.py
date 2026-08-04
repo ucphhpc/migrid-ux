@@ -14,4 +14,3 @@
 # distributed except according to those terms.
 #
 # --- END_HEADER ---
-
