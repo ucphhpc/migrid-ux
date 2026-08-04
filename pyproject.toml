@@ -10,7 +10,7 @@ maintainers = [
 description = "Supporting libraries and applications for the MiGrid user-facing web interfaces."
 readme = "README.md"
 license = "GPL-2.0-or-later OR MIT"
-license-files = ["LICENSES/LICENSE.GPLv2", "LICENSES/LICENSE.MIT]
+license-files = ["LICENSES/LICENSE.GPLv2", "LICENSES/LICENSE.MIT"]
 
 [build-system]
 requires = ["setuptools"]
