@@ -2,7 +2,7 @@
 name = "migux"
 version = "1.1.0"
 dependencies = []
-requires-python = ">=3.12"
+requires-python = ">=3.9"
 authors = [{ name = "Another person", email = "another.person@example.com" }]
 maintainers = [
   { name = "Another person", email = "another.person@example.com" },
