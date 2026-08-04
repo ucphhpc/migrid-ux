@@ -150,6 +150,8 @@ def migux_apps_peers__POST_accepted_import():
             "errors_map": errors_map,
         }, 404
 
+    # TODO, implement the creation of new accepted peers
+    # based on the csvtext and global values
     return {}
 
 
