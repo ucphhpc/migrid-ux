@@ -85,6 +85,20 @@ export class PeersApp extends AppBase {
   _changeTab(ev) {
     const { previousValue: currentTabIndex } = ev.detail;
 
+    // Clear any error string on any of the form tabs the tab is changed
+    const formNames = [
+      "peers_accepted",
+      "peers_requested",
+      "peers_new",
+      "peers_import",
+    ];
+    const leavingNamespace = this.state.formState(formNames[currentTabIndex]);
+    if (leavingNamespace) {
+      leavingNamespace._error_string("");
+    }
+
+    // When leaving the peers_new tab when in editing mode, it will be cleared
+    // and the editing canceled
     if (currentTabIndex === 2) {
       const newPeersNamespace = this.state.formState("peers_new");
       if (newPeersNamespace._is_editing()) {
