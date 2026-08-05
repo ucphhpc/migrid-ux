@@ -117,16 +117,15 @@ def migux_apps_peers__POST_accepted_delete():
     """
 
     payload = request.json
+    peer_dns_to_delete = set(payload["peers"])
 
     example_data = EXAMPLE_DATA["GET /accepted"]
-    for peer_dn in payload["peers"]:
-        filtered_example_data = [
-            item
-            for item in example_data
-            if item["distinguished_name"] != peer_dn
-        ]
-        EXAMPLE_DATA["GET /accepted"] = filtered_example_data
-
+    remaining_peers = [
+        peer_dn
+        for peer_dn in example_data
+        if peer_dn["distinguished_name"] not in peer_dns_to_delete
+    ]
+    EXAMPLE_DATA["GET /accepted"] = remaining_peers
     return {}
 
 
@@ -296,7 +295,6 @@ def migux_apps_peers__POST_new():
     """
     Request handler: POST /peers/new
     """
-
     example_data = EXAMPLE_DATA["GET /accepted"]
     example_user_dict = EXAMPLE_DATA["GET /accepted"][0]
 
