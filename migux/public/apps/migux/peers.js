@@ -236,9 +236,9 @@ export class PeersApp extends AppBase {
       };
       await this.request("/peers/accepted/import", requestOptions, namespace);
 
+      this.summaryRequest();
       await this.searchAcceptedQuery();
       this.importClear();
-      this.summaryRequest();
       this.changeTab(0);
     } catch (e) {
       const errorsMap = (e.data || {}).errors_map;
@@ -272,7 +272,6 @@ export class PeersApp extends AppBase {
 
   searchAcceptedRemove(_, namespace) {
     const resultsRows = namespace.results_rows();
-
     const distinguished_names_for_removal = [];
 
     for (const entry of resultsRows) {
@@ -299,14 +298,13 @@ export class PeersApp extends AppBase {
           throw error;
         }
 
-        // update the total and count values
+        // Reduce the namespace total
         const currentTotal = namespace.total();
         namespace.total(currentTotal - distinguished_names_for_removal.length);
 
-        const currentCount = namespace.count();
-        namespace.count(currentCount - distinguished_names_for_removal.length);
-
-        this.searchAcceptedQuery();
+        // update the total and count values
+        this.summaryRequest();
+        await this.searchAcceptedQuery();
       })
       .catch((error) => {
         namespace._error_string(error.message);
@@ -355,33 +353,21 @@ export class PeersApp extends AppBase {
           throw error;
         }
 
-        // update requsted total and count
-        const requestedTotal =
-          namespace.total() - distinguished_names_for_accept.length;
-        namespace.total(requestedTotal);
-
-        const requestedCount =
-          namespace.count() - distinguished_names_for_accept.length;
-        namespace.count(requestedCount);
-
-        const acceptedTotal =
-          acceptedNamespace.total() + distinguished_names_for_accept.length;
-        acceptedNamespace.total(acceptedTotal);
-
-        const acceptedCount =
-          acceptedNamespace.count() + distinguished_names_for_accept.length;
-        acceptedNamespace.count(acceptedCount);
-
         // Ensure that the form state is also updated
         this.changeTab(0);
 
+        // Reduce the namespace total
+        const currentTotal = namespace.total();
+        namespace.total(currentTotal - distinguished_names_for_accept.length);
+
         // ensure the newly added peer wll be loaded
+        this.summaryRequest();
         acceptedNamespace.query("*");
         // refresh the accepted peers listing
-        this.searchAcceptedQuery();
+        await this.searchAcceptedQuery();
         // refresh the requested peers so the peer
         // being accepted will disappear if shown
-        this.searchRequestedQuery();
+        await this.searchRequestedQuery();
       })
       .catch((error) => {
         namespace._error_string(error.message);
@@ -417,14 +403,13 @@ export class PeersApp extends AppBase {
           throw error;
         }
 
-        // update total
+        // Reduce the namespace total
         const currentTotal = namespace.total();
         namespace.total(currentTotal - distinguished_names_for_removal.length);
 
-        const currentCount = namespace.count();
-        namespace.count(currentCount - distinguished_names_for_removal.length);
-
-        this.searchRequestedQuery();
+        // update total
+        this.summaryRequest();
+        await this.searchRequestedQuery();
       })
       .catch((error) => {
         namespace._error_string(error.message);
