@@ -19,13 +19,29 @@
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title" id="peers-modal-label">Peers</h1>
-            <button
-              class="CloseButton"
-              data-bind-disabled="disable_close"
-              data-bind-onclick="onClose"
-              aria-label="Close"
-            ></button>
+            <div class="modal-title">
+              <div class="modal-title-msg">
+                <h1 id="peers-modal-label">Peers</h1>
+              </div>
+              <div class="modal-title-buttons">
+                <button
+                  class="CloseButton"
+                  data-bind-disabled="disable_close"
+                  data-bind-onclick="onClose"
+                  aria-label="Close"
+                ></button>
+              </div>
+            </div>
+            <div class="modal-subtitle">
+              <p class="modal-subtitle">
+                Peers enables you to add and manage external people you vouch
+                for to get an account on the system — whether for a particular
+                course, workshop, research project, or general collaboration
+                with you. When a peer is added or accepted, site admins will use
+                the provided information to evaluate and process their account
+                request.
+              </p>
+            </div>
           </div>
           <div class="modal-body" id="peers-modal-body">
             <ul
