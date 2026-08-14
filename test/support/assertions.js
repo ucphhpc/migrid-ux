@@ -72,3 +72,13 @@ export function assertFalse(value) {
 export function assertNull(value) {
   return assert.ok(value === null);
 }
+
+export function assertInstanceOf(instance, expected_instance_type) {
+  return assert.ok(instance instanceof expected_instance_type);
+}
+
+export function assertIsObjectInstance(instance) {
+  return assert.ok(
+    Object.prototype.toString.call(instance) === "[object Object]",
+  );
+}
