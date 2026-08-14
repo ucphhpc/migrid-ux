@@ -23,6 +23,7 @@ import {
   computedValue,
   observedArray,
   observedHtml,
+  observedValue,
 } from "../../lib/observable.js";
 
 function _someTruthyValue(arrayOfValues) {
@@ -56,6 +57,8 @@ export class PeersApp extends AppBase {
       "change",
       _changeTabBound,
     );
+    // Ensure that the default NO_VALUE toString entry is removed
+    this.state.namespace("__app__")._active_tooltips({});
   }
 
   onDestroy() {
@@ -72,6 +75,57 @@ export class PeersApp extends AppBase {
   }
 
   /* app wide functions */
+
+  _disableToolTips() {
+    // A label wrapper can cause double click that
+    // triggers this too early.
+    // https://stackoverflow.com/questions/19249209/why-does-a-label-inside-an-input-trigger-a-click-event
+
+    // TODO, change to use direct events to disable activated
+    // tooltips
+    const appState = this.state.namespace("__app__");
+    // Copy the current active _active_tooltips
+    const currentActiveTooltips = Object.assign(
+      Object.create(null),
+      appState._active_tooltips(),
+    );
+
+    const newActiveTooltips = {};
+    for (const [key, value] of Object.entries(currentActiveTooltips)) {
+      const justActivated = value.just_activated;
+      const active = value.active;
+
+      // If just activated, set it to be disabled later so
+      // the user is able to see it when it is activated the first time
+      if (justActivated && active) {
+        newActiveTooltips[key] = {
+          just_activated: false,
+          active: active,
+        };
+        continue;
+      }
+
+      // Get the formstate tooltip signal observed variable
+      const formStatePath = key.split("__");
+      const activeToolTipFormKey = formStatePath[1];
+      const activeToolTipVariableName = formStatePath[2];
+
+      // flip the identified activation variable (show/hide)
+      const activeToolTipForm = this.state.formState(activeToolTipFormKey);
+      activeToolTipForm[activeToolTipVariableName](false);
+
+      newActiveTooltips[key] = {
+        just_activated: false,
+        active: false,
+      };
+    }
+    appState._active_tooltips(newActiveTooltips);
+  }
+
+  disableToolTips() {
+    // UI selection to disable tooltips
+    this._disableToolTips();
+  }
 
   changeTab(nextTabIndex) {
     const appState = this.state.namespace("__app__");
@@ -611,9 +665,53 @@ export class PeersApp extends AppBase {
       tooltipEl.textContent = tooltipText;
 
       this._tooltipElementsByParentId[associatedElId] = tooltipEl;
-
       element.appendChild(tooltipEl);
     }
+  }
+
+  tooltipHide(_, namespace, inputEl) {
+    if (inputEl === null) {
+      return;
+    }
+    const elId = inputEl.id;
+
+    const appState = this.state.namespace("__app__");
+    const currentActiveTooltips = appState._active_tooltips();
+    const newActiveTooltips = Object.assign(
+      Object.create(null),
+      currentActiveTooltips,
+      { [elId]: { just_activated: false, active: false } },
+    );
+    appState._active_tooltips(newActiveTooltips);
+
+    // Retrieve the bound tooltip state variable
+    // that is bound to hide the tooltip
+    const toolTipNamespaceKey = elId.split("__")[2];
+    // disable the form tooltip
+    namespace[toolTipNamespaceKey](false);
+  }
+
+  tooltipShow(_, namespace, inputEl) {
+    if (inputEl === null) {
+      return;
+    }
+    // Update the appwide active tooltips when
+    // it can be associated with an inputEl id
+    const elId = inputEl.id;
+    const appState = this.state.namespace("__app__");
+    // Update the existing _active_tooltips
+    const newValue = Object.assign(
+      Object.create(null),
+      appState._active_tooltips(),
+      { [elId]: { just_activated: true, active: true } },
+    );
+    appState._active_tooltips(newValue);
+
+    // Retrieve the bound tooltip state variable
+    // that is bound to hide the tooltip
+    const toolTipNamespaceKey = elId.split("__")[2];
+    // disable the form tooltip
+    namespace[toolTipNamespaceKey](true);
   }
 
   /* common functions */
@@ -719,6 +817,9 @@ export const App = PeersApp;
         return computedValue(_someTruthyValue, observing);
       },
       selected_tab_index: 0,
+      // Ensure that the initial value is not shared across
+      // instances
+      _active_tooltips: observedValue(NO_VALUE),
     },
     forms: {
       peers_accepted: {
@@ -727,6 +828,7 @@ export const App = PeersApp;
         count: 0,
         total: 0,
         _error_string: "",
+        tooltip: false,
       },
       peers_requested: {
         ...makePeersListingState({ showColLabel: false }),
@@ -737,6 +839,8 @@ export const App = PeersApp;
         // additional filter criteria
         kind: "",
         expire: "",
+        info_tooltip: false,
+        expire_tooltip: false,
       },
       peers_new: {
         ...PeersApp.CONST_NEW_PEERS_FIELDS,
@@ -747,6 +851,7 @@ export const App = PeersApp;
         _is_editing: false,
         _editing_dn: NO_VALUE,
         _error_string: "",
+        expire_tooltip: false,
       },
       peers_import: {
         ...PeersApp.CONST_ACCEPTED_IMPORT_FIELDS,
@@ -758,6 +863,8 @@ export const App = PeersApp;
         kind: "",
         label: "",
         _error_string: "",
+        expire_tooltip: false,
+        info_tooltip: false,
       },
     },
   };
