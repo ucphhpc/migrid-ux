@@ -491,7 +491,7 @@
                       data-bind-observe="kind"
                       data-bind-onchange="newPeerFieldChange"
                     >
-                      <option value="" disabled selected>What is the peer invited for? Select a Kind</option>
+                      <option value="" disabled selected>Select a Kind (Required)</option>
                       <option value="course">Course</option>
                       <option value="project">Project</option>
                       <option value="collaboration">Collaboration</option>
@@ -553,7 +553,7 @@
                         aria-label="Full Name"
                         id="peers_add_full_name"
                         name="peers_add_full_name"
-                        placeholder="Full name"
+                        placeholder="Full name (Required)"
                         data-bind-disabled="_is_editing"
                         data-bind-observe="full_name"
                         data-bind-onchange="newPeerFieldChange"
@@ -572,7 +572,7 @@
                       aria-label="Organization"
                       id="peers_add_organization"
                       name="peers_add_organization"
-                      placeholder="Organization"
+                      placeholder="Organization (Required)"
                       data-bind-disabled="_is_editing"
                       data-bind-observe="organization"
                       data-bind-onchange="newPeerFieldChange"
@@ -590,7 +590,7 @@
                       aria-label="Email"
                       id="peers_add_email"
                       name="peers_add_email"
-                      placeholder="Email at organization"
+                      placeholder="Email at organization (Required)"
                       data-bind-disabled="_is_editing"
                       data-bind-observe="email"
                       data-bind-onchange="newPeerFieldChange"
@@ -611,7 +611,7 @@
                       data-bind-observe="country"
                       data-bind-onchange="newPeerFieldChange"
                     >
-                      <option value=""></option>
+                      <option value="" disabled selected>Select a Country (Required)</option>
                       <option value="AF">Afghanistan</option>
                       <option value="AX">Åland Islands</option>
                       <option value="AL">Albania</option>
