@@ -6,6 +6,7 @@
 /public/build/**/*.css.map
 /migux/public/apps/**/*.css
 /migux/public/apps/**/*.css.map
+/migux/public/apps/**/*.html
 
 # special case SASS source files
 src/scss/_root.scss
