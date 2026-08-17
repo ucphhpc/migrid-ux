@@ -313,9 +313,14 @@ export class PeersApp extends AppBase {
 
   searchAcceptedQuery() {
     const namespace = this.state.formState("peers_accepted");
-    return this.peersListingQuery("/peers/accepted", namespace, {
-      query: namespace.query(),
-    });
+    // Empty query means that we will search for everything
+    if (namespace.query() == "") {
+      namespace.query("*");
+    }
+    const searchParams = {
+      query: namespace.query()
+    }
+    return this.peersListingQuery("/peers/accepted", namespace, searchParams);
   }
 
   searchAcceptedSelectAll({ value: selectedValue }, namespace) {
@@ -378,9 +383,7 @@ export class PeersApp extends AppBase {
 
   searchRequestedAccept(_, namespace) {
     const acceptedNamespace = this.state.formState("peers_accepted");
-
     const resultsRows = namespace.results_rows();
-
     const distinguished_names_for_accept = [];
 
     for (const entry of resultsRows) {
@@ -416,7 +419,6 @@ export class PeersApp extends AppBase {
 
         // ensure the newly added peer wll be loaded
         this.summaryRequest();
-        acceptedNamespace.query("*");
         // refresh the accepted peers listing
         await this.searchAcceptedQuery();
         // refresh the requested peers so the peer
@@ -472,6 +474,8 @@ export class PeersApp extends AppBase {
 
   searchRequestedQuery() {
     const namespace = this.state.formState("peers_requested");
+    
+
 
     const additionalParams = {};
     for (const observableName of ["query", "kind", "expire"]) {
