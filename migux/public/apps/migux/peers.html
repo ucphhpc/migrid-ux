@@ -456,14 +456,14 @@
                 </h5>
                 <p></p>
                 <div class="fields-grid">
-                  <input
-                    type="hidden"
-                    id="peers_add_format"
-                    name="peers_add_format"
-                    value="userid"
-                  />
-                  <label class="form-label">
-                    Label
+                  <div>
+                    <input
+                      type="hidden"
+                      id="peers_add_format"
+                      name="peers_add_format"
+                      value="userid"
+                    />
+                    <label class="form-label">Label</label>
                     <input
                       type="text"
                       class="form-control peers_label"
@@ -479,7 +479,7 @@
                       class="form-label__error"
                       data-bind-observe="_label_err"
                     ></span>
-                  </label>
+                  </div>
                   <div>
                     <label class="form-label">Kind</label>
                     <select
@@ -502,8 +502,7 @@
                     ></span>
                   </div>
                   <div>
-                    <span class="form-label"
-                      >Expire
+                    <label class=form-label>Expire
                       <span
                         id="migux_apps_peers__peers_new___expire_tooltip"
                         class="fakelink"
@@ -517,7 +516,7 @@
                         class="fakelink"
                         data-bind-show="_expire_tooltip"
                         data-bind-onclick="tooltipHide"
-                      >
+                        >
                         <i>&quest;</i>
                         <span class="MiguxTooltip"
                           >Expire: For security reasons peer accounts should be closed when no longer required.
@@ -526,43 +525,39 @@
                           Peer accounts still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided expire date.
                         </span>
                       </span>
-                    </span>
-                    <div>
-                      <input
-                        type="date"
-                        class="form-control peers_expire"
-                        aria-label="Access expiry date"
-                        id="peers_add_expire"
-                        name="peers_add_expire"
-                        placeholder="Expire date"
-                        data-bind-observe="expire"
-                        data-bind-onchange="newPeerFieldChange"
-                      />
-                      <span
-                        class="form-label__error"
-                        data-bind-observe="_expire_err"
-                      ></span>
-                    </div>
+                    </label>
+                    <input
+                      type="date"
+                      class="form-control peers_expire"
+                      aria-label="Access expiry date"
+                      id="peers_add_expire"
+                      name="peers_add_expire"
+                      placeholder="Expire date"
+                      data-bind-observe="expire"
+                      data-bind-onchange="newPeerFieldChange"
+                    />
+                    <span
+                      class="form-label__error"
+                      data-bind-observe="_expire_err"
+                    ></span>
                   </div>
                   <div>
-                    <label class="form-label">
-                      Full Name
-                      <input
-                        type="text"
-                        class="form-control peers_full_name"
-                        aria-label="Full Name"
-                        id="peers_add_full_name"
-                        name="peers_add_full_name"
-                        placeholder="Full name (Required)"
-                        data-bind-disabled="_is_editing"
-                        data-bind-observe="full_name"
-                        data-bind-onchange="newPeerFieldChange"
-                      />
-                      <span
-                        class="form-label__error"
-                        data-bind-observe="_full_name_err"
-                      ></span>
-                    </label>
+                    <label class="form-label">Full Name</label>
+                    <input
+                      type="text"
+                      class="form-control peers_full_name"
+                      aria-label="Full Name"
+                      id="peers_add_full_name"
+                      name="peers_add_full_name"
+                      placeholder="Full name (Required)"
+                      data-bind-disabled="_is_editing"
+                      data-bind-observe="full_name"
+                      data-bind-onchange="newPeerFieldChange"
+                    />
+                    <span
+                      class="form-label__error"
+                      data-bind-observe="_full_name_err"
+                    ></span>
                   </div>
                   <div>
                     <label class="form-label">Organization</label>
