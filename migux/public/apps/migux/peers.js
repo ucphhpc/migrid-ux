@@ -692,6 +692,7 @@ export class PeersApp extends AppBase {
   }
 
   tooltipShow(_, namespace, inputEl) {
+    // Is an element associated with tooltip
     if (inputEl === null) {
       return;
     }
@@ -840,7 +841,7 @@ export const App = PeersApp;
         kind: "",
         expire: "",
         info_tooltip: false,
-        expire_tooltip: false,
+        _expire_tooltip: false,
       },
       peers_new: {
         ...PeersApp.CONST_NEW_PEERS_FIELDS,
@@ -851,7 +852,7 @@ export const App = PeersApp;
         _is_editing: false,
         _editing_dn: NO_VALUE,
         _error_string: "",
-        expire_tooltip: false,
+        _expire_tooltip: false,
       },
       peers_import: {
         ...PeersApp.CONST_ACCEPTED_IMPORT_FIELDS,
@@ -863,7 +864,7 @@ export const App = PeersApp;
         kind: "",
         label: "",
         _error_string: "",
-        expire_tooltip: false,
+        _expire_tooltip: false,
         info_tooltip: false,
       },
     },

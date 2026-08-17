@@ -24,6 +24,7 @@ import {
   assertFalse,
   assertTrue,
   assertEqual,
+  assertKeys,
 } from "../../support/assertions.js";
 import { browserHooksEach, grabBrowserGlobals } from "../../support/browser.js";
 
@@ -693,6 +694,67 @@ describe("apps/peers", function () {
       await app.importAction(null, importPeersNamespace);
 
       assertTrue(searchAcceptedQueryStub.calledOnce);
+    });
+  });
+
+  describe("managing tooltips", () => {
+    /** @type {import("../../migux/public/apps/peers.js").PeersApp} */
+    let app;
+    let fakeFetch;
+    let state;
+
+    beforeEach(() => {
+      fakeFetch = makeFakeFetch({
+        body: {},
+        contentType: "application/json",
+      });
+
+      state = createState(AppBase.definition(PeersApp));
+      app = new PeersApp(state, { _fetch: fakeFetch });
+      // Ensure that the default 'toString: f' is not present
+      state._active_tooltips({});
+    });
+
+    it("accepted_peers _tooltip is activated", async () => {
+      const acceptedPeersState = app.state.formState("peers_accepted");
+      assertFalse(acceptedPeersState.tooltip());
+      const inputElement = {
+        id: "migux_apps_peers__peers_accepted__tooltip",
+      };
+
+      await app.tooltipShow(null, acceptedPeersState, inputElement);
+      assertTrue(acceptedPeersState.tooltip());
+    });
+
+    it("accepted_peers _tooltip is deactivated", async () => {
+      const acceptedPeersState = app.state.formState("peers_accepted");
+      assertFalse(acceptedPeersState.tooltip());
+      acceptedPeersState.tooltip(true);
+      const inputElement = {
+        id: "migux_apps_peers__peers_accepted__tooltip",
+      };
+
+      await app.tooltipHide(null, acceptedPeersState, inputElement);
+      assertFalse(acceptedPeersState.tooltip());
+    });
+
+    it("accepted_peers tooltip activating with element updates active_tooltips", async () => {
+      const appState = app.state.namespace("__app__");
+      const acceptedPeersState = app.state.formState("peers_accepted");
+      const inputElement = {
+        id: "migux_apps_peers__peers_accepted__tooltip",
+      };
+
+      await app.tooltipShow(null, acceptedPeersState, inputElement);
+
+      const newActiveTooltips = appState._active_tooltips();
+      assertKeys(newActiveTooltips, [inputElement.id]);
+      assertKeys(newActiveTooltips[inputElement.id], [
+        "active",
+        "just_activated",
+      ]);
+      assertTrue(newActiveTooltips[inputElement.id]["active"]);
+      assertTrue(newActiveTooltips[inputElement.id]["just_activated"]);
     });
   });
 
