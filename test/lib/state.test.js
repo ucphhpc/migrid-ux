@@ -35,6 +35,7 @@ import {
   observedValue,
   NO_VALUE,
   _valueOfObserved,
+  observedArray,
 } from "../../lib/observable.js";
 import { createState, createNamespacedState } from "../../lib/state.js";
 
@@ -61,6 +62,11 @@ describe("state", () => {
 
     assertKeys(state, ["bar", "baz", "foo"]);
     assertValuesEach(state, (value) => isObserved(value));
+    // The definition also sets the initial value if no matching
+    // defaults are given
+    assertTrue(state.foo());
+    assertEqual(state.bar(), 1);
+    assertEqual(state.baz(), "foobar");
   });
 
   it("should define specified fields and apply initial values", () => {
@@ -370,16 +376,40 @@ describe("state", () => {
   });
 
   describe("with custom observables", () => {
+    it("basic observable state change", () => {
+      const definition = {
+        custom: observedValue(false),
+      };
+      const state = createState(definition);
+      assertFalse(state.custom());
+      state.custom(true);
+      assertTrue(state.custom());
+    });
+
     it("should preserve the configured observable on state creation", () => {
       const definition = {
         custom: observedValue(undefined, { foo: true }),
       };
       const state = createState(definition);
-
       const customObservable = asObservable(state.custom);
 
       assertEqual(customObservable._options, { foo: true });
       assertIsNot(customObservable, definition.custom);
+      assertTrue(customObservable.getOption("foo"));
+    });
+
+    it("should do correct state change with default values", () => {
+      const definition = {
+        custom: observedValue(undefined, { active: false, disabled: true }),
+      };
+      const defaults = {
+        custom: { active: true, disabled: false },
+      };
+      const state = createState(definition, defaults);
+      const customObservable = asObservable(state.custom);
+
+      assertTrue(customObservable.value.active);
+      assertFalse(customObservable.value.disabled);
     });
   });
 
@@ -388,7 +418,7 @@ describe("state", () => {
       const definition = {
         __array__: {
           things: {
-            checked: false,
+            checked: true,
           },
         },
       };
@@ -407,16 +437,18 @@ describe("state", () => {
     });
 
     it("should wrap the items of an array on assignment", () => {
+      // __array__ is a special keyword identifier when creating
+      // a state to assign its contained key/values during constructor
       const definition = {
         __array__: {
-          things: {
-            checked: false,
-          },
+          things: {},
         },
       };
+
       const state = createState(definition);
       const appNamespace = state.namespace("__app__");
       // validate that we start with no array items
+      // since the definition only sets the provided keys
       if (appNamespace.things().length !== 0) throw new Error("PRECONDITION");
 
       appNamespace.things([{ checked: false }, { checked: true }]);
@@ -426,6 +458,44 @@ describe("state", () => {
       assertEqual(arrayValue.length, 2);
       assertFalse(arrayValue[0].checked());
       assertTrue(arrayValue[1].checked());
+    });
+
+    it("using ArrayObservable to create the state array items with defaults", () => {
+      const definition = {
+        things: observedArray(NO_VALUE, {}),
+      };
+
+      const defaults = {
+        things: [{ checked: true }, { checked: false }],
+      };
+      const state = createState(definition, defaults);
+      const appNamespace = state.namespace("__app__");
+      // validate that the ArrayObservable is created as expected
+      const arrayValue = appNamespace.things();
+      assertTrue(Array.isArray(arrayValue));
+      assertEqual(arrayValue.length, 2);
+      assertTrue(arrayValue[0].checked());
+      assertFalse(arrayValue[1].checked());
+    });
+
+    it("using ArrayObservable to create the state array items without defaults", () => {
+      const definition = {
+        things: observedArray(NO_VALUE, {}),
+      };
+
+      const state = createState(definition);
+      const appNamespace = state.namespace("__app__");
+      // Since we only pass a definition, no array values are populated
+      if (appNamespace.things().length !== 0) throw new Error("PRECONDITION");
+
+      // Populate the defined array observable
+      appNamespace.things([{ checked: true }, { checked: false }]);
+
+      const arrayValue = appNamespace.things();
+      assertTrue(Array.isArray(arrayValue));
+      assertEqual(arrayValue.length, 2);
+      assertTrue(arrayValue[0].checked());
+      assertFalse(arrayValue[1].checked());
     });
   });
 });
