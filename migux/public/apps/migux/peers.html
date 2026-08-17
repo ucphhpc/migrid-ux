@@ -470,7 +470,7 @@
                       aria-label="Label for peers"
                       id="peers_add_label"
                       name="peers_add_label"
-                      placeholder="Peers name or label"
+                      placeholder="Peers name or label (Required)"
                       data-bind-disabled="_is_editing"
                       data-bind-observe="label"
                       data-bind-onchange="newPeerFieldChange"
@@ -483,14 +483,15 @@
                   <div>
                     <label class="form-label">Kind</label>
                     <select
+                      id="peers_add_kind"
                       class="form-select peers_kind"
                       aria-label="Kind"
-                      id="peers_add_kind"
                       name="peers_add_kind"
                       data-bind-disabled="_is_editing"
                       data-bind-observe="kind"
                       data-bind-onchange="newPeerFieldChange"
                     >
+                      <option value="" disabled selected>What is the peer invited for? Select a Kind</option>
                       <option value="course">Course</option>
                       <option value="project">Project</option>
                       <option value="collaboration">Collaboration</option>
