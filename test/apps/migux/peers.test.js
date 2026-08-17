@@ -1085,7 +1085,8 @@ describe("apps/peers", function () {
         const app = bootstrap(document);
 
         const namespace = app.state.formState("peers_new");
-        assertEqual(namespace.kind(), "course");
+        // Empty placeholder
+        assertEqual(namespace.kind(), "");
       });
 
       it('should send the form on "Create" button press', () => {
@@ -1106,7 +1107,7 @@ describe("apps/peers", function () {
           headers: {
             "Content-Type": "application/json",
           },
-          body: '{"full_name":"","email":"","label":"","expire":"","organization":"","kind":"course","country":"","state":"NA","invite_on_email":true}',
+          body: '{"full_name":"","email":"","label":"","expire":"","organization":"","kind":"","country":"","state":"NA","invite_on_email":true}',
         });
       });
     });
