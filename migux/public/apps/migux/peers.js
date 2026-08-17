@@ -520,7 +520,8 @@ export class PeersApp extends AppBase {
     return this.request("/peers/new", requestOptions, namespace)
       .then(async () => {
         await this.searchAcceptedQuery();
-        this.newPeerClear();
+        const newPeerNamespace = this.state.formState("peers_new");
+        this.resetNamespace(newPeerNamespace);
         // Update the requested peers tab count and total state
         // before switching to it.
         this.summaryRequest();
@@ -544,17 +545,31 @@ export class PeersApp extends AppBase {
       });
   }
 
-  newPeerClear() {
-    const newPeerNamespace = this.state.formState("peers_new");
-    this.state.resetNamespace(newPeerNamespace);
+  resetNamespace(namespace) {
+    this.state.resetNamespace(namespace);
   }
 
   newPeerFieldChange(_, namespace, __, observed) {
     const fieldName = this.state.namespaceObservedToName(observed, namespace);
     // find the corresponding field error observable
-    const errObserved = namespace[this._fieldNameToFieldError(fieldName)];
+    const errObserved = namespace[PeersApp._fieldNameToFieldError(fieldName)];
     // clear it
     errObserved("");
+  }
+
+  newPeerCreateReset() {
+    // Clears the new peers form input values to their default and
+    // removes any displayed errors
+    const newPeerNamespace = this.state.formState("peers_new");
+    this.resetNamespace(newPeerNamespace);
+    // reset the form errors
+    this._resetNamespaceFieldErrors(
+      Object.keys(PeersApp.CONST_NEW_PEERS_FIELDS),
+      newPeerNamespace,
+    );
+    // clear the form values
+    const newPeerForm = document.getElementById("peers_new_form");
+    newPeerForm.reset();
   }
 
   // edit peer functions
@@ -591,7 +606,7 @@ export class PeersApp extends AppBase {
 
   editPeerCancel() {
     const newPeerNamespace = this.state.formState("peers_new");
-    this.newPeerClear();
+    this.resetNamespace();
     newPeerNamespace._is_editing(false);
     newPeerNamespace._editing_dn(NO_VALUE);
   }
@@ -626,7 +641,7 @@ export class PeersApp extends AppBase {
 
   /* other */
 
-  _fieldNameToFieldError(fieldName) {
+  static _fieldNameToFieldError(fieldName) {
     return `_${fieldName}_err`;
   }
 
@@ -634,10 +649,19 @@ export class PeersApp extends AppBase {
     for (const fieldName of fieldNames) {
       const errValue = errorsMap[fieldName];
       if (!(typeof errValue === "string" && errValue)) continue;
-      const errFieldName = this._fieldNameToFieldError(fieldName);
+      const errFieldName = PeersApp._fieldNameToFieldError(fieldName);
       const errObservable = namespace[errFieldName];
       errObservable(`<p>${errValue}</p>`);
     }
+  }
+
+  _resetNamespaceFieldErrors(fieldNames, namespace) {
+    for (const fieldName of fieldNames) {
+      const errFieldName = PeersApp._fieldNameToFieldError(fieldName);
+      const errObservable = namespace[errFieldName];
+      errObservable("");
+    }
+    namespace._error_string("");
   }
 
   /**
@@ -720,7 +744,8 @@ export class PeersApp extends AppBase {
   static _makeErrorFieldDefinitionsForFields(fieldDefinitions) {
     const definition = {};
     for (const fieldName of Object.keys(fieldDefinitions)) {
-      definition[`_${fieldName}_err`] = NO_VALUE;
+      const fieldErrName = PeersApp._fieldNameToFieldError(fieldName);
+      definition[fieldErrName] = NO_VALUE;
     }
     return definition;
   }

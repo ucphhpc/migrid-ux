@@ -441,6 +441,7 @@
                 </div>
               </form>
               <form
+                id="peers_new_form"
                 class="peers_new TabsPanel"
                 name="peers_new"
                 aria-labelledby="peers_new-tab"
@@ -937,7 +938,14 @@
                     </button>
                     <button
                       class="btn btn-secondary"
-                      data-bind-onclick="editPeerCancel"
+                      data-bind-onclick="newPeerCreateReset"
+                      data-bind-hide="_is_editing"
+                    >
+                      Reset
+                    </button>
+                    <button
+                      class="btn btn-secondary"
+                      data-bind-onclick="newPeerCreateReset"
                       data-bind-show="_is_editing"
                     >
                       Cancel
