@@ -660,7 +660,27 @@
                     ></span>
                   </div>
                   <div>
-                    <label class="form-label">Email</label>
+                    <label class="form-label">Email
+                      <span
+                        id="migux_apps_peers__peers_new___email_tooltip"
+                        class="fakelink"
+                        data-bind-hide="_email_tooltip"
+                        data-bind-onclick="tooltipShow"
+                      >
+                        <i>&quest;</i>
+                      </span>
+                      <span
+                        id="migux_apps_peers__peers_new___email_tooltip"
+                        class="fakelink"
+                        data-bind-show="_email_tooltip"
+                        data-bind-onclick="tooltipHide"
+                      >
+                        <i>&quest;</i>
+                        <span class="MiguxTooltip"
+                          >Email: an email address you have verified belongs to the Peer. This will be the mailbox that receives the Peer invitation from you to create a user account on the service. Furthermore it will also be their username that they will use to login to the service with. Do note that the user will also recieve expiration warnings (30, 10, and 3 days) before the specified End Date at this email.
+                        </span>
+                      </span>
+                    </label>
                     <input
                       type="email"
                       class="form-control peers_email"
