@@ -383,7 +383,6 @@ export class PeersApp extends AppBase {
   /* search requested functions */
 
   searchRequestedAccept(_, namespace) {
-    const acceptedNamespace = this.state.formState("peers_accepted");
     const resultsRows = namespace.results_rows();
     const distinguished_names_for_accept = [];
 
