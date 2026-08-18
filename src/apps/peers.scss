@@ -87,7 +87,8 @@
       justify-content: center;
       font-size: 0.9rem;
 
-      width: 1.45rem;
+      width: 110%;
+      height: 105%;
       border: 1px solid black;
       border-radius: 50%;
     }
@@ -126,6 +127,8 @@
       }
 
       &--compensate {
+        min-height: calc(2 * var(--mig-ux-field-margin));
+
         p {
           top: calc(-1 * var(--mig-ux-field-margin));
         }
