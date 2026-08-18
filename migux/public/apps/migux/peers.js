@@ -855,8 +855,8 @@ export const App = PeersApp;
         all: false,
         count: 0,
         total: 0,
-        _error_string: "",
         tooltip: false,
+        _error_string: "",
       },
       peers_requested: {
         ...makePeersListingState({ showColLabel: false }),
@@ -868,6 +868,7 @@ export const App = PeersApp;
         kind: "",
         expire: "",
         info_tooltip: false,
+        _label_tooltip: false,
         _expire_tooltip: false,
       },
       peers_new: {
@@ -879,7 +880,9 @@ export const App = PeersApp;
         _is_editing: false,
         _editing_dn: NO_VALUE,
         _error_string: "",
+        _label_tooltip: false,
         _expire_tooltip: false,
+        _kind_tooltip: false,
       },
       peers_import: {
         ...PeersApp.CONST_ACCEPTED_IMPORT_FIELDS,
@@ -890,9 +893,11 @@ export const App = PeersApp;
         expire: "",
         kind: "",
         label: "",
-        _error_string: "",
-        _expire_tooltip: false,
         info_tooltip: false,
+        _error_string: "",
+        _label_tooltip: false,
+        _kind_tooltip: false,
+        _expire_tooltip: false,
       },
     },
   };
