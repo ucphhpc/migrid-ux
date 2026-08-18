@@ -125,7 +125,7 @@
                       <th data-bind-show="col_state">State</th>
                       <th data-bind-show="col_kind">Kind</th>
                       <th data-bind-show="col_label">Label</th>
-                      <th data-bind-show="col_expire">Expire</th>
+                      <th data-bind-show="col_expire">End Date</th>
                       <th
                         class="col-settings settings-aid"
                         data-bind-onclick="peersListingSettingsToggle"
@@ -181,7 +181,7 @@
                             ><input
                               type="checkbox"
                               data-bind-checked="col_expire"
-                            />Expire</label
+                            />End Date</label
                           >
                         </div>
                       </th>
@@ -255,8 +255,27 @@
                     name="peers_request_format"
                     value="userid"
                   />
-                  <label class="form-label">
-                    Label
+                  <span class="form-label">Label
+                    <span
+                      id="migux_apps_peers__peers_requested___label_tooltip"
+                      class="fakelink"
+                      data-bind-hide="_label_tooltip"
+                      data-bind-onclick="tooltipShow"
+                    >
+                      <i>&quest;</i>
+                    </span>
+                    <span
+                      id="migux_apps_peers__peers_requested___label_tooltip"
+                      class="fakelink"
+                      data-bind-show="_label_tooltip"
+                      data-bind-onclick="tooltipHide"
+                      >
+                      <i>&quest;</i>
+                      <span class="MiguxTooltip"
+                        >Label: The label is used as a free text identifer for the peer.
+                        You can use this to group/organizee a collection of peers that you subsequently can search and or select against when going through your Accepted Peers.
+                      </span>
+                    </span>
                     <input
                       type="text"
                       class="form-control"
@@ -265,7 +284,7 @@
                       data-bind-observe="query"
                       data-bind-onenter="searchRequestedQuery"
                     />
-                  </label>
+                  </span>
                   <label class="form-label">
                     Kind
                     <select
@@ -283,7 +302,7 @@
                     </select>
                   </label>
                   <span class="form-label">
-                    Expire
+                    End Date
                     <span
                       id="migux_apps_peers__peers_requested___expire_tooltip"
                       class="fakelink"
@@ -300,10 +319,10 @@
                     >
                       <i>&quest;</i>
                       <span class="MiguxTooltip"
-                        >Expire: For security reasons peer accounts should be closed when no longer required.
-                        Expire is used to limit account access time for that purpose, and you can always extend it later if needed.
+                        >End Date: For security reasons peer accounts should be closed when no longer required.
+                        The End Date is used to limit account access time for that purpose, and you can always extend it later if needed.
                         For courses and workshops a few weeks or months should usually suffice, while projects and long-term collaboration often extend to months or years.
-                        Peer accounts still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided expire date.
+                        Peer account still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided End Date.
                       </span>
                     </span>
                     <input
@@ -312,7 +331,7 @@
                       aria-label="Access expiry date"
                       id="peers_request_expire"
                       name="peers_request_expire"
-                      placeholder="Expire date"
+                      placeholder="End Date"
                       pattern="[0-9/-]+"
                       data-bind-observe="expire"
                       data-bind-onchange="searchRequestedQuery"
@@ -346,7 +365,7 @@
                       <th data-bind-show="col_state">State</th>
                       <th data-bind-show="col_kind">Kind</th>
                       <th data-bind-show="col_label">Label</th>
-                      <th data-bind-show="col_expire">Expire</th>
+                      <th data-bind-show="col_expire">End Date</th>
                       <th
                         class="col-settings settings-aid"
                         data-bind-onclick="peersListingSettingsToggle"
@@ -402,7 +421,7 @@
                             ><input
                               type="checkbox"
                               data-bind-checked="col_expire"
-                            />Expire</label
+                            />End Date</label
                           >
                         </div>
                       </th>
@@ -464,7 +483,28 @@
                       name="peers_add_format"
                       value="userid"
                     />
-                    <label class="form-label">Label</label>
+                    <label class="form-label">Label
+                      <span
+                        id="migux_apps_peers__peers_new___label_tooltip"
+                        class="fakelink"
+                        data-bind-hide="_label_tooltip"
+                        data-bind-onclick="tooltipShow"
+                      >
+                        <i>&quest;</i>
+                      </span>
+                      <span
+                        id="migux_apps_peers__peers_new___label_tooltip"
+                        class="fakelink"
+                        data-bind-show="_label_tooltip"
+                        data-bind-onclick="tooltipHide"
+                        >
+                        <i>&quest;</i>
+                        <span class="MiguxTooltip"
+                        >Label: The label is used as a free text identifer for the peer.
+                        You can use this to group/organizee a collection of peers that you subsequently can search and or select against when going through your Accepted Peers.
+                        </span>
+                      </span>
+                    </label>
                     <input
                       type="text"
                       class="form-control peers_label"
@@ -482,7 +522,28 @@
                     ></span>
                   </div>
                   <div>
-                    <label class="form-label">Kind</label>
+                    <label class="form-label">Kind
+                      <span
+                        id="migux_apps_peers__peers_new___kind_tooltip"
+                        class="fakelink"
+                        data-bind-hide="_kind_tooltip"
+                        data-bind-onclick="tooltipShow"
+                      >
+                        <i>&quest;</i>
+                      </span>
+                      <span
+                        id="migux_apps_peers__peers_new___kind_tooltip"
+                        class="fakelink"
+                        data-bind-show="_kind_tooltip"
+                        data-bind-onclick="tooltipHide"
+                        >
+                        <i>&quest;</i>
+                        <span class="MiguxTooltip"
+                          >Kind: is used to define the purpose for you granting the external peer access to ERDA. Be it for a Course, Project, or general Collaboration.
+                          Like the Label, this can be used by you to select a particular kind of group when going through your Accepted Peers.
+                        </span>
+                      </span>
+                    </label>
                     <select
                       id="peers_add_kind"
                       class="form-select peers_kind"
@@ -503,7 +564,7 @@
                     ></span>
                   </div>
                   <div>
-                    <label class=form-label>Expire
+                    <label class=form-label>End Date
                       <span
                         id="migux_apps_peers__peers_new___expire_tooltip"
                         class="fakelink"
@@ -520,10 +581,10 @@
                         >
                         <i>&quest;</i>
                         <span class="MiguxTooltip"
-                          >Expire: For security reasons peer accounts should be closed when no longer required.
-                          Expire is used to limit account access time for that purpose, and you can always extend it later if needed.
+                          >End Date: For security reasons peer accounts should be closed when no longer required.
+                          The End Date is used to limit account access time for that purpose, and you can always extend it later if needed.
                           For courses and workshops a few weeks or months should usually suffice, while projects and long-term collaboration often extend to months or years.
-                          Peer accounts still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided expire date.
+                          Peer accounts still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided End Date.
                         </span>
                       </span>
                     </label>
@@ -533,7 +594,7 @@
                       aria-label="Access expiry date"
                       id="peers_add_expire"
                       name="peers_add_expire"
-                      placeholder="Expire date"
+                      placeholder="End Date"
                       data-bind-observe="expire"
                       data-bind-onchange="newPeerFieldChange"
                     />
@@ -561,7 +622,8 @@
                     ></span>
                   </div>
                   <div>
-                    <label class="form-label">Organization</label>
+                    <label class="form-label">Organization
+                    </label>
                     <input
                       type="text"
                       class="form-control peers_org"
@@ -999,8 +1061,27 @@
                     name="peers_import_format"
                     value="csvform"
                   />
-                  <label class="form-label">
-                    Label
+                  <span class="form-label">Label
+                      <span
+                        id="migux_apps_peers__peers_import___label_tooltip"
+                        class="fakelink"
+                        data-bind-hide="_label_tooltip"
+                        data-bind-onclick="tooltipShow"
+                      >
+                        <i>&quest;</i>
+                      </span>
+                      <span
+                        id="migux_apps_peers__peers_import___label_tooltip"
+                        class="fakelink"
+                        data-bind-show="_label_tooltip"
+                        data-bind-onclick="tooltipHide"
+                        >
+                        <i>&quest;</i>
+                        <span class="MiguxTooltip"
+                        >Label: The label is used as a free text identifer for the peer.
+                        You can use this to group/organize a collection of peers that you subsequently can search and or select against when going through your Accepted Peers.
+                        </span>
+                      </span>
                     <input
                       type="text"
                       class="form-control peers_label"
@@ -1015,9 +1096,28 @@
                       class="form-label__error"
                       data-bind-observe="_label_err"
                     ></span>
-                  </label>
-                  <label class="form-label">
-                    Kind
+                  </span>
+                  <span class="form-label">Kind
+                    <span
+                      id="migux_apps_peers__peers_import___kind_tooltip"
+                      class="fakelink"
+                      data-bind-hide="_kind_tooltip"
+                      data-bind-onclick="tooltipShow"
+                    >
+                      <i>&quest;</i>
+                    </span>
+                    <span
+                      id="migux_apps_peers__peers_import___kind_tooltip"
+                      class="fakelink"
+                      data-bind-show="_kind_tooltip"
+                      data-bind-onclick="tooltipHide"
+                      >
+                      <i>&quest;</i>
+                      <span class="MiguxTooltip"
+                        >Kind: is used to define the purpose for you granting the external peer access to ERDA. Be it for a Course, Project, or general Collaboration.
+                        Like the Label, this can be used by you to select a particular kind of group when going through your Accepted Peers.
+                      </span>
+                    </span>
                     <select
                       class="form-select peers_kind"
                       aria-label="Kind"
@@ -1025,6 +1125,7 @@
                       name="peers_import_kind"
                       data-bind-observe="kind"
                     >
+                      <option value="" disabled selected>Select a Kind (Required)</option>
                       <option value="course">Course</option>
                       <option value="project">Project</option>
                       <option value="collaboration">Collaboration</option>
@@ -1033,9 +1134,9 @@
                       class="form-label__error"
                       data-bind-observe="_kind_err"
                     ></span>
-                  </label>
+                  </span>
                   <span class="form-label">
-                    Expire
+                    End Date
                     <span
                       id="migux_apps_peers__peers_import___expire_tooltip"
                       class="fakelink"
@@ -1052,10 +1153,10 @@
                     >
                       <i>&quest;</i>
                       <span class="MiguxTooltip"
-                        >Expire: For security reasons peer accounts should be closed when no longer required.
-                        Expire is used to limit account access time for that purpose, and you can always extend it later if needed.
+                        >End Date: For security reasons peer accounts should be closed when no longer required.
+                        The End Date is used to limit account access time for that purpose, and you can always extend it later if needed.
                         For courses and workshops a few weeks or months should usually suffice, while projects and long-term collaboration often extend to months or years.
-                        Peer accounts still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided expire date.
+                        Peer accounts still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided End Date.
                       </span>
                     </span>
                     <input
@@ -1064,7 +1165,7 @@
                       aria-label="Access expiry date"
                       id="peers_import_expire"
                       name="peers_import_expire"
-                      placeholder="Expire date"
+                      placeholder="End Date"
                       pattern="[0-9/-]+"
                       data-bind-observe="expire"
                     />
