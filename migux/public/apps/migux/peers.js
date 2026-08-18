@@ -68,7 +68,8 @@ export class PeersApp extends AppBase {
   onInitialize() {
     this.summaryRequest();
 
-    this.searchAcceptedQuery();
+    // default to search for everything
+    this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
     this.searchRequestedQuery();
 
     this._options.afterInitialization(this);
@@ -291,7 +292,7 @@ export class PeersApp extends AppBase {
       await this.request("/peers/accepted/import", requestOptions, namespace);
 
       this.summaryRequest();
-      await this.searchAcceptedQuery();
+      await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
       this.importClear();
       this.changeTab(0);
     } catch (e) {
@@ -311,15 +312,15 @@ export class PeersApp extends AppBase {
 
   /* search accepted functions */
 
-  searchAcceptedQuery() {
+  searchAcceptedQuery({ defaultEmptyQuery = "" } = {}) {
     const namespace = this.state.formState("peers_accepted");
     // Empty query means that we will search for everything
-    if (namespace.query() == "") {
-      namespace.query("*");
+    if (namespace.query() == "" && defaultEmptyQuery !== "") {
+      namespace.query(defaultEmptyQuery);
     }
     const searchParams = {
-      query: namespace.query()
-    }
+      query: namespace.query(),
+    };
     return this.peersListingQuery("/peers/accepted", namespace, searchParams);
   }
 
@@ -363,7 +364,7 @@ export class PeersApp extends AppBase {
 
         // update the total and count values
         this.summaryRequest();
-        await this.searchAcceptedQuery();
+        await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
       })
       .catch((error) => {
         namespace._error_string(error.message);
@@ -420,7 +421,7 @@ export class PeersApp extends AppBase {
         // ensure the newly added peer wll be loaded
         this.summaryRequest();
         // refresh the accepted peers listing
-        await this.searchAcceptedQuery();
+        await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
         // refresh the requested peers so the peer
         // being accepted will disappear if shown
         await this.searchRequestedQuery();
@@ -474,8 +475,6 @@ export class PeersApp extends AppBase {
 
   searchRequestedQuery() {
     const namespace = this.state.formState("peers_requested");
-    
-
 
     const additionalParams = {};
     for (const observableName of ["query", "kind", "expire"]) {
@@ -523,7 +522,7 @@ export class PeersApp extends AppBase {
     };
     return this.request("/peers/new", requestOptions, namespace)
       .then(async () => {
-        await this.searchAcceptedQuery();
+        await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
         const newPeerNamespace = this.state.formState("peers_new");
         this.resetNamespace(newPeerNamespace);
         // Update the requested peers tab count and total state
@@ -639,7 +638,7 @@ export class PeersApp extends AppBase {
     ).then(async () => {
       this.editPeerCancel();
       this.changeTab(0);
-      await this.searchAcceptedQuery();
+      await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
     });
   }
 

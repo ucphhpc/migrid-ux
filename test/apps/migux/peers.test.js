@@ -435,9 +435,9 @@ describe("apps/peers", function () {
       });
 
       it("should reload the accepted listing", async () => {
-        const searchAcceptedQueryStub = sinon.stub(app, "searchAcceptedQuery");
+        const searchAcceptedQueryStub = sinon.spy(app, "searchAcceptedQuery");
         const acceptedPeersState = app.state.formState("peers_accepted");
-        acceptedPeersState.query("to be replaced");
+        acceptedPeersState.query("");
 
         await app.searchRequestedAccept(null, requestedPeersState);
 
@@ -451,7 +451,6 @@ describe("apps/peers", function () {
           "searchRequestedQuery",
         );
         requestedPeersState.query("not to be replaced");
-
         await app.searchRequestedAccept(null, requestedPeersState);
 
         assertTrue(searchRequestedQueryStub.calledOnce);
@@ -968,7 +967,7 @@ describe("apps/peers", function () {
     });
 
     describe("with the accepted peers tab", () => {
-      it("should open empty with placeholder text", async () => {
+      it("should open with placeholder text that it is searching for results", async () => {
         const app = bootstrap(document);
         app._fetch = makeFakeFetch({
           body: [],
@@ -980,7 +979,7 @@ describe("apps/peers", function () {
         const placeholderEl = formEl.querySelector(
           'div[data-bind-observe="results_placeholder"]',
         );
-        assertEqual(placeholderEl.innerHTML, "No results.");
+        assertEqual(placeholderEl.innerHTML, "Searching...");
       });
 
       describe("with peers displayed", () => {
