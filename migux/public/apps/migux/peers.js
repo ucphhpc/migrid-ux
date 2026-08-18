@@ -884,6 +884,7 @@ export const App = PeersApp;
         _expire_tooltip: false,
         _kind_tooltip: false,
         _organization_tooltip: false,
+        _country_tooltip: false,
       },
       peers_import: {
         ...PeersApp.CONST_ACCEPTED_IMPORT_FIELDS,

@@ -678,7 +678,27 @@
                     ></span>
                   </div>
                   <div>
-                    <label class="form-label">Country</label>
+                    <label class="form-label">Country
+                      <span
+                        id="migux_apps_peers__peers_new___country_tooltip"
+                        class="fakelink"
+                        data-bind-hide="_country_tooltip"
+                        data-bind-onclick="tooltipShow"
+                      >
+                        <i>&quest;</i>
+                      </span>
+                      <span
+                        id="migux_apps_peers__peers_new___country_tooltip"
+                        class="fakelink"
+                        data-bind-show="_country_tooltip"
+                        data-bind-onclick="tooltipHide"
+                      >
+                        <i>&quest;</i>
+                        <span class="MiguxTooltip"
+                          >The country where the peer is located when they signup for ERDA.
+                        </span>
+                      </span>
+                    </label>
                     <select
                       class="form-select peers_country"
                       aria-label="Country (ISO 3166)"
