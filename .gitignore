@@ -22,3 +22,5 @@ __pycache__/
 /migux.egg-info/
 /packages.lst
 
+# diff files
+*.diff
