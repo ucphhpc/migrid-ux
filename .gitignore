@@ -24,3 +24,6 @@ __pycache__/
 
 # diff files
 *.diff
+
+# package lock files
+*-lock.json
