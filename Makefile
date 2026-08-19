@@ -28,7 +28,7 @@ info:
 
 LOCAL_PYTHON_BIN = './envhelp/lpython'
 NPM_BIN = './envhelp/npm'
-NVM_VERSION = '0.40.4'
+NVM_VERSION = '0.40.5'
 
 .PHONY: build
 build: development
