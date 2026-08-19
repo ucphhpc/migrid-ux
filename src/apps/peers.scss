@@ -6,7 +6,7 @@
   // Styles
   @media (min-width: 992px) {
     .modal-dialog {
-      height: 800px;
+      min-height: 800px;
     }
   }
 
@@ -87,8 +87,8 @@
       justify-content: center;
       font-size: 0.9rem;
 
-      width: 110%;
-      height: 105%;
+      width: 1.5em;
+      height: 1.5em;
       border: 1px solid black;
       border-radius: 50%;
     }
