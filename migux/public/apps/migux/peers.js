@@ -869,7 +869,7 @@ export const App = PeersApp;
         expire: "",
         info_tooltip: false,
         _fullname_or_email_tooltip: false,
-        _expire_tooltip: false
+        _expire_tooltip: false,
       },
       peers_new: {
         ...PeersApp.CONST_NEW_PEERS_FIELDS,
@@ -886,6 +886,7 @@ export const App = PeersApp;
         _organization_tooltip: false,
         _country_tooltip: false,
         _email_tooltip: false,
+        _invite_email_tooltip: false,
       },
       peers_import: {
         ...PeersApp.CONST_ACCEPTED_IMPORT_FIELDS,
@@ -901,6 +902,7 @@ export const App = PeersApp;
         _label_tooltip: false,
         _kind_tooltip: false,
         _expire_tooltip: false,
+        _invite_email_tooltip: false,
       },
     },
   };

@@ -985,6 +985,25 @@
                   ></span>
                   <div class="tab-actions__controls">
                     <div class="form-switch" data-bind-hide="_is_editing">
+                      <span
+                        id="migux_apps_peers__peers_new___invite_email_tooltip"
+                        class="fakelink"
+                        data-bind-hide="_invite_email_tooltip"
+                        data-bind-onclick="tooltipShow"
+                      >
+                        <i>&quest;</i>
+                      </span>
+                      <span
+                        id="migux_apps_peers__peers_new___invite_email_tooltip"
+                        class="fakelink"
+                        data-bind-show="_invite_email_tooltip"
+                        data-bind-onclick="tooltipHide"
+                      >
+                        <i>&quest;</i>
+                        <span class="MiguxTooltip"
+                          >By enabling this toogle, the stated Peer Email will receive an invitation to create a user account once you press the Create button.
+                        </span>
+                      </span>
                       <label>
                         <input
                           type="checkbox"
@@ -1006,7 +1025,7 @@
                     </button>
                     <button
                       class="btn btn-primary"
-                      data-bind-onclick="newPeerCreate"
+                      data-bind-onclick="newPeerCreate"z
                       data-bind-hide="_is_editing"
                     >
                       Create
@@ -1213,6 +1232,25 @@ John Doe;DTU;john.doe@dtu.dk;DK;
                   ></span>
                   <div class="tab-actions__controls">
                     <div class="form-switch">
+                      <span
+                        id="migux_apps_peers__peers_import___invite_email_tooltip"
+                        class="fakelink"
+                        data-bind-hide="_invite_email_tooltip"
+                        data-bind-onclick="tooltipShow"
+                      >
+                        <i>&quest;</i>
+                      </span>
+                      <span
+                        id="migux_apps_peers__peers_import___invite_email_tooltip"
+                        class="fakelink"
+                        data-bind-show="_invite_email_tooltip"
+                        data-bind-onclick="tooltipHide"
+                      >
+                        <i>&quest;</i>
+                        <span class="MiguxTooltip"
+                          >By enabling this toogle, the stated Peer(s) Email(s) will receive an invitation to create a user account once you press the Import button.
+                        </span>
+                      </span>
                       <label>
                         <input
                           type="checkbox"
