@@ -255,54 +255,37 @@
                     name="peers_request_format"
                     value="userid"
                   />
-                  <span class="form-label">Label
+                  <span class="form-label">Peer(s) Full Name
                     <span
-                      id="migux_apps_peers__peers_requested___label_tooltip"
+                      id="migux_apps_peers__peers_requested___fullname_tooltip"
                       class="fakelink"
-                      data-bind-hide="_label_tooltip"
+                      data-bind-hide="_fullname_tooltip"
                       data-bind-onclick="tooltipShow"
                     >
                       <i>&quest;</i>
                     </span>
                     <span
-                      id="migux_apps_peers__peers_requested___label_tooltip"
+                      id="migux_apps_peers__peers_requested___fullname_tooltip"
                       class="fakelink"
-                      data-bind-show="_label_tooltip"
+                      data-bind-show="_fullname_tooltip"
                       data-bind-onclick="tooltipHide"
                       >
                       <i>&quest;</i>
                       <span class="MiguxTooltip"
-                        >The Label is used as a free text identifer for the peer.
-                        You can use this to group/organizee a collection of peers that you subsequently can search and or select against when going through your Accepted Peers.
+                        >You can use this field to search by the Full Name the external used to request a Peer account with.
                       </span>
                     </span>
                     <input
                       type="text"
                       class="form-control"
                       aria-label="Label for peers"
-                      placeholder="Peers name or label"
+                      placeholder="Search by Peer(s) Full Name"
                       data-bind-observe="query"
                       data-bind-onenter="searchRequestedQuery"
                     />
                   </span>
-                  <label class="form-label">
-                    Kind
-                    <select
-                      class="form-select peers_kind"
-                      aria-label="Kind"
-                      id="peers_request_kind"
-                      name="peers_request_kind"
-                      data-bind-observe="kind"
-                      data-bind-onchange="searchRequestedQuery"
-                    >
-                      <option value=""></option>
-                      <option value="course">Course</option>
-                      <option value="project">Project</option>
-                      <option value="collaboration">Collaboration</option>
-                    </select>
-                  </label>
                   <span class="form-label">
-                    End Date
+                    Filter by End Date
                     <span
                       id="migux_apps_peers__peers_requested___expire_tooltip"
                       class="fakelink"
@@ -1147,7 +1130,7 @@
                       aria-label="Label for peers"
                       id="peers_import_label"
                       name="peers_import_label"
-                      placeholder="Peers name or label"
+                      placeholder="Label"
                       pattern="[^ ]*"
                       data-bind-observe="label"
                     />

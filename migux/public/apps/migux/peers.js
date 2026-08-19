@@ -868,8 +868,8 @@ export const App = PeersApp;
         kind: "",
         expire: "",
         info_tooltip: false,
-        _label_tooltip: false,
-        _expire_tooltip: false,
+        _fullname_tooltip: false,
+        _expire_tooltip: false
       },
       peers_new: {
         ...PeersApp.CONST_NEW_PEERS_FIELDS,
