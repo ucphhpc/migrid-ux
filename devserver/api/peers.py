@@ -228,6 +228,11 @@ def migux_apps_peers__POST_accepted_update():
 
     example_data = EXAMPLE_DATA["GET /accepted"]
 
+    should_simulate_error = payload["label"] == "ERROR"
+    response = create_response(payload, simulate_error=should_simulate_error)
+    if should_simulate_error:
+        return response, 404
+
     found_peer = None
     for item in example_data:
         if item["distinguished_name"] == peer_dn:
@@ -235,10 +240,9 @@ def migux_apps_peers__POST_accepted_update():
             break
 
     if found_peer is None:
-        return 404, {}
+        return {}, 404
 
     found_peer.update(payload)
-
     return found_peer
 
 
@@ -291,6 +295,22 @@ def migux_apps_peers__POST_requested_delete():
     return {}
 
 
+def create_response(payload, simulate_error=False):
+    """
+    Helper function for creating the devserver API response
+    """
+    success_map = {"0": not simulate_error}
+    errors_map = {}
+
+    if simulate_error:
+        simulated_errors = {
+            key: "%s error occcurred" % (key,) for key in payload.keys()
+        }
+        errors_map = {"0": simulated_errors}
+
+    return {"success_map": success_map, "errors_map": errors_map}
+
+
 def migux_apps_peers__POST_new():
     """
     Request handler: POST /peers/new
@@ -301,23 +321,9 @@ def migux_apps_peers__POST_new():
     payload = request.json
     should_simulate_error = payload["full_name"] == "ERROR"
 
-    success_map = {
-        "0": not should_simulate_error,
-    }
-    errors_map = {}
-
+    response = create_response(payload, simulate_error=should_simulate_error)
     if should_simulate_error:
-        simulated_errors = {
-            key: "%s error occcurred" % (key,)
-            for key in payload.keys()
-            if key != "full_name"
-        }
-        errors_map = {"0": simulated_errors}
-
-        return {
-            "success_map": success_map,
-            "errors_map": errors_map,
-        }, 400
+        return response, 404
 
     # simulate a valid user payload by only allowing values
     # for keys that we expect to be present in a user entry
@@ -327,10 +333,7 @@ def migux_apps_peers__POST_new():
     user_dict.update({"distinguished_name": _fill_distinguished_name(payload)})
     example_data.append(user_dict)
 
-    return {
-        "success_map": success_map,
-        "errors_map": errors_map,
-    }
+    return response
 
 
 ROUTES = {

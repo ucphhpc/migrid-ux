@@ -652,6 +652,20 @@ export class PeersApp extends AppBase {
       })
       .catch((error) => {
         newPeerNamespace._error_string(error.message);
+
+        const errorData = error.data || {};
+        const errorsMap = errorData["errors_map"] || {};
+        const payloadErrors = errorsMap["0"];
+        if (!payloadErrors || Object.keys(payloadErrors).length === 0) {
+          return;
+        }
+
+        // The fieldNames to target with the error messages
+        this._unpackAndApplyErrorsMap(
+          payloadErrors,
+          PeersApp.CONST_EDIT_PEER_FIELD_NAMES,
+          newPeerNamespace,
+        );
       });
   }
 
