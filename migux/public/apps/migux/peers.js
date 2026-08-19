@@ -638,6 +638,8 @@ export class PeersApp extends AppBase {
       this.editPeerCancel();
       this.changeTab(0);
       await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
+    }).catch((error) => {
+        newPeerNamespace._error_string(error.message);
     });
   }
 
