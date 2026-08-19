@@ -1,0 +1,884 @@
+diff --git a/migux/public/apps/migux/peers.html b/migux/public/apps/migux/peers.html
+index c9d2a71..412ea19 100644
+--- a/migux/public/apps/migux/peers.html
++++ b/migux/public/apps/migux/peers.html
+@@ -125,7 +125,7 @@
+                       <th data-bind-show="col_state">State</th>
+                       <th data-bind-show="col_kind">Kind</th>
+                       <th data-bind-show="col_label">Label</th>
+-                      <th data-bind-show="col_expire">Expire</th>
++                      <th data-bind-show="col_expire">End Date</th>
+                       <th
+                         class="col-settings settings-aid"
+                         data-bind-onclick="peersListingSettingsToggle"
+@@ -181,7 +181,7 @@
+                             ><input
+                               type="checkbox"
+                               data-bind-checked="col_expire"
+-                            />Expire</label
++                            />End Date</label
+                           >
+                         </div>
+                       </th>
+@@ -255,67 +255,33 @@
+                     name="peers_request_format"
+                     value="userid"
+                   />
+-                  <label class="form-label">
+-                    Label
+-                    <input
+-                      type="text"
+-                      class="form-control"
+-                      aria-label="Label for peers"
+-                      placeholder="Peers name or label"
+-                      data-bind-observe="query"
+-                      data-bind-onenter="searchRequestedQuery"
+-                    />
+-                  </label>
+-                  <label class="form-label">
+-                    Kind
+-                    <select
+-                      class="form-select peers_kind"
+-                      aria-label="Kind"
+-                      id="peers_request_kind"
+-                      name="peers_request_kind"
+-                      data-bind-observe="kind"
+-                      data-bind-onchange="searchRequestedQuery"
+-                    >
+-                      <option value=""></option>
+-                      <option value="course">Course</option>
+-                      <option value="project">Project</option>
+-                      <option value="collaboration">Collaboration</option>
+-                    </select>
+-                  </label>
+-                  <span class="form-label">
+-                    Expire
++                  <span class="form-label">Peer(s) Full Name or Email
+                     <span
+-                      id="migux_apps_peers__peers_requested___expire_tooltip"
++                      id="migux_apps_peers__peers_requested___fullname_or_email_tooltip"
+                       class="fakelink"
+-                      data-bind-hide="_expire_tooltip"
++                      data-bind-hide="_fullname_or_email_tooltip"
+                       data-bind-onclick="tooltipShow"
+                     >
+                       <i>&quest;</i>
+                     </span>
+                     <span
+-                      id="migux_apps_peers__peers_requested___expire_tooltip"
++                      id="migux_apps_peers__peers_requested___fullname_or_email_tooltip"
+                       class="fakelink"
+-                      data-bind-show="_expire_tooltip"
++                      data-bind-show="_fullname_or_email_tooltip"
+                       data-bind-onclick="tooltipHide"
+-                    >
++                      >
+                       <i>&quest;</i>
+                       <span class="MiguxTooltip"
+-                        >Expire: For security reasons peer accounts should be closed when no longer required.
+-                        Expire is used to limit account access time for that purpose, and you can always extend it later if needed.
+-                        For courses and workshops a few weeks or months should usually suffice, while projects and long-term collaboration often extend to months or years.
+-                        Peer accounts still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided expire date.
++                        >You can use this field to search by the Full Name or Email the external used to request a Peer account with.
+                       </span>
+                     </span>
+                     <input
+-                      type="date"
+-                      class="form-control peers_expire"
+-                      aria-label="Access expiry date"
+-                      id="peers_request_expire"
+-                      name="peers_request_expire"
+-                      placeholder="Expire date"
+-                      pattern="[0-9/-]+"
+-                      data-bind-observe="expire"
+-                      data-bind-onchange="searchRequestedQuery"
++                      type="text"
++                      class="form-control"
++                      aria-label="Label for peers"
++                      placeholder="Search by Peer(s) Full Name"
++                      data-bind-observe="query"
++                      data-bind-onenter="searchRequestedQuery"
+                     />
+                   </span>
+                 </div>
+@@ -346,7 +312,7 @@
+                       <th data-bind-show="col_state">State</th>
+                       <th data-bind-show="col_kind">Kind</th>
+                       <th data-bind-show="col_label">Label</th>
+-                      <th data-bind-show="col_expire">Expire</th>
++                      <th data-bind-show="col_expire">End Date</th>
+                       <th
+                         class="col-settings settings-aid"
+                         data-bind-onclick="peersListingSettingsToggle"
+@@ -402,7 +368,7 @@
+                             ><input
+                               type="checkbox"
+                               data-bind-checked="col_expire"
+-                            />Expire</label
++                            />End Date</label
+                           >
+                         </div>
+                       </th>
+@@ -464,31 +430,71 @@
+                       name="peers_add_format"
+                       value="userid"
+                     />
+-                    <label class="form-label">Label</label>
++                    <label class="form-label">Label
++                      <span
++                        id="migux_apps_peers__peers_new___label_tooltip"
++                        class="fakelink"
++                        data-bind-hide="_label_tooltip"
++                        data-bind-onclick="tooltipShow"
++                      >
++                        <i>&quest;</i>
++                      </span>
++                      <span
++                        id="migux_apps_peers__peers_new___label_tooltip"
++                        class="fakelink"
++                        data-bind-show="_label_tooltip"
++                        data-bind-onclick="tooltipHide"
++                        >
++                        <i>&quest;</i>
++                        <span class="MiguxTooltip"
++                        >The Label is used as a free text identifer for the peer.
++                        You can use this to group/organizee a collection of peers that you subsequently can search and or select against when going through your Accepted Peers.
++                        </span>
++                      </span>
++                    </label>
+                     <input
+                       type="text"
+                       class="form-control peers_label"
+                       aria-label="Label for peers"
+                       id="peers_add_label"
+                       name="peers_add_label"
+-                      placeholder="Peers name or label (Required)"
+-                      data-bind-disabled="_is_editing"
++                      placeholder="Label (Required)"
+                       data-bind-observe="label"
+                       data-bind-onchange="newPeerFieldChange"
+                     />
+                     <span
+-                      class="form-label__error"
++                      class="form-label__error form-label__error--compensate"
+                       data-bind-observe="_label_err"
+                     ></span>
+                   </div>
+                   <div>
+-                    <label class="form-label">Kind</label>
++                    <label class="form-label">Kind
++                      <span
++                        id="migux_apps_peers__peers_new___kind_tooltip"
++                        class="fakelink"
++                        data-bind-hide="_kind_tooltip"
++                        data-bind-onclick="tooltipShow"
++                      >
++                        <i>&quest;</i>
++                      </span>
++                      <span
++                        id="migux_apps_peers__peers_new___kind_tooltip"
++                        class="fakelink"
++                        data-bind-show="_kind_tooltip"
++                        data-bind-onclick="tooltipHide"
++                        >
++                        <i>&quest;</i>
++                        <span class="MiguxTooltip"
++                          > Is used to define the purpose for you granting the external peer access to ERDA. Be it for a Course, Project, or general Collaboration.
++                          Like the Label, this can be used by you to select a particular kind of group when going through your Accepted Peers.
++                        </span>
++                      </span>
++                    </label>
+                     <select
+                       id="peers_add_kind"
+                       class="form-select peers_kind"
+                       aria-label="Kind"
+                       name="peers_add_kind"
+-                      data-bind-disabled="_is_editing"
+                       data-bind-observe="kind"
+                       data-bind-onchange="newPeerFieldChange"
+                     >
+@@ -503,7 +509,7 @@
+                     ></span>
+                   </div>
+                   <div>
+-                    <label class=form-label>Expire
++                    <label class=form-label>End Date
+                       <span
+                         id="migux_apps_peers__peers_new___expire_tooltip"
+                         class="fakelink"
+@@ -520,10 +526,10 @@
+                         >
+                         <i>&quest;</i>
+                         <span class="MiguxTooltip"
+-                          >Expire: For security reasons peer accounts should be closed when no longer required.
+-                          Expire is used to limit account access time for that purpose, and you can always extend it later if needed.
++                          >For security reasons peer accounts should be closed when no longer required.
++                          The End Date is used to limit account access time for that purpose, and you can always extend it later if needed.
+                           For courses and workshops a few weeks or months should usually suffice, while projects and long-term collaboration often extend to months or years.
+-                          Peer accounts still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided expire date.
++                          Peer accounts still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided End Date.
+                         </span>
+                       </span>
+                     </label>
+@@ -533,12 +539,12 @@
+                       aria-label="Access expiry date"
+                       id="peers_add_expire"
+                       name="peers_add_expire"
+-                      placeholder="Expire date"
++                      placeholder="End Date"
+                       data-bind-observe="expire"
+                       data-bind-onchange="newPeerFieldChange"
+                     />
+                     <span
+-                      class="form-label__error"
++                      class="form-label__error form-label__error--compensate"
+                       data-bind-observe="_expire_err"
+                     ></span>
+                   </div>
+@@ -556,12 +562,32 @@
+                       data-bind-onchange="newPeerFieldChange"
+                     />
+                     <span
+-                      class="form-label__error"
++                      class="form-label__error form-label__error--compensate"
+                       data-bind-observe="_full_name_err"
+                     ></span>
+                   </div>
+                   <div>
+-                    <label class="form-label">Organization</label>
++                    <label class="form-label">Organization
++                      <span
++                        id="migux_apps_peers__peers_new___organization_tooltip"
++                        class="fakelink"
++                        data-bind-hide="_organization_tooltip"
++                        data-bind-onclick="tooltipShow"
++                      >
++                        <i>&quest;</i>
++                      </span>
++                      <span
++                        id="migux_apps_peers__peers_new___organization_tooltip"
++                        class="fakelink"
++                        data-bind-show="_organization_tooltip"
++                        data-bind-onclick="tooltipHide"
++                      >
++                        <i>&quest;</i>
++                        <span class="MiguxTooltip"
++                          >The organization that the peer is associated with when the Peer account is created.
++                        </span>
++                      </span>
++                    </label>
+                     <input
+                       type="text"
+                       class="form-control peers_org"
+@@ -579,7 +605,27 @@
+                     ></span>
+                   </div>
+                   <div>
+-                    <label class="form-label">Email</label>
++                    <label class="form-label">Email
++                      <span
++                        id="migux_apps_peers__peers_new___email_tooltip"
++                        class="fakelink"
++                        data-bind-hide="_email_tooltip"
++                        data-bind-onclick="tooltipShow"
++                      >
++                        <i>&quest;</i>
++                      </span>
++                      <span
++                        id="migux_apps_peers__peers_new___email_tooltip"
++                        class="fakelink"
++                        data-bind-show="_email_tooltip"
++                        data-bind-onclick="tooltipHide"
++                      >
++                        <i>&quest;</i>
++                        <span class="MiguxTooltip"
++                          >An email address you have verified belongs to the Peer. This will be the mailbox that receives the Peer invitation from you to create a user account on the service. Furthermore it will also be their username that they will use to login to the service with. Do note that the user will also recieve expiration warnings (30, 10, and 3 days) before the specified End Date at this email.
++                        </span>
++                      </span>
++                    </label>
+                     <input
+                       type="email"
+                       class="form-control peers_email"
+@@ -597,7 +643,27 @@
+                     ></span>
+                   </div>
+                   <div>
+-                    <label class="form-label">Country</label>
++                    <label class="form-label">Country
++                      <span
++                        id="migux_apps_peers__peers_new___country_tooltip"
++                        class="fakelink"
++                        data-bind-hide="_country_tooltip"
++                        data-bind-onclick="tooltipShow"
++                      >
++                        <i>&quest;</i>
++                      </span>
++                      <span
++                        id="migux_apps_peers__peers_new___country_tooltip"
++                        class="fakelink"
++                        data-bind-show="_country_tooltip"
++                        data-bind-onclick="tooltipHide"
++                      >
++                        <i>&quest;</i>
++                        <span class="MiguxTooltip"
++                          >The country where the peer is located when they signup for ERDA.
++                        </span>
++                      </span>
++                    </label>
+                     <select
+                       class="form-select peers_country"
+                       aria-label="Country (ISO 3166)"
+@@ -917,6 +983,25 @@
+                   ></span>
+                   <div class="tab-actions__controls">
+                     <div class="form-switch" data-bind-hide="_is_editing">
++                      <span
++                        id="migux_apps_peers__peers_new___invite_email_tooltip"
++                        class="fakelink"
++                        data-bind-hide="_invite_email_tooltip"
++                        data-bind-onclick="tooltipShow"
++                      >
++                        <i>&quest;</i>
++                      </span>
++                      <span
++                        id="migux_apps_peers__peers_new___invite_email_tooltip"
++                        class="fakelink"
++                        data-bind-show="_invite_email_tooltip"
++                        data-bind-onclick="tooltipHide"
++                      >
++                        <i>&quest;</i>
++                        <span class="MiguxTooltip"
++                          >By enabling this toogle, the stated Peer Email will receive an invitation to create a user account once you press the Create button.
++                        </span>
++                      </span>
+                       <label>
+                         <input
+                           type="checkbox"
+@@ -938,7 +1023,7 @@
+                     </button>
+                     <button
+                       class="btn btn-primary"
+-                      data-bind-onclick="newPeerCreate"
++                      data-bind-onclick="newPeerCreate"z
+                       data-bind-hide="_is_editing"
+                     >
+                       Create
+@@ -999,15 +1084,34 @@
+                     name="peers_import_format"
+                     value="csvform"
+                   />
+-                  <label class="form-label">
+-                    Label
++                  <span class="form-label">Label
++                      <span
++                        id="migux_apps_peers__peers_import___label_tooltip"
++                        class="fakelink"
++                        data-bind-hide="_label_tooltip"
++                        data-bind-onclick="tooltipShow"
++                      >
++                        <i>&quest;</i>
++                      </span>
++                      <span
++                        id="migux_apps_peers__peers_import___label_tooltip"
++                        class="fakelink"
++                        data-bind-show="_label_tooltip"
++                        data-bind-onclick="tooltipHide"
++                        >
++                        <i>&quest;</i>
++                        <span class="MiguxTooltip"
++                        >Label: The label is used as a free text identifer for the peer.
++                        You can use this to group/organize a collection of peers that you subsequently can search and or select against when going through your Accepted Peers.
++                        </span>
++                      </span>
+                     <input
+                       type="text"
+                       class="form-control peers_label"
+                       aria-label="Label for peers"
+                       id="peers_import_label"
+                       name="peers_import_label"
+-                      placeholder="Peers name or label"
++                      placeholder="Label (Required)"
+                       pattern="[^ ]*"
+                       data-bind-observe="label"
+                     />
+@@ -1015,9 +1119,28 @@
+                       class="form-label__error"
+                       data-bind-observe="_label_err"
+                     ></span>
+-                  </label>
+-                  <label class="form-label">
+-                    Kind
++                  </span>
++                  <span class="form-label">Kind
++                    <span
++                      id="migux_apps_peers__peers_import___kind_tooltip"
++                      class="fakelink"
++                      data-bind-hide="_kind_tooltip"
++                      data-bind-onclick="tooltipShow"
++                    >
++                      <i>&quest;</i>
++                    </span>
++                    <span
++                      id="migux_apps_peers__peers_import___kind_tooltip"
++                      class="fakelink"
++                      data-bind-show="_kind_tooltip"
++                      data-bind-onclick="tooltipHide"
++                      >
++                      <i>&quest;</i>
++                      <span class="MiguxTooltip"
++                        >Kind: is used to define the purpose for you granting the external peer access to ERDA. Be it for a Course, Project, or general Collaboration.
++                        Like the Label, this can be used by you to select a particular kind of group when going through your Accepted Peers.
++                      </span>
++                    </span>
+                     <select
+                       class="form-select peers_kind"
+                       aria-label="Kind"
+@@ -1025,6 +1148,7 @@
+                       name="peers_import_kind"
+                       data-bind-observe="kind"
+                     >
++                      <option value="" disabled selected>Select a Kind (Required)</option>
+                       <option value="course">Course</option>
+                       <option value="project">Project</option>
+                       <option value="collaboration">Collaboration</option>
+@@ -1033,9 +1157,9 @@
+                       class="form-label__error"
+                       data-bind-observe="_kind_err"
+                     ></span>
+-                  </label>
++                  </span>
+                   <span class="form-label">
+-                    Expire
++                    End Date
+                     <span
+                       id="migux_apps_peers__peers_import___expire_tooltip"
+                       class="fakelink"
+@@ -1052,10 +1176,10 @@
+                     >
+                       <i>&quest;</i>
+                       <span class="MiguxTooltip"
+-                        >Expire: For security reasons peer accounts should be closed when no longer required.
+-                        Expire is used to limit account access time for that purpose, and you can always extend it later if needed.
++                        >End Date: For security reasons peer accounts should be closed when no longer required.
++                        The End Date is used to limit account access time for that purpose, and you can always extend it later if needed.
+                         For courses and workshops a few weeks or months should usually suffice, while projects and long-term collaboration often extend to months or years.
+-                        Peer accounts still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided expire date.
++                        Peer accounts still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided End Date.
+                       </span>
+                     </span>
+                     <input
+@@ -1064,7 +1188,7 @@
+                       aria-label="Access expiry date"
+                       id="peers_import_expire"
+                       name="peers_import_expire"
+-                      placeholder="Expire date"
++                      placeholder="End Date"
+                       pattern="[0-9/-]+"
+                       data-bind-observe="expire"
+                     />
+@@ -1106,6 +1230,25 @@ John Doe;DTU;john.doe@dtu.dk;DK;
+                   ></span>
+                   <div class="tab-actions__controls">
+                     <div class="form-switch">
++                      <span
++                        id="migux_apps_peers__peers_import___invite_email_tooltip"
++                        class="fakelink"
++                        data-bind-hide="_invite_email_tooltip"
++                        data-bind-onclick="tooltipShow"
++                      >
++                        <i>&quest;</i>
++                      </span>
++                      <span
++                        id="migux_apps_peers__peers_import___invite_email_tooltip"
++                        class="fakelink"
++                        data-bind-show="_invite_email_tooltip"
++                        data-bind-onclick="tooltipHide"
++                      >
++                        <i>&quest;</i>
++                        <span class="MiguxTooltip"
++                          >By enabling this toogle, the stated Peer(s) Email(s) will receive an invitation to create a user account once you press the Import button.
++                        </span>
++                      </span>
+                       <label>
+                         <input
+                           type="checkbox"
+diff --git a/migux/public/apps/migux/peers.js b/migux/public/apps/migux/peers.js
+index 2a525ac..1e8dff4 100644
+--- a/migux/public/apps/migux/peers.js
++++ b/migux/public/apps/migux/peers.js
+@@ -68,8 +68,9 @@ export class PeersApp extends AppBase {
+   onInitialize() {
+     this.summaryRequest();
+ 
+-    this.searchAcceptedQuery();
+-    this.searchRequestedQuery();
++    // default to search for everything
++    this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
++    this.searchRequestedQuery({ defaultEmptyQuery: "*" });
+ 
+     this._options.afterInitialization(this);
+   }
+@@ -291,7 +292,7 @@ export class PeersApp extends AppBase {
+       await this.request("/peers/accepted/import", requestOptions, namespace);
+ 
+       this.summaryRequest();
+-      await this.searchAcceptedQuery();
++      await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
+       this.importClear();
+       this.changeTab(0);
+     } catch (e) {
+@@ -311,15 +312,25 @@ export class PeersApp extends AppBase {
+ 
+   /* search accepted functions */
+ 
+-  searchAcceptedQuery() {
++  searchAcceptedQuery({ defaultEmptyQuery = "" } = {}) {
+     const namespace = this.state.formState("peers_accepted");
+     // Empty query means that we will search for everything
+-    if (namespace.query() == "") {
+-      namespace.query("*");
++    if (namespace.query() == "" && defaultEmptyQuery !== "") {
++      namespace.query(defaultEmptyQuery);
+     }
+     const searchParams = {
+-      query: namespace.query()
+-    }
++      query: namespace.query(),
++    };
++
++    // TODO allow kind to be set as a filter
++    // const additionalParams = {};
++    // for (const observableName of ["kind"]) {
++    //   const observed = namespace[observableName];
++    //   let value;
++    //   if ((value = observed())) {
++    //     additionalParams[observableName] = value;
++    //   }
++
+     return this.peersListingQuery("/peers/accepted", namespace, searchParams);
+   }
+ 
+@@ -363,7 +374,7 @@ export class PeersApp extends AppBase {
+ 
+         // update the total and count values
+         this.summaryRequest();
+-        await this.searchAcceptedQuery();
++        await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
+       })
+       .catch((error) => {
+         namespace._error_string(error.message);
+@@ -382,7 +393,6 @@ export class PeersApp extends AppBase {
+   /* search requested functions */
+ 
+   searchRequestedAccept(_, namespace) {
+-    const acceptedNamespace = this.state.formState("peers_accepted");
+     const resultsRows = namespace.results_rows();
+     const distinguished_names_for_accept = [];
+ 
+@@ -420,10 +430,10 @@ export class PeersApp extends AppBase {
+         // ensure the newly added peer wll be loaded
+         this.summaryRequest();
+         // refresh the accepted peers listing
+-        await this.searchAcceptedQuery();
++        await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
+         // refresh the requested peers so the peer
+         // being accepted will disappear if shown
+-        await this.searchRequestedQuery();
++        await this.searchRequestedQuery({ defaultEmptyQuery: "*" });
+       })
+       .catch((error) => {
+         namespace._error_string(error.message);
+@@ -465,32 +475,24 @@ export class PeersApp extends AppBase {
+ 
+         // update total
+         this.summaryRequest();
+-        await this.searchRequestedQuery();
++        await this.searchRequestedQuery({ defaultEmptyQuery: "*" });
+       })
+       .catch((error) => {
+         namespace._error_string(error.message);
+       });
+   }
+ 
+-  searchRequestedQuery() {
++  searchRequestedQuery({ defaultEmptyQuery = "" } = {}) {
+     const namespace = this.state.formState("peers_requested");
+-    
+-
+-
+-    const additionalParams = {};
+-    for (const observableName of ["query", "kind", "expire"]) {
+-      const observed = namespace[observableName];
+-      let value;
+-      if ((value = observed())) {
+-        additionalParams[observableName] = value;
+-      }
++    // Empty query means that we will search for everything
++    if (namespace.query() == "" && defaultEmptyQuery !== "") {
++      namespace.query(defaultEmptyQuery);
+     }
++    const searchParams = {
++      query: namespace.query(),
++    };
+ 
+-    return this.peersListingQuery(
+-      "/peers/requested",
+-      namespace,
+-      additionalParams,
+-    );
++    return this.peersListingQuery("/peers/requested", namespace, searchParams);
+   }
+ 
+   searchRequestedSelectAll({ value: selectedValue }, namespace) {
+@@ -504,7 +506,7 @@ export class PeersApp extends AppBase {
+     if (wereResultsCleared) {
+       // results are cleared when the column seleciton changes, so we infer
+       // infer such a change occurred and thus must be refresh the results
+-      this.searchRequestedQuery();
++      this.searchRequestedQuery({ defaultEmptyQuery: "*" });
+     }
+   }
+ 
+@@ -523,7 +525,7 @@ export class PeersApp extends AppBase {
+     };
+     return this.request("/peers/new", requestOptions, namespace)
+       .then(async () => {
+-        await this.searchAcceptedQuery();
++        await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
+         const newPeerNamespace = this.state.formState("peers_new");
+         this.resetNamespace(newPeerNamespace);
+         // Update the requested peers tab count and total state
+@@ -550,6 +552,12 @@ export class PeersApp extends AppBase {
+   }
+ 
+   resetNamespace(namespace) {
++    if (namespace === undefined) {
++      throw new Error(
++        "Can't reset the namespace when an undefined was recieved",
++      );
++    }
++
+     this.state.resetNamespace(namespace);
+   }
+ 
+@@ -610,7 +618,7 @@ export class PeersApp extends AppBase {
+ 
+   editPeerCancel() {
+     const newPeerNamespace = this.state.formState("peers_new");
+-    this.resetNamespace();
++    this.resetNamespace(newPeerNamespace);
+     newPeerNamespace._is_editing(false);
+     newPeerNamespace._editing_dn(NO_VALUE);
+   }
+@@ -636,11 +644,15 @@ export class PeersApp extends AppBase {
+         data: values,
+       },
+       newPeerNamespace,
+-    ).then(async () => {
+-      this.editPeerCancel();
+-      this.changeTab(0);
+-      await this.searchAcceptedQuery();
+-    });
++    )
++      .then(async () => {
++        this.editPeerCancel();
++        this.changeTab(0);
++        await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
++      })
++      .catch((error) => {
++        newPeerNamespace._error_string(error.message);
++      });
+   }
+ 
+   /* other */
+@@ -762,7 +774,7 @@ PeersApp.CONST_ACCEPTED_IMPORT_FIELDS = {
+   label: "",
+ };
+ 
+-PeersApp.CONST_EDIT_PEER_FIELD_NAMES = ["expire"];
++PeersApp.CONST_EDIT_PEER_FIELD_NAMES = ["expire", "kind", "label"];
+ 
+ PeersApp.CONST_NEW_PEERS_FIELDS = {
+   full_name: "",
+@@ -857,8 +869,8 @@ export const App = PeersApp;
+         all: false,
+         count: 0,
+         total: 0,
+-        _error_string: "",
+         tooltip: false,
++        _error_string: "",
+       },
+       peers_requested: {
+         ...makePeersListingState({ showColLabel: false }),
+@@ -870,6 +882,7 @@ export const App = PeersApp;
+         kind: "",
+         expire: "",
+         info_tooltip: false,
++        _fullname_or_email_tooltip: false,
+         _expire_tooltip: false,
+       },
+       peers_new: {
+@@ -881,7 +894,13 @@ export const App = PeersApp;
+         _is_editing: false,
+         _editing_dn: NO_VALUE,
+         _error_string: "",
++        _label_tooltip: false,
+         _expire_tooltip: false,
++        _kind_tooltip: false,
++        _organization_tooltip: false,
++        _country_tooltip: false,
++        _email_tooltip: false,
++        _invite_email_tooltip: false,
+       },
+       peers_import: {
+         ...PeersApp.CONST_ACCEPTED_IMPORT_FIELDS,
+@@ -892,9 +911,12 @@ export const App = PeersApp;
+         expire: "",
+         kind: "",
+         label: "",
++        info_tooltip: false,
+         _error_string: "",
++        _label_tooltip: false,
++        _kind_tooltip: false,
+         _expire_tooltip: false,
+-        info_tooltip: false,
++        _invite_email_tooltip: false,
+       },
+     },
+   };
+diff --git a/src/apps/peers.scss b/src/apps/peers.scss
+index 2e45ba9..fd73164 100644
+--- a/src/apps/peers.scss
++++ b/src/apps/peers.scss
+@@ -6,7 +6,7 @@
+   // Styles
+   @media (min-width: 992px) {
+     .modal-dialog {
+-      height: 800px;
++      min-height: 800px;
+     }
+   }
+ 
+@@ -85,10 +85,10 @@
+     i {
+       display: inline-flex;
+       justify-content: center;
+-      font-size: 1rem;
++      font-size: 0.9rem;
+ 
+-      height: 110%;
+-      width: 110%;
++      width: 1.5em;
++      height: 1.5em;
+       border: 1px solid black;
+       border-radius: 50%;
+     }
+@@ -127,6 +127,8 @@
+       }
+ 
+       &--compensate {
++        min-height: calc(2 * var(--mig-ux-field-margin));
++
+         p {
+           top: calc(-1 * var(--mig-ux-field-margin));
+         }
+@@ -287,6 +289,7 @@
+     .form-switch {
+       display: flex;
+       align-items: center;
++      gap: 3em;
+     }
+   }
+ 
+diff --git a/test/apps/migux/peers.test.js b/test/apps/migux/peers.test.js
+index defc83f..85cdc5c 100644
+--- a/test/apps/migux/peers.test.js
++++ b/test/apps/migux/peers.test.js
+@@ -284,31 +284,6 @@ describe("apps/peers", function () {
+       // query is unchanged
+       assertEqual(namespace.query(), "show me peers");
+     });
+-
+-    it("should issue the request and filter by expire", async () => {
+-      const fakeFetch = makeFakeFetch({ body: TEST_SEARCH_REQUESTED_RESULT });
+-      const state = createState(AppBase.definition(PeersApp));
+-      const namespace = state.formState("peers_requested");
+-      const instance = new PeersApp(state, { _fetch: fakeFetch });
+-
+-      namespace.expire("2223-12-10");
+-
+-      await instance.searchRequestedQuery();
+-
+-      assertTrue(fakeFetch.calledOnce);
+-
+-      const queryArgs = fakeFetch.getCallQueryArgs(0);
+-      assertEqual(queryArgs, {
+-        expire: "2223-12-10",
+-        fields: "full_name,email,organization,kind,expire",
+-      });
+-
+-      const theCall = fakeFetch.getCall(0);
+-      assertEqual(theCall.args, [
+-        "/peers/requested?expire=2223-12-10&fields=full_name%2Cemail%2Corganization%2Ckind%2Cexpire",
+-        { method: "GET" },
+-      ]);
+-    });
+   });
+ 
+   describe("with existing accepted peers", () => {
+@@ -435,9 +410,9 @@ describe("apps/peers", function () {
+       });
+ 
+       it("should reload the accepted listing", async () => {
+-        const searchAcceptedQueryStub = sinon.stub(app, "searchAcceptedQuery");
++        const searchAcceptedQueryStub = sinon.spy(app, "searchAcceptedQuery");
+         const acceptedPeersState = app.state.formState("peers_accepted");
+-        acceptedPeersState.query("to be replaced");
++        acceptedPeersState.query("");
+ 
+         await app.searchRequestedAccept(null, requestedPeersState);
+ 
+@@ -451,7 +426,6 @@ describe("apps/peers", function () {
+           "searchRequestedQuery",
+         );
+         requestedPeersState.query("not to be replaced");
+-
+         await app.searchRequestedAccept(null, requestedPeersState);
+ 
+         assertTrue(searchRequestedQueryStub.calledOnce);
+@@ -968,7 +942,7 @@ describe("apps/peers", function () {
+     });
+ 
+     describe("with the accepted peers tab", () => {
+-      it("should open empty with placeholder text", async () => {
++      it("should open with placeholder text that it is searching for results", async () => {
+         const app = bootstrap(document);
+         app._fetch = makeFakeFetch({
+           body: [],
+@@ -980,7 +954,7 @@ describe("apps/peers", function () {
+         const placeholderEl = formEl.querySelector(
+           'div[data-bind-observe="results_placeholder"]',
+         );
+-        assertEqual(placeholderEl.innerHTML, "No results.");
++        assertEqual(placeholderEl.innerHTML, "Searching...");
+       });
+ 
+       describe("with peers displayed", () => {
+@@ -1012,7 +986,7 @@ describe("apps/peers", function () {
+     });
+ 
+     describe("with the requested peers tab", () => {
+-      it("should open empty with placeholder text", async () => {
++      it("should open with placeholder text that it is searching for results", async () => {
+         const app = bootstrap(document);
+         app._fetch = makeFakeFetch({
+           body: [],
+@@ -1024,7 +998,7 @@ describe("apps/peers", function () {
+         const placeholderEl = formEl.querySelector(
+           'div[data-bind-observe="results_placeholder"]',
+         );
+-        assertEqual(placeholderEl.innerHTML, "No results.");
++        assertEqual(placeholderEl.innerHTML, "Searching...");
+       });
+ 
+       it("should load requested peers", async () => {
