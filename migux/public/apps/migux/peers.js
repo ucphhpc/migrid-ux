@@ -868,7 +868,7 @@ export const App = PeersApp;
         kind: "",
         expire: "",
         info_tooltip: false,
-        _fullname_tooltip: false,
+        _fullname_or_email_tooltip: false,
         _expire_tooltip: false
       },
       peers_new: {

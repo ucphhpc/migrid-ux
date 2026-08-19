@@ -255,24 +255,24 @@
                     name="peers_request_format"
                     value="userid"
                   />
-                  <span class="form-label">Peer(s) Full Name
+                  <span class="form-label">Peer(s) Full Name or Email
                     <span
-                      id="migux_apps_peers__peers_requested___fullname_tooltip"
+                      id="migux_apps_peers__peers_requested___fullname_or_email_tooltip"
                       class="fakelink"
-                      data-bind-hide="_fullname_tooltip"
+                      data-bind-hide="_fullname_or_email_tooltip"
                       data-bind-onclick="tooltipShow"
                     >
                       <i>&quest;</i>
                     </span>
                     <span
-                      id="migux_apps_peers__peers_requested___fullname_tooltip"
+                      id="migux_apps_peers__peers_requested___fullname_or_email_tooltip"
                       class="fakelink"
-                      data-bind-show="_fullname_tooltip"
+                      data-bind-show="_fullname_or_email_tooltip"
                       data-bind-onclick="tooltipHide"
                       >
                       <i>&quest;</i>
                       <span class="MiguxTooltip"
-                        >You can use this field to search by the Full Name the external used to request a Peer account with.
+                        >You can use this field to search by the Full Name or Email the external used to request a Peer account with.
                       </span>
                     </span>
                     <input
@@ -282,42 +282,6 @@
                       placeholder="Search by Peer(s) Full Name"
                       data-bind-observe="query"
                       data-bind-onenter="searchRequestedQuery"
-                    />
-                  </span>
-                  <span class="form-label">
-                    Filter by End Date
-                    <span
-                      id="migux_apps_peers__peers_requested___expire_tooltip"
-                      class="fakelink"
-                      data-bind-hide="_expire_tooltip"
-                      data-bind-onclick="tooltipShow"
-                    >
-                      <i>&quest;</i>
-                    </span>
-                    <span
-                      id="migux_apps_peers__peers_requested___expire_tooltip"
-                      class="fakelink"
-                      data-bind-show="_expire_tooltip"
-                      data-bind-onclick="tooltipHide"
-                    >
-                      <i>&quest;</i>
-                      <span class="MiguxTooltip"
-                        >End Date: For security reasons peer accounts should be closed when no longer required.
-                        The End Date is used to limit account access time for that purpose, and you can always extend it later if needed.
-                        For courses and workshops a few weeks or months should usually suffice, while projects and long-term collaboration often extend to months or years.
-                        Peer account still need to be renewed at least annually, but the peer users can do so themselves without your repeated explicit acceptance, as long as it does not exceed your provided End Date.
-                      </span>
-                    </span>
-                    <input
-                      type="date"
-                      class="form-control peers_expire"
-                      aria-label="Access expiry date"
-                      id="peers_request_expire"
-                      name="peers_request_expire"
-                      placeholder="End Date"
-                      pattern="[0-9/-]+"
-                      data-bind-observe="expire"
-                      data-bind-onchange="searchRequestedQuery"
                     />
                   </span>
                 </div>
