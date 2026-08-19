@@ -62,6 +62,22 @@ def _unconcatify(value, sep):
     return result
 
 
+def _create_response(payload, simulate_error=False):
+    """
+    Helper function for creating the devserver API response
+    """
+    success_map = {"0": not simulate_error}
+    errors_map = {}
+
+    if simulate_error:
+        simulated_errors = {
+            key: "%s error occcurred" % (key,) for key in payload.keys()
+        }
+        errors_map = {"0": simulated_errors}
+
+    return {"success_map": success_map, "errors_map": errors_map}
+
+
 def migux_apps_peers__GET_summary():
     """
     Request handler: GET /peers/summary
@@ -229,7 +245,7 @@ def migux_apps_peers__POST_accepted_update():
     example_data = EXAMPLE_DATA["GET /accepted"]
 
     should_simulate_error = payload["label"] == "ERROR"
-    response = create_response(payload, simulate_error=should_simulate_error)
+    response = _create_response(payload, simulate_error=should_simulate_error)
     if should_simulate_error:
         return response, 404
 
@@ -295,22 +311,6 @@ def migux_apps_peers__POST_requested_delete():
     return {}
 
 
-def create_response(payload, simulate_error=False):
-    """
-    Helper function for creating the devserver API response
-    """
-    success_map = {"0": not simulate_error}
-    errors_map = {}
-
-    if simulate_error:
-        simulated_errors = {
-            key: "%s error occcurred" % (key,) for key in payload.keys()
-        }
-        errors_map = {"0": simulated_errors}
-
-    return {"success_map": success_map, "errors_map": errors_map}
-
-
 def migux_apps_peers__POST_new():
     """
     Request handler: POST /peers/new
@@ -321,7 +321,7 @@ def migux_apps_peers__POST_new():
     payload = request.json
     should_simulate_error = payload["full_name"] == "ERROR"
 
-    response = create_response(payload, simulate_error=should_simulate_error)
+    response = _create_response(payload, simulate_error=should_simulate_error)
     if should_simulate_error:
         return response, 404
 
