@@ -774,7 +774,7 @@ PeersApp.CONST_ACCEPTED_IMPORT_FIELDS = {
   label: "",
 };
 
-PeersApp.CONST_EDIT_PEER_FIELD_NAMES = ["expire"];
+PeersApp.CONST_EDIT_PEER_FIELD_NAMES = ["expire", "kind", "label"];
 
 PeersApp.CONST_NEW_PEERS_FIELDS = {
   full_name: "",
