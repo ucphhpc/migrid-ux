@@ -548,6 +548,10 @@ export class PeersApp extends AppBase {
   }
 
   resetNamespace(namespace) {
+    if (namespace === undefined) {
+      throw new Error("Can't reset the namespace when an undefined was recieved");
+    }
+
     this.state.resetNamespace(namespace);
   }
 
@@ -608,7 +612,7 @@ export class PeersApp extends AppBase {
 
   editPeerCancel() {
     const newPeerNamespace = this.state.formState("peers_new");
-    this.resetNamespace();
+    this.resetNamespace(newPeerNamespace);
     newPeerNamespace._is_editing(false);
     newPeerNamespace._editing_dn(NO_VALUE);
   }
