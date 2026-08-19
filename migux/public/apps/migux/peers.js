@@ -549,7 +549,9 @@ export class PeersApp extends AppBase {
 
   resetNamespace(namespace) {
     if (namespace === undefined) {
-      throw new Error("Can't reset the namespace when an undefined was recieved");
+      throw new Error(
+        "Can't reset the namespace when an undefined was recieved",
+      );
     }
 
     this.state.resetNamespace(namespace);
@@ -638,13 +640,15 @@ export class PeersApp extends AppBase {
         data: values,
       },
       newPeerNamespace,
-    ).then(async () => {
-      this.editPeerCancel();
-      this.changeTab(0);
-      await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
-    }).catch((error) => {
+    )
+      .then(async () => {
+        this.editPeerCancel();
+        this.changeTab(0);
+        await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
+      })
+      .catch((error) => {
         newPeerNamespace._error_string(error.message);
-    });
+      });
   }
 
   /* other */
