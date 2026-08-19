@@ -284,31 +284,6 @@ describe("apps/peers", function () {
       // query is unchanged
       assertEqual(namespace.query(), "show me peers");
     });
-
-    it("should issue the request and filter by expire", async () => {
-      const fakeFetch = makeFakeFetch({ body: TEST_SEARCH_REQUESTED_RESULT });
-      const state = createState(AppBase.definition(PeersApp));
-      const namespace = state.formState("peers_requested");
-      const instance = new PeersApp(state, { _fetch: fakeFetch });
-
-      namespace.expire("2223-12-10");
-
-      await instance.searchRequestedQuery();
-
-      assertTrue(fakeFetch.calledOnce);
-
-      const queryArgs = fakeFetch.getCallQueryArgs(0);
-      assertEqual(queryArgs, {
-        expire: "2223-12-10",
-        fields: "full_name,email,organization,kind,expire",
-      });
-
-      const theCall = fakeFetch.getCall(0);
-      assertEqual(theCall.args, [
-        "/peers/requested?expire=2223-12-10&fields=full_name%2Cemail%2Corganization%2Ckind%2Cexpire",
-        { method: "GET" },
-      ]);
-    });
   });
 
   describe("with existing accepted peers", () => {
@@ -1011,7 +986,7 @@ describe("apps/peers", function () {
     });
 
     describe("with the requested peers tab", () => {
-      it("should open empty with placeholder text", async () => {
+      it("should open with placeholder text that it is searching for results", async () => {
         const app = bootstrap(document);
         app._fetch = makeFakeFetch({
           body: [],
@@ -1023,7 +998,7 @@ describe("apps/peers", function () {
         const placeholderEl = formEl.querySelector(
           'div[data-bind-observe="results_placeholder"]',
         );
-        assertEqual(placeholderEl.innerHTML, "No results.");
+        assertEqual(placeholderEl.innerHTML, "Searching...");
       });
 
       it("should load requested peers", async () => {

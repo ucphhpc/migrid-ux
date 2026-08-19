@@ -70,7 +70,7 @@ export class PeersApp extends AppBase {
 
     // default to search for everything
     this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
-    this.searchRequestedQuery();
+    this.searchRequestedQuery({ defaultEmptyQuery: "*" });
 
     this._options.afterInitialization(this);
   }
@@ -321,6 +321,16 @@ export class PeersApp extends AppBase {
     const searchParams = {
       query: namespace.query(),
     };
+
+    // TODO allow kind to be set as a filter
+    // const additionalParams = {};
+    // for (const observableName of ["kind"]) {
+    //   const observed = namespace[observableName];
+    //   let value;
+    //   if ((value = observed())) {
+    //     additionalParams[observableName] = value;
+    //   }
+
     return this.peersListingQuery("/peers/accepted", namespace, searchParams);
   }
 
@@ -423,7 +433,7 @@ export class PeersApp extends AppBase {
         await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
         // refresh the requested peers so the peer
         // being accepted will disappear if shown
-        await this.searchRequestedQuery();
+        await this.searchRequestedQuery({ defaultEmptyQuery: "*" });
       })
       .catch((error) => {
         namespace._error_string(error.message);
@@ -465,30 +475,24 @@ export class PeersApp extends AppBase {
 
         // update total
         this.summaryRequest();
-        await this.searchRequestedQuery();
+        await this.searchRequestedQuery({ defaultEmptyQuery: "*" });
       })
       .catch((error) => {
         namespace._error_string(error.message);
       });
   }
 
-  searchRequestedQuery() {
+  searchRequestedQuery({ defaultEmptyQuery = "" } = {}) {
     const namespace = this.state.formState("peers_requested");
-
-    const additionalParams = {};
-    for (const observableName of ["query", "kind", "expire"]) {
-      const observed = namespace[observableName];
-      let value;
-      if ((value = observed())) {
-        additionalParams[observableName] = value;
-      }
+    // Empty query means that we will search for everything
+    if (namespace.query() == "" && defaultEmptyQuery !== "") {
+      namespace.query(defaultEmptyQuery);
     }
+    const searchParams = {
+      query: namespace.query(),
+    };
 
-    return this.peersListingQuery(
-      "/peers/requested",
-      namespace,
-      additionalParams,
-    );
+    return this.peersListingQuery("/peers/requested", namespace, searchParams);
   }
 
   searchRequestedSelectAll({ value: selectedValue }, namespace) {
@@ -502,7 +506,7 @@ export class PeersApp extends AppBase {
     if (wereResultsCleared) {
       // results are cleared when the column seleciton changes, so we infer
       // infer such a change occurred and thus must be refresh the results
-      this.searchRequestedQuery();
+      this.searchRequestedQuery({ defaultEmptyQuery: "*" });
     }
   }
 
