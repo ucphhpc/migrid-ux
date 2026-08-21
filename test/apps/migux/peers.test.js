@@ -257,12 +257,12 @@ describe("apps/peers", function () {
       const queryArgs = fakeFetch.getCallQueryArgs(0);
       assertEqual(queryArgs, {
         query: "my search query",
-        fields: "full_name,email,organization,kind,expire",
+        fields: "full_name,email,organization,expire",
       });
 
       const theCall = fakeFetch.getCall(0);
       assertEqual(theCall.args, [
-        "/peers/requested?query=my+search+query&fields=full_name%2Cemail%2Corganization%2Ckind%2Cexpire",
+        "/peers/requested?query=my+search+query&fields=full_name%2Cemail%2Corganization%2Cexpire",
         { method: "GET" },
       ]);
     });
