@@ -1284,18 +1284,5 @@ John Doe;DTU;john.doe@dtu.dk;DK;
         </div>
       </div>
     </div>
-
-    <script>
-      (async () => {
-        const rootEl = document.querySelector("[data-migrole=app]");
-        const appName = rootEl.dataset.migapp;
-        const { bootstrap } = await import(`./${appName}.js`);
-        bootstrap(rootEl, {
-          urlOptions: {
-            apiUrl: "http://localhost:8881/api/peers",
-          },
-        });
-      })();
-    </script>
   </body>
 </html>
