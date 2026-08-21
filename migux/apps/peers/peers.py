@@ -73,7 +73,10 @@ class FieldObjectListing:
 
     def __init__(self, field_objects, field_names):
         self._entry_wrapper = _FieldObjectIterator(field_names)
-        self._objects_iterator = iter(field_objects)
+        if field_objects is not None:
+            self._objects_iterator = iter(field_objects)
+        else:
+            self._objects_iterator = iter([])
 
     def __iter__(self):
         return self
