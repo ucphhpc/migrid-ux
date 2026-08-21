@@ -813,7 +813,10 @@ PeersApp.CONST_PEERS_LISTING_COLNAMES = [
 export const App = PeersApp;
 
 (function () {
-  function makePeersListingState({ showColLabel = true, showColKind = true } = {}) {
+  function makePeersListingState({
+    showColLabel = true,
+    showColKind = true,
+  } = {}) {
     return {
       query: "",
       // column chooser
