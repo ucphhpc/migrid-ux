@@ -29,9 +29,11 @@
   // ── Header section (internal, no border/shadow) ──
   &-header {
     padding: 1.5rem 1.5rem 0.5rem;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    text-align: unset;
 
-    .popup-title {
+    .popup-container-title {
       margin: 0;
     }
   }
