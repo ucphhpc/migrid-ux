@@ -987,7 +987,27 @@
                     ></span>
                   </div>
                   <div>
-                    <label class="form-label">State (if applicable)</label>
+                    <label class="form-label">State (if applicable)
+                      <span
+                        id="migux_apps_peers__peers_new___state_tooltip"
+                        class="fakelink"
+                        data-bind-hide="_state_tooltip"
+                        data-bind-onclick="tooltipShow"
+                      >
+                        <i>&quest;</i>
+                      </span>
+                      <span
+                        id="migux_apps_peers__peers_new___state_tooltip"
+                        class="fakelink"
+                        data-bind-show="_state_tooltip"
+                        data-bind-onclick="tooltipHide"
+                      >
+                        <i>&quest;</i>
+                        <span class="MiguxTooltip"
+                          >State: The state code (2-letter) where the peer is located if applicable.
+                        </span>
+                      </span>
+                    </label>
                     <input
                       type="text"
                       class="form-control peers_state"

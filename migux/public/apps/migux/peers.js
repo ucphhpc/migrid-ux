@@ -320,9 +320,9 @@ export class PeersApp extends AppBase {
     this.state.resetNamespace(importNamespace);
   }
 
-  static getRowsSelectedPeers(result_rows) {
+  static getRowsSelectedPeers(results_rows) {
     const selected = [];
-    for (const entry of result_rows) {
+    for (const entry of results_rows) {
       if (entry.selected()) {
         selected.push(entry.peer_dn());
       }
@@ -929,6 +929,7 @@ export const App = PeersApp;
         _organization_tooltip: false,
         _country_tooltip: false,
         _email_tooltip: false,
+_state_tooltip: false,
         _invite_email_tooltip: false,
       },
       peers_import: {
