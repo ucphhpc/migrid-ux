@@ -1,4 +1,7 @@
 .PeersApp {
+  // Commen
+  @import "./popup.scss";
+
   // Components
   @import "../components/Tabs.scss";
   @import "../components/MiguxTooltip.scss";
