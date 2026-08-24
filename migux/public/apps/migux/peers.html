@@ -1236,6 +1236,12 @@
                       placeholder="Paste or enter CSV-formatted list of peers ..."
                       data-bind-observe="csvtext"
                     ></textarea>
+                    <div>
+                      <span
+                        class="form-label__error"
+                        data-bind-observe="_csvtext_err"
+                      ></span>
+                    </div>
                     <p>
                       An example of how you should format your CSV-formatted
                       list of peers when importing them:
@@ -1246,10 +1252,6 @@ Jane Doe;Dept. of Physics at University of Aarhus;jane.doe@phys.au.dk;DK;
 ...
 John Doe;DTU;john.doe@dtu.dk;DK;
                   </pre>
-                    <span
-                      class="form-label__error"
-                      data-bind-observe="_csvtext_err"
-                    ></span>
                   </div>
                 </div>
                 <div class="tab-actions">
