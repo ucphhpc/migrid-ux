@@ -929,7 +929,7 @@ export const App = PeersApp;
         _organization_tooltip: false,
         _country_tooltip: false,
         _email_tooltip: false,
-_state_tooltip: false,
+        _state_tooltip: false,
         _invite_email_tooltip: false,
       },
       peers_import: {
