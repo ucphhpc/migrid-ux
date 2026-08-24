@@ -123,6 +123,16 @@ export class PeersApp extends AppBase {
     appState._active_tooltips(newActiveTooltips);
   }
 
+  showDialog() {
+    const popupState = this.state.namespace("popup");
+    popupState.visible(true);
+  }
+
+  hideDialog() {
+    const popupState = this.state.namespace("popup");
+    popupState.visible(false);
+  }
+
   disableToolTips() {
     // UI selection to disable tooltips
     this._disableToolTips();
@@ -340,16 +350,20 @@ export class PeersApp extends AppBase {
     }
   }
 
-  searchAcceptedRemove(_, namespace) {
-    const resultsRows = namespace.results_rows();
-    const distinguished_names_for_removal = [];
-
-    for (const entry of resultsRows) {
+  static getRowsSelectedPeers(result_rows) {
+    const selected = [];
+    for (const entry of result_rows) {
       if (entry.selected()) {
-        distinguished_names_for_removal.push(entry.peer_dn());
+        selected.push(entry.peer_dn());
       }
     }
+    return selected;
+  }
 
+  searchAcceptedRemove(_, namespace) {
+    const resultsRows = namespace.results_rows();
+    const distinguished_names_for_removal =
+      PeersApp.getRowsSelectedPeers(resultsRows);
     if (distinguished_names_for_removal.length === 0) {
       // no peers were selected - nothing to do
       return;
@@ -394,14 +408,8 @@ export class PeersApp extends AppBase {
 
   searchRequestedAccept(_, namespace) {
     const resultsRows = namespace.results_rows();
-    const distinguished_names_for_accept = [];
-
-    for (const entry of resultsRows) {
-      if (entry.selected()) {
-        distinguished_names_for_accept.push(entry.peer_dn());
-      }
-    }
-
+    const distinguished_names_for_accept =
+      PeersApp.getRowsSelectedPeers(resultsRows);
     if (distinguished_names_for_accept.length === 0) {
       // no peers were selected - nothing to do
       return;
@@ -442,15 +450,8 @@ export class PeersApp extends AppBase {
 
   searchRequestedRemove(_, namespace) {
     const resultsRows = namespace.results_rows();
-
-    const distinguished_names_for_removal = [];
-
-    for (const entry of resultsRows) {
-      if (entry.selected()) {
-        distinguished_names_for_removal.push(entry.peer_dn());
-      }
-    }
-
+    const distinguished_names_for_removal =
+      PeersApp.getRowsSelectedPeers(resultsRows);
     if (distinguished_names_for_removal.length === 0) {
       // no peers were selected - nothing to do
       return;
@@ -880,6 +881,17 @@ export const App = PeersApp;
       // instances
       _active_tooltips: observedValue(NO_VALUE),
     },
+    // An appwide popup dialog to display
+    // messages and receive user confirmation.
+    // Disabled and empty at construction
+    popup: {
+      visible: false,
+      title: "",
+      message: "",
+      primary_label: "",
+      secondary_label: "",
+    },
+    // keyword defined in createNamespacedState
     forms: {
       peers_accepted: {
         ...makePeersListingState(),
