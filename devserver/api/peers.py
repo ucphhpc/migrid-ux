@@ -71,7 +71,7 @@ def _create_response(payload, simulate_error=False):
 
     if simulate_error:
         simulated_errors = {
-            key: "%s error occcurred" % (key,) for key in payload.keys()
+            key: "%s error occurred" % (key,) for key in payload.keys()
         }
         errors_map = {"0": simulated_errors}
 
