@@ -1,0 +1,56 @@
+// Default to not being visible
+.popup-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 1100;
+
+  background-color: rgba(0, 0, 0, 0.4);
+
+  // ── .popup-content = the single dialog card ──
+  &-content {
+    background-color: white;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    overflow: hidden; // contain any internal content
+  }
+
+  // ── Header section (internal, no border/shadow) ──
+  &-header {
+    padding: 1.5rem 1.5rem 0.5rem;
+    text-align: center;
+
+    .popup-title {
+      margin: 0;
+    }
+  }
+
+  // ── Body section (internal, no border/shadow) ──
+  &-body {
+    padding: 0.5rem 1.5rem;
+    text-align: center;
+  }
+
+  // ── Footer section (internal, no border/shadow) ──
+  &-footer {
+    padding: 0.5rem 1.5rem 1.5rem;
+    text-align: center;
+
+    .popup-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+  }
+}

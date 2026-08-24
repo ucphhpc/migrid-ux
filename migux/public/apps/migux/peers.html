@@ -16,6 +16,32 @@
       aria-modal="true"
       role="dialog"
     >
+      <div class="popup" id="peers-modal-popup">
+        <div class="popup-container" data-bind-show="visible">
+          <div class="popup-container-content">
+            <div class="popup-container-header">
+              <h5 class="popup-container-title" data-bind-observe="title"></h5>
+            </div>
+            <div class="popup-container-body">
+              <div class="popup-container-message" data-bind-observe="message">
+              </div>
+            </div>
+            <div class="popup-container-footer">
+              <div class="popup-container-buttons">
+
+                <button class="btn btn-secondary" data-bind-show="secondary_label">
+                  <span data-bind-observe="secondary_label">
+                  </span>
+                </button>
+                <button class="btn btn-primary" data-bind-show="primary_label">
+                  <span data-bind-observe="primary_label" data-bind-onclick="hideDialog">
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="capture-user-clicks" data-bind-onclick="disableToolTips">
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
@@ -963,7 +989,7 @@
                       aria-label="State"
                       id="peers_add_state"
                       name="peers_add_state"
-                      placeholder="2-Letter state code"
+                      placeholder="2-Letter state code (Optional)"
                       data-bind-disabled="_is_editing"
                       data-bind-observe="state"
                       data-bind-onchange="newPeerFieldChange"
