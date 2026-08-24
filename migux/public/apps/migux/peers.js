@@ -282,12 +282,15 @@ export class PeersApp extends AppBase {
       payload[fieldName] = observed();
     }
 
-    const absentFields = fieldNames.filter((fieldName) => !payload[fieldName]);
-
+    // Optional fields includes label and kind,
+    const optionalFields = ["kind", "label"];
+    const absentRequiredFields = fieldNames.filter(
+      (fieldName) => !optionalFields.includes(fieldName) && !payload[fieldName],
+    );
     try {
-      if (absentFields.length > 0) {
+      if (absentRequiredFields.length > 0) {
         const errorsMap = {};
-        for (const fieldName of absentFields) {
+        for (const fieldName of absentRequiredFields) {
           errorsMap[fieldName] = `${fieldName} value is required`;
         }
         const error = new Error("The form has failed to validate.");
@@ -318,6 +321,17 @@ export class PeersApp extends AppBase {
   importClear() {
     const importNamespace = this.state.formState("peers_import");
     this.state.resetNamespace(importNamespace);
+  }
+
+  importReset() {
+    const importNamespace = this.state.formState("peers_import");
+    this.resetNamespace(importNamespace);
+    this._resetNamespaceFieldErrors(
+      Object.keys(PeersApp.CONST_ACCEPTED_IMPORT_FIELDS),
+      importNamespace,
+    );
+    const importForm = document.getElementById("peers_import_form");
+    importForm.reset();
   }
 
   static getRowsSelectedPeers(results_rows) {
@@ -783,10 +797,10 @@ export class PeersApp extends AppBase {
 }
 
 PeersApp.CONST_ACCEPTED_IMPORT_FIELDS = {
-  csvtext: "",
-  expire: "",
-  kind: "",
   label: "",
+  kind: "",
+  expire: "",
+  csvtext: "",
 };
 
 PeersApp.CONST_EDIT_PEER_FIELD_NAMES = ["expire", "kind", "label"];

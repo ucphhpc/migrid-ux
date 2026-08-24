@@ -1096,6 +1096,7 @@
                 </div>
               </form>
               <form
+                id="peers_import_form"
                 name="peers_import"
                 class="peers_import TabsPanel"
                 aria-labelledby="peers_import-tab"
@@ -1313,6 +1314,12 @@ John Doe;DTU;john.doe@dtu.dk;DK;
                         Invite on email
                       </label>
                     </div>
+                    <button
+                      class="btn btn-secondary"
+                      data-bind-onclick="importReset"
+                    >
+                      Reset
+                    </button>
                     <button
                       class="btn btn-primary"
                       data-bind-onclick="importAction"
