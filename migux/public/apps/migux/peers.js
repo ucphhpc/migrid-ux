@@ -320,6 +320,16 @@ export class PeersApp extends AppBase {
     this.state.resetNamespace(importNamespace);
   }
 
+  static getRowsSelectedPeers(result_rows) {
+    const selected = [];
+    for (const entry of result_rows) {
+      if (entry.selected()) {
+        selected.push(entry.peer_dn());
+      }
+    }
+    return selected;
+  }
+
   /* search accepted functions */
 
   searchAcceptedQuery({ defaultEmptyQuery = "" } = {}) {
@@ -348,16 +358,6 @@ export class PeersApp extends AppBase {
     for (const item of namespace.results_rows()) {
       item.selected(selectedValue);
     }
-  }
-
-  static getRowsSelectedPeers(result_rows) {
-    const selected = [];
-    for (const entry of result_rows) {
-      if (entry.selected()) {
-        selected.push(entry.peer_dn());
-      }
-    }
-    return selected;
   }
 
   searchAcceptedRemove(_, namespace) {
