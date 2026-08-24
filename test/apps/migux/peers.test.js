@@ -790,7 +790,7 @@ describe("apps/peers", function () {
 
     it("should close itself on click of the x icon", () => {
       bootstrap(document.body);
-      const closeIconEl = document.querySelector(".CloseButton");
+      const closeIconEl = document.querySelector(".modal-close");
 
       closeIconEl.dispatchEvent(new window.MouseEvent("click"));
 
