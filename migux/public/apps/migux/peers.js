@@ -945,8 +945,9 @@ export const App = PeersApp;
         all: false,
         count: 0,
         total: 0,
-        tooltip: false,
         _error_string: "",
+        tooltip: false,
+        _fullname_or_email_tooltip: false
       },
       peers_requested: {
         ...makePeersListingState({ showColLabel: false, showColKind: false }),

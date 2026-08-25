@@ -120,16 +120,37 @@
                   </span>
                   <p></p>
                 </h5>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="peers_search_accepted"
-                  name="query"
-                  list="peers_search_options"
-                  placeholder="Type to search..."
-                  data-bind-observe="query"
-                  data-bind-onenter="searchAcceptedQuery"
-                />
+                  <span class="form-label">Peer(s) Full Name or Email
+                    <span
+                      id="migux_apps_peers__peers_accepted___fullname_or_email_tooltip"
+                      class="fakelink"
+                      data-bind-hide="_fullname_or_email_tooltip"
+                      data-bind-onclick="tooltipShow"
+                    >
+                      <i>&quest;</i>
+                    </span>
+                    <span
+                      id="migux_apps_peers__peers_accepted___fullname_or_email_tooltip"
+                      class="fakelink"
+                      data-bind-show="_fullname_or_email_tooltip"
+                      data-bind-onclick="tooltipHide"
+                      >
+                      <i>&quest;</i>
+                      <span class="MiguxTooltip"
+                        >You can use this field to search by the Full Name or Email that the Peer was accepted with.
+                      </span>
+                    </span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="peers_search_accepted"
+                    name="query"
+                    list="peers_search_options"
+                    placeholder="Type to search..."
+                    data-bind-observe="query"
+                    data-bind-onenter="searchAcceptedQuery"
+                  />
+                </span>
                 <input
                   type="hidden"
                   data-bind-observe="changed_column"
