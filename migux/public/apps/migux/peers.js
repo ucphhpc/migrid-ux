@@ -172,6 +172,16 @@ export class PeersApp extends AppBase {
     }
   }
 
+  resetNamespace(namespace) {
+    if (namespace === undefined) {
+      throw new Error(
+        "Can't reset the namespace when an undefined was recieved",
+      );
+    }
+
+    this.state.resetNamespace(namespace);
+  }
+
   summaryRequest() {
     const acceptedState = this.state.formState("peers_accepted");
     const requestedState = this.state.formState("peers_requested");
@@ -274,6 +284,8 @@ export class PeersApp extends AppBase {
   /* accepted import functions */
 
   async importAction(_, namespace) {
+    // Do initial user friendly check if everything is present before
+    // the backend does a comprehensive check
     const fieldNames = Object.keys(PeersApp.CONST_ACCEPTED_IMPORT_FIELDS);
 
     const payload = {};
@@ -283,9 +295,9 @@ export class PeersApp extends AppBase {
     }
 
     // Optional fields includes label and kind,
-    const optionalFields = ["kind", "label"];
+    const optionalFields = ["label", "kind"];
     const absentRequiredFields = fieldNames.filter(
-      (fieldName) => !optionalFields.includes(fieldName) && !payload[fieldName],
+      (fieldName) => !payload[fieldName] && !optionalFields.includes(fieldName),
     );
     try {
       if (absentRequiredFields.length > 0) {
@@ -304,34 +316,43 @@ export class PeersApp extends AppBase {
       };
       await this.request("/peers/accepted/import", requestOptions, namespace);
 
-      this.summaryRequest();
       await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
       this.importClear();
+      this.summaryRequest();
       this.changeTab(0);
     } catch (e) {
       const errorsMap = (e.data || {}).errors_map;
+
       if (errorsMap) {
         this._unpackAndApplyErrorsMap(errorsMap, fieldNames, namespace);
+      }
+
+      if (e.message !== undefined && e.message !== "") {
+        namespace._error_string(e.message);
       } else {
-        namespace._error_string("unknown error");
+        namespace._error_string("unknown error occured");
       }
     }
   }
 
   importClear() {
     const importNamespace = this.state.formState("peers_import");
-    this.state.resetNamespace(importNamespace);
+    this.resetNamespace(importNamespace);
   }
 
   importReset() {
-    const importNamespace = this.state.formState("peers_import");
-    this.resetNamespace(importNamespace);
+    // Clears the import form input values to their default and
+    // removes any displayed errors
+    this.importClear();
+    // reset the form errors
+    const importPeerNamespace = this.state.formState("peers_import");
     this._resetNamespaceFieldErrors(
       Object.keys(PeersApp.CONST_ACCEPTED_IMPORT_FIELDS),
-      importNamespace,
+      importPeerNamespace,
     );
-    const importForm = document.getElementById("peers_import_form");
-    importForm.reset();
+    // clear the form values
+    const importPeerForm = document.getElementById("peers_import_form");
+    importPeerForm.reset();
   }
 
   static getRowsSelectedPeers(results_rows) {
@@ -527,53 +548,63 @@ export class PeersApp extends AppBase {
 
   /* new peer functions */
 
-  newPeerCreate(ev, namespace) {
+  async newPeerCreate(ev, namespace) {
     const values = this.state.serializeNamespace(namespace);
 
     if (!values.state) {
       values.state = "NA";
     }
 
-    const requestOptions = {
-      method: "POST",
-      data: values,
-    };
-    return this.request("/peers/new", requestOptions, namespace)
-      .then(async () => {
-        await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
-        const newPeerNamespace = this.state.formState("peers_new");
-        this.resetNamespace(newPeerNamespace);
-        // Update the requested peers tab count and total state
-        // before switching to it.
-        this.summaryRequest();
-        this.changeTab(0);
-      })
-      .catch((error) => {
-        namespace._error_string(error.message);
+    // Do initial user friendly check if everything is present before
+    // the backend does a comprehensive check
+    const fieldNames = Object.keys(PeersApp.CONST_NEW_PEERS_FIELDS);
 
-        const errorData = error.data || {};
-        const errorsMap = errorData["errors_map"] || {};
-        const payloadErrors = errorsMap["0"];
-        if (!payloadErrors || Object.keys(payloadErrors).length === 0) {
-          return;
+    const optionalFields = ["label", "kind", "state"];
+    const absentRequiredFields = fieldNames.filter(
+      (fieldName) => !values[fieldName] && !optionalFields.includes(fieldName),
+    );
+
+    try {
+      if (absentRequiredFields.length > 0) {
+        const errorsMap = { 0: {} };
+        for (const fieldName of absentRequiredFields) {
+          errorsMap["0"][fieldName] =
+            `${fieldName} is empty but is required to have content`;
         }
+        const error = new Error("The form has failed to validate.");
+        error.data = { errors_map: errorsMap };
+        throw error;
+      }
 
-        this._unpackAndApplyErrorsMap(
-          payloadErrors,
-          Object.keys(PeersApp.CONST_NEW_PEERS_FIELDS),
-          namespace,
-        );
-      });
+      const requestOptions = {
+        method: "POST",
+        data: values,
+      };
+      await this.request("/peers/new", requestOptions, namespace);
+      await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
+      this.newPeerClear();
+      // Update the requested peers tab count and total state
+      // before switching to it.
+      this.summaryRequest();
+      this.changeTab(0);
+    } catch (error) {
+      const errorData = error.data || {};
+      const errorsMap = errorData["errors_map"] || {};
+      const payloadErrors = errorsMap["0"];
+
+      if (payloadErrors && Object.keys(payloadErrors).length > 0) {
+        this._unpackAndApplyErrorsMap(payloadErrors, fieldNames, namespace);
+      }
+
+      if (error.message !== undefined && error.message !== "") {
+        namespace._error_string(error.message);
+      }
+    }
   }
 
-  resetNamespace(namespace) {
-    if (namespace === undefined) {
-      throw new Error(
-        "Can't reset the namespace when an undefined was recieved",
-      );
-    }
-
-    this.state.resetNamespace(namespace);
+  newPeerClear() {
+    const newPeerNamespace = this.state.formState("peers_new");
+    this.resetNamespace(newPeerNamespace);
   }
 
   newPeerFieldChange(_, namespace, __, observed) {
@@ -587,9 +618,9 @@ export class PeersApp extends AppBase {
   newPeerCreateReset() {
     // Clears the new peers form input values to their default and
     // removes any displayed errors
-    const newPeerNamespace = this.state.formState("peers_new");
-    this.resetNamespace(newPeerNamespace);
+    this.newPeerClear();
     // reset the form errors
+    const newPeerNamespace = this.state.formState("peers_new");
     this._resetNamespaceFieldErrors(
       Object.keys(PeersApp.CONST_NEW_PEERS_FIELDS),
       newPeerNamespace,
