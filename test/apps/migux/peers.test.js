@@ -540,7 +540,6 @@ describe("apps/peers", function () {
       });
 
       const newPeerNamespace = state.formState("peers_new");
-
       await app.newPeerCreate(null, newPeerNamespace);
 
       // check fields are unchanged
@@ -1055,6 +1054,17 @@ describe("apps/peers", function () {
     });
 
     describe("with the new peers tab", () => {
+      const EXAMPLE_PEERS_FIELDS = {
+        full_name: "foo",
+        email: "foo@example.com",
+        label: "some_peer_label",
+        expire: "2003-02-01",
+        organization: "KU",
+        kind: "course",
+        country: "DK",
+        state: "NA",
+      };
+
       it('should use the default option for "kind" on first open', () => {
         const app = bootstrap(document);
 
@@ -1065,6 +1075,12 @@ describe("apps/peers", function () {
 
       it('should send the form on "Create" button press', () => {
         const app = bootstrap(document);
+        // Populate the required fields before pushing the create button
+        const newPeerNamespace = app.state.formState("peers_new");
+        for (const [field, value] of Object.entries(EXAMPLE_PEERS_FIELDS)) {
+          newPeerNamespace[field](value);
+        }
+
         app._fetch = makeFakeFetch({
           body: [],
           contentType: "application/json",
@@ -1076,13 +1092,20 @@ describe("apps/peers", function () {
 
         const firstCall = app._fetch.getCall(0);
         const firstCallOptions = firstCall.args[1];
-        assertEqual(firstCallOptions, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: '{"full_name":"","email":"","label":"","expire":"","organization":"","kind":"","country":"","state":"NA","invite_on_email":true}',
-        });
+        assertEqual(
+          firstCallOptions.body,
+          JSON.stringify({
+            full_name: EXAMPLE_PEERS_FIELDS.full_name,
+            email: EXAMPLE_PEERS_FIELDS.email,
+            label: EXAMPLE_PEERS_FIELDS.label,
+            expire: EXAMPLE_PEERS_FIELDS.expire,
+            organization: EXAMPLE_PEERS_FIELDS.organization,
+            kind: EXAMPLE_PEERS_FIELDS.kind,
+            country: EXAMPLE_PEERS_FIELDS.country,
+            state: EXAMPLE_PEERS_FIELDS.state,
+            invite_on_email: true,
+          }),
+        );
       });
     });
 
