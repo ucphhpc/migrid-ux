@@ -491,7 +491,7 @@
                       name="peers_add_label"
                       placeholder="Label (Optional)"
                       data-bind-observe="label"
-                      data-bind-onchange="newPeerFieldChange"
+                      data-bind-onchange="clearFormErrorOnFieldChange"
                     />
                     <span
                       class="form-label__error form-label__error--compensate"
@@ -527,7 +527,7 @@
                       aria-label="Kind"
                       name="peers_add_kind"
                       data-bind-observe="kind"
-                      data-bind-onchange="newPeerFieldChange"
+                      data-bind-onchange="clearFormErrorOnFieldChange"
                     >
                       <option value="" disabled selected>Select a Kind (Optional)</option>
                       <option value="course">Course</option>
@@ -571,7 +571,7 @@
                       id="peers_add_expire"
                       name="peers_add_expire"
                       data-bind-observe="expire"
-                      data-bind-onchange="newPeerFieldChange"
+                      data-bind-onchange="clearFormErrorOnFieldChange"
                     />
                     <span
                       class="form-label__error form-label__error--compensate"
@@ -589,7 +589,7 @@
                       placeholder="Full name (Required)"
                       data-bind-disabled="_is_editing"
                       data-bind-observe="full_name"
-                      data-bind-onchange="newPeerFieldChange"
+                      data-bind-onchange="clearFormErrorOnFieldChange"
                     />
                     <span
                       class="form-label__error form-label__error--compensate"
@@ -627,7 +627,7 @@
                       placeholder="Organization (Required)"
                       data-bind-disabled="_is_editing"
                       data-bind-observe="organization"
-                      data-bind-onchange="newPeerFieldChange"
+                      data-bind-onchange="clearFormErrorOnFieldChange"
                     />
                     <span
                       class="form-label__error form-label__error--compensate"
@@ -665,7 +665,7 @@
                       placeholder="Email at organization (Required)"
                       data-bind-disabled="_is_editing"
                       data-bind-observe="email"
-                      data-bind-onchange="newPeerFieldChange"
+                      data-bind-onchange="clearFormErrorOnFieldChange"
                     />
                     <span
                       class="form-label__error form-label__error--compensate"
@@ -701,7 +701,7 @@
                       name="peers_add_country"
                       data-bind-disabled="_is_editing"
                       data-bind-observe="country"
-                      data-bind-onchange="newPeerFieldChange"
+                      data-bind-onchange="clearFormErrorOnFieldChange"
                     >
                       <option value="" disabled selected>Select a Country (Required)</option>
                       <option value="AF">Afghanistan</option>
@@ -1017,7 +1017,7 @@
                       placeholder="2-Letter state code (Optional)"
                       data-bind-disabled="_is_editing"
                       data-bind-observe="state"
-                      data-bind-onchange="newPeerFieldChange"
+                      data-bind-onchange="clearFormErrorOnFieldChange"
                     />
                     <span
                       class="form-label__error form-label__error--compensate"
@@ -1165,7 +1165,7 @@
                       placeholder="Label (Optional)"
                       pattern="[^ ]*"
                       data-bind-observe="label"
-                      data-bind-onchange="importFieldChange"
+                      data-bind-onchange="clearFormErrorOnFieldChange"
                     />
                     <span
                       class="form-label__error"
@@ -1199,7 +1199,7 @@
                       id="peers_import_kind"
                       name="peers_import_kind"
                       data-bind-observe="kind"
-                      data-bind-onchange="importFieldChange"
+                      data-bind-onchange="clearFormErrorOnFieldChange"
                     >
                       <option value="" disabled selected>Select a Kind (Optional)</option>
                       <option value="course">Course</option>
@@ -1244,7 +1244,7 @@
                       placeholder="End Date"
                       pattern="[0-9/-]+"
                       data-bind-observe="expire"
-                      data-bind-onchange="importFieldChange"
+                      data-bind-onchange="clearFormErrorOnFieldChange"
                     />
                     <span
                       class="form-label__error"
@@ -1259,7 +1259,7 @@
                       rows="10"
                       placeholder="Paste or enter CSV-formatted list of peers ..."
                       data-bind-observe="csvtext"
-                      data-bind-onchange="importFieldChange"
+                      data-bind-onchange="clearFormErrorOnFieldChange"
                     ></textarea>
                     <div>
                       <span

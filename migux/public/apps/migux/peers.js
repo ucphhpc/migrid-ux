@@ -182,6 +182,14 @@ export class PeersApp extends AppBase {
     this.state.resetNamespace(namespace);
   }
 
+  clearFormErrorOnFieldChange(_, namespace, __, observed) {
+    const fieldName = this.state.namespaceObservedToName(observed, namespace);
+    // find the corresponding field error observable
+    const errObserved = namespace[PeersApp._fieldNameToFieldError(fieldName)];
+    // clear it
+    errObserved("");
+  }
+
   summaryRequest() {
     const acceptedState = this.state.formState("peers_accepted");
     const requestedState = this.state.formState("peers_requested");
@@ -338,14 +346,6 @@ export class PeersApp extends AppBase {
   importClear() {
     const importNamespace = this.state.formState("peers_import");
     this.resetNamespace(importNamespace);
-  }
-
-  importFieldChange(_, namespace, __, observed) {
-    const fieldName = this.state.namespaceObservedToName(observed, namespace);
-    // find the corresponding field error observable
-    const errObserved = namespace[PeersApp._fieldNameToFieldError(fieldName)];
-    // clear it
-    errObserved("");
   }
 
   importReset() {
@@ -613,14 +613,6 @@ export class PeersApp extends AppBase {
   newPeerClear() {
     const newPeerNamespace = this.state.formState("peers_new");
     this.resetNamespace(newPeerNamespace);
-  }
-
-  newPeerFieldChange(_, namespace, __, observed) {
-    const fieldName = this.state.namespaceObservedToName(observed, namespace);
-    // find the corresponding field error observable
-    const errObserved = namespace[PeersApp._fieldNameToFieldError(fieldName)];
-    // clear it
-    errObserved("");
   }
 
   newPeerCreateReset() {
