@@ -115,7 +115,7 @@
 
       margin-left: var(--mig-ux-field-margin);
       margin-right: var(--mig-ux-field-margin);
-      padding-bottom: 1.5em;
+      margin-bottom: 2em;
 
       p {
         display: flex;
@@ -131,7 +131,6 @@
       }
 
       &--compensate {
-        min-height: calc(2 * var(--mig-ux-field-margin));
 
         p {
           top: calc(-1 * var(--mig-ux-field-margin));
