@@ -440,8 +440,7 @@ export class PeersApp extends AppBase {
 
   searchAcceptedSendInvitation(_, namespace) {
     const resultsRows = namespace.results_rows();
-    const peer_dns_for_invitation =
-      PeersApp.getRowsSelectedPeers(resultsRows);
+    const peer_dns_for_invitation = PeersApp.getRowsSelectedPeers(resultsRows);
     if (peer_dns_for_invitation.length === 0) {
       return;
     }
@@ -458,8 +457,6 @@ export class PeersApp extends AppBase {
           error.status = 422;
           throw error;
         }
-        
-
       })
       .catch((error) => {
         if (error.message !== undefined && error.message !== "") {
@@ -983,6 +980,7 @@ export const App = PeersApp;
         _error_string: "",
         tooltip: false,
         _label_or_email_tooltip: false,
+        _invitation_tooltip: false,
       },
       peers_requested: {
         ...makePeersListingState({ showColLabel: false, showColKind: false }),

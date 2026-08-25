@@ -33,7 +33,6 @@
             </div>
             <div class="popup-container-footer">
               <div class="popup-container-buttons">
-
                 <button class="btn btn-secondary" data-bind-show="secondary_label">
                   <span data-bind-observe="secondary_label">
                   </span>
@@ -273,6 +272,25 @@
                     data-bind-observe="_error_string"
                   ></span>
                   <div class="tab-actions__controls">
+                    <span
+                      id="migux_apps_peers__peers_accepted___invitation_tooltip"
+                      class="fakelink"
+                      data-bind-hide="_invitation_tooltip"
+                      data-bind-onclick="tooltipShow"
+                    >
+                      <i>&quest;</i>
+                    </span>
+                    <span
+                      id="migux_apps_peers__peers_accepted___invitation_tooltip"
+                      class="fakelink"
+                      data-bind-show="_invitation_tooltip"
+                      data-bind-onclick="tooltipHide"
+                    >
+                      <i>&quest;</i>
+                      <span class="MiguxTooltip"
+                        >By clicking this button, the selected Accepted Peers will recieve an invitation email for creating an account on the system.
+                      </span>
+                    </span>
                     <button
                       class="btn btn-secondary"
                       data-bind-onclick="searchAcceptedSendInvitation"
