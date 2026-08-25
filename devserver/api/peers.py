@@ -99,9 +99,15 @@ def migux_apps_peers__GET_accepted():
         args={
             "query": request.values.get("query"),
             "fields": _unconcatify(request.values.get("fields", ""), ","),
+            "kind": request.values.get("kind", ""),
         }
     )
     example_data = EXAMPLE_DATA["GET /accepted"]
+
+    # Filter by kind if provided
+    kind = request_info.args.get("kind", "")
+    if kind:
+        example_data = [d for d in example_data if d.get("kind") == kind]
 
     return server_common.render_app_template(
         template_route, request_info=request_info, data=example_data

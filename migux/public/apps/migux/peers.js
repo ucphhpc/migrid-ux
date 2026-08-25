@@ -386,13 +386,13 @@ export class PeersApp extends AppBase {
     };
 
     // TODO allow kind to be set as a filter
-    // const additionalParams = {};
-    // for (const observableName of ["kind"]) {
-    //   const observed = namespace[observableName];
-    //   let value;
-    //   if ((value = observed())) {
-    //     additionalParams[observableName] = value;
-    //   }
+    for (const observableName of ["kind"]) {
+      const observed = namespace[observableName];
+      let value;
+      if ((value = observed())) {
+        searchParams[observableName] = value;
+      }
+    }
 
     return this.peersListingQuery("/peers/accepted", namespace, searchParams);
   }
@@ -943,6 +943,7 @@ export const App = PeersApp;
       peers_accepted: {
         ...makePeersListingState(),
         all: false,
+        kind: "",
         count: 0,
         total: 0,
         _error_string: "",

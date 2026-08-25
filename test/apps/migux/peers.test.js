@@ -239,6 +239,34 @@ describe("apps/peers", function () {
       assertEqual(namespace.results(), "");
       assertEqual(namespace.results_placeholder(), "ARRANGED");
     });
+
+    it("should include kind in the request when a kind is selected", async () => {
+      const fakeFetch = makeFakeFetch({ body: TEST_SEARCH_REQUESTED_RESULT });
+      const state = createState(AppBase.definition(PeersApp));
+      const namespace = state.formState("peers_accepted");
+      const instance = new PeersApp(state, { _fetch: fakeFetch });
+      namespace.query("my search query");
+      namespace.kind("course");
+
+      await instance.searchAcceptedQuery();
+
+      const queryArgs = fakeFetch.getCallQueryArgs(0);
+      assertEqual(queryArgs.kind, "course");
+    });
+
+    it("should not include kind when no kind is selected", async () => {
+      const fakeFetch = makeFakeFetch({ body: TEST_SEARCH_REQUESTED_RESULT });
+      const state = createState(AppBase.definition(PeersApp));
+      const namespace = state.formState("peers_accepted");
+      const instance = new PeersApp(state, { _fetch: fakeFetch });
+      namespace.query("my search query");
+      namespace.kind("");
+
+      await instance.searchAcceptedQuery();
+
+      const queryArgs = fakeFetch.getCallQueryArgs(0);
+      assertEqual(queryArgs.kind, undefined);
+    });
   });
 
   describe("when listing requested peers", () => {
