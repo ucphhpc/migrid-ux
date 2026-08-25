@@ -697,8 +697,6 @@ export class PeersApp extends AppBase {
         await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
       })
       .catch((error) => {
-        newPeerNamespace._error_string(error.message);
-
         const errorData = error.data || {};
         const errorsMap = errorData["errors_map"] || {};
         const payloadErrors = errorsMap["0"];
@@ -712,6 +710,10 @@ export class PeersApp extends AppBase {
           PeersApp.CONST_EDIT_PEER_FIELD_NAMES,
           newPeerNamespace,
         );
+
+        if (error.message !== undefined && error.message !== "") {
+          newPeerNamespace._error_string(error.message);
+        }
       });
   }
 
