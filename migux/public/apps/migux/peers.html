@@ -1165,6 +1165,7 @@
                       placeholder="Label (Optional)"
                       pattern="[^ ]*"
                       data-bind-observe="label"
+                      data-bind-onchange="importFieldChange"
                     />
                     <span
                       class="form-label__error"
@@ -1198,6 +1199,7 @@
                       id="peers_import_kind"
                       name="peers_import_kind"
                       data-bind-observe="kind"
+                      data-bind-onchange="importFieldChange"
                     >
                       <option value="" disabled selected>Select a Kind (Optional)</option>
                       <option value="course">Course</option>
@@ -1242,6 +1244,7 @@
                       placeholder="End Date"
                       pattern="[0-9/-]+"
                       data-bind-observe="expire"
+                      data-bind-onchange="importFieldChange"
                     />
                     <span
                       class="form-label__error"
@@ -1256,6 +1259,7 @@
                       rows="10"
                       placeholder="Paste or enter CSV-formatted list of peers ..."
                       data-bind-observe="csvtext"
+                      data-bind-onchange="importFieldChange"
                     ></textarea>
                     <div>
                       <span

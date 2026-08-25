@@ -340,6 +340,14 @@ export class PeersApp extends AppBase {
     this.resetNamespace(importNamespace);
   }
 
+  importFieldChange(_, namespace, __, observed) {
+    const fieldName = this.state.namespaceObservedToName(observed, namespace);
+    // find the corresponding field error observable
+    const errObserved = namespace[PeersApp._fieldNameToFieldError(fieldName)];
+    // clear it
+    errObserved("");
+  }
+
   importReset() {
     // Clears the import form input values to their default and
     // removes any displayed errors
