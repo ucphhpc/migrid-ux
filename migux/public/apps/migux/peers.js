@@ -438,6 +438,40 @@ export class PeersApp extends AppBase {
       });
   }
 
+  searchAcceptedSendInvitation(_, namespace) {
+    const resultsRows = namespace.results_rows();
+    const peer_dns_for_invitation =
+      PeersApp.getRowsSelectedPeers(resultsRows);
+    if (peer_dns_for_invitation.length === 0) {
+      return;
+    }
+
+    const requestOptions = {
+      method: "POST",
+      data: { peers: peer_dns_for_invitation },
+    };
+    return this.request("/peers/accepted/send_invitation", requestOptions)
+      .then(async (res) => {
+        const result = await res.json();
+        if (typeof result.error === "string" && result.error) {
+          const error = new Error(result.error);
+          error.status = 422;
+          throw error;
+        }
+        
+
+      })
+      .catch((error) => {
+        if (error.message !== undefined && error.message !== "") {
+          namespace._error_string(error.message);
+        } else {
+          namespace._error_string(
+            "an unknown error occurred while trying to send invitations",
+          );
+        }
+      });
+  }
+
   searchAcceptedSettingsHide(_, namespace) {
     const wereResultsCleared = namespace.results() === "";
     if (wereResultsCleared) {

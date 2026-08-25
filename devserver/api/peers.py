@@ -268,6 +268,24 @@ def migux_apps_peers__POST_accepted_update():
     return found_peer
 
 
+def migux_apps_peers__POST_accepted_send_invitation():
+    """
+    Request handler: POST /peers/accepted/send_invitation
+    """
+
+    payload = request.json
+    peer_dns_to_invite = set(payload.get("peers", []))
+    if not peer_dns_to_invite:
+        return {"error": "No peers selected for invitation"}, 422
+
+    example_data = EXAMPLE_DATA["GET /accepted"]
+    for item in example_data:
+        if item["distinguished_name"] in peer_dns_to_invite:
+            item["invitation_sent"] = True
+
+    return {}
+
+
 def migux_apps_peers__POST_requested_accept():
     """
     Request handler: GET /peers/requested/accept
@@ -352,6 +370,7 @@ ROUTES = {
     "POST /accepted/fetch": migux_apps_peers__POST_accepted_fetch,
     "POST /accepted/import": migux_apps_peers__POST_accepted_import,
     "POST /accepted/update": migux_apps_peers__POST_accepted_update,
+    "POST /accepted/send_invitation": migux_apps_peers__POST_accepted_send_invitation,
     "POST /new": migux_apps_peers__POST_new,
 }
 

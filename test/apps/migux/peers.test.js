@@ -380,6 +380,60 @@ describe("apps/peers", function () {
         assertEqual(acceptedPeersState.total(), 0);
       });
     });
+
+    describe("when sending invitation", () => {
+      beforeEach(() => {
+        acceptedPeersState.results_rows()[0].selected(true);
+        acceptedPeersState.results_rows()[1].selected(true);
+
+        sinon
+          .stub(app, "request")
+          .resolves({ json: () => Promise.resolve({}) });
+      });
+
+      it("should call request with correct path and payload", async () => {
+        await app.searchAcceptedSendInvitation(null, acceptedPeersState);
+
+        assertTrue(app.request.calledOnce);
+        const callArgs = app.request.getCall(0).args;
+        assertEqual(callArgs[0], "/peers/accepted/send_invitation");
+        assertEqual(callArgs[1].method, "POST");
+        assertEqual(callArgs[1].data.peers.length, 2);
+      });
+
+      it("should not change tabs", async () => {
+        assertEqual(app.state.selected_tab_index(), 0);
+
+        await app.searchAcceptedSendInvitation(null, acceptedPeersState);
+
+        assertEqual(app.state.selected_tab_index(), 0);
+      });
+
+      it("should not change total on success", async () => {
+        const initialTotal = acceptedPeersState.total();
+
+        await app.searchAcceptedSendInvitation(null, acceptedPeersState);
+
+        assertEqual(acceptedPeersState.total(), initialTotal);
+      });
+
+      it("should do nothing when no peers selected", async () => {
+        acceptedPeersState.results_rows()[0].selected(false);
+        acceptedPeersState.results_rows()[1].selected(false);
+
+        await app.searchAcceptedSendInvitation(null, acceptedPeersState);
+
+        assertFalse(app.request.called);
+      });
+
+      it("should display error on failure", async () => {
+        app.request.rejects(new Error("invitation failed"));
+
+        await app.searchAcceptedSendInvitation(null, acceptedPeersState);
+
+        assertEqual(acceptedPeersState._error_string(), "invitation failed");
+      });
+    });
   });
 
   describe("with existing requested peers", () => {
