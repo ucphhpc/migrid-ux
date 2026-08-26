@@ -490,15 +490,15 @@ export class PeersApp extends AppBase {
         let popupMsg = "";
         if (popupMsgs["success"].length > 0) {
           popupMsg += "Succesfully invited the following peers: <br><br>";
-          popupMsg += popupMsgs["success"].map(
-            (p) => `${p.full_name} &lt;${p.email}&gt;<br>`,
-          );
+          popupMsg += popupMsgs["success"]
+            .map((p) => `${p.full_name} &lt;${p.email}&gt;`)
+            .join("<br>");
         }
         if (popupMsgs["failures"].length > 0) {
           popupMsg += "<br><br> Failed to invited the following peers: <br>";
-          popupMsg += popupMsgs["failures"].map(
-            (p) => `${p.full_name} &lt;${p.email}&gt;<br>`,
-          );
+          popupMsg += popupMsgs["failures"]
+            .map((p) => `${p.full_name} &lt;${p.email}&gt;`)
+            .join("<br>");
         }
         // populate the popup with errors
         this.setPopupDialog("Inviation Results.", popupMsg);
