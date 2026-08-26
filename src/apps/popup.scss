@@ -1,5 +1,5 @@
 // Default to not being visible
-.popup-container {
+.migux-popup-container {
   position: absolute;
   top: 0;
   left: 0;
@@ -35,7 +35,7 @@
     flex-direction: column;
     text-align: unset;
 
-    .popup-container-title {
+    .migux-popup-container-title {
       margin: 0;
     }
   }
