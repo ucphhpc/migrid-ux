@@ -469,8 +469,8 @@ export class PeersApp extends AppBase {
 
         // Create the popup message
         const popupMsgs = {
-          success: "Succesfully invited the following peers: <br><br>",
-          failures: "Failed to invited the following peers: <br><br>",
+          success: "Succesfully invited the following peers: <br>",
+          failures: "Failed to invited the following peers: <br>",
         };
         for (const [peerDnInvitation, invited] of Object.entries(
           peerInvitations,
