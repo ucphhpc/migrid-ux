@@ -130,7 +130,7 @@ describe("apps/peers", function () {
   });
 
   describe("when listing accepted peers", () => {
-    it("should not issue a request for an empty search term", async () => {
+    it("should issue a request for an empty search term", async () => {
       const makeFakeRes = () => {
         const res = {
           ok: true,
@@ -147,7 +147,7 @@ describe("apps/peers", function () {
 
       await instance.searchAcceptedQuery();
 
-      assertTrue(fakeFetch.notCalled);
+      assertTrue(fakeFetch.calledOnce);
     });
 
     it("should issue the request", async () => {
@@ -461,14 +461,13 @@ describe("apps/peers", function () {
       });
     });
 
-    it("should clear the listing on an empty search query", async () => {
+    it("should not clear the listing on an empty search query", async () => {
       requestedPeersState.query("");
 
       await app.searchRequestedQuery();
 
-      assertTrue(fakeFetch.notCalled);
-      assertEqual(requestedPeersState.results_rows().length, 0);
-      assertEqual(requestedPeersState.results_placeholder(), "No results.");
+      assertTrue(fakeFetch.calledOnce);
+      assertEqual(requestedPeersState.results_rows().length, 3);
     });
 
     describe("when accepting a peer", () => {
@@ -982,7 +981,7 @@ describe("apps/peers", function () {
       const keyboardEvent = new window.KeyboardEvent("keyup", { key: "Enter" });
       searchEl.dispatchEvent(keyboardEvent);
 
-      assertFalse(app._fetch.called);
+      assertTrue(app._fetch.calledOnce);
       assertPlaceholderVisibility(true);
     });
 
