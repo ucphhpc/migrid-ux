@@ -62,7 +62,16 @@ def _unconcatify(value, sep):
     return result
 
 
-def _create_response(payload, simulate_error=False):
+def create_handler_response(
+    status, message=None, error=None, **ui_response_kwargs
+):
+    """
+    A helper function to create route handler responses.
+    """
+    return {"message": message, "error": error, **ui_response_kwargs}, status
+
+
+def _create_form_response(payload, simulate_error=False):
     """
     Helper function for creating the devserver API response
     """
@@ -148,7 +157,7 @@ def migux_apps_peers__POST_accepted_delete():
         if peer_dn["distinguished_name"] not in peer_dns_to_delete
     ]
     EXAMPLE_DATA["GET /accepted"] = remaining_peers
-    return {}
+    return create_handler_response(200)
 
 
 def migux_apps_peers__POST_accepted_import():
@@ -235,9 +244,11 @@ def migux_apps_peers__POST_accepted_fetch():
             break
 
     if found_peer is None:
-        return {}, 404
+        return create_handler_response(
+            404, error="Failed to find the specified Peer"
+        )
 
-    return found_peer
+    return create_handler_response(200, **found_peer)
 
 
 def migux_apps_peers__POST_accepted_update():
@@ -251,9 +262,13 @@ def migux_apps_peers__POST_accepted_update():
     example_data = EXAMPLE_DATA["GET /accepted"]
 
     should_simulate_error = payload["label"] == "ERROR"
-    response = _create_response(payload, simulate_error=should_simulate_error)
+    form_response = _create_form_response(
+        payload, simulate_error=should_simulate_error
+    )
     if should_simulate_error:
-        return response, 404
+        return create_handler_response(
+            404, error="Failed to update Peer", **form_response
+        )
 
     found_peer = None
     for item in example_data:
@@ -262,10 +277,12 @@ def migux_apps_peers__POST_accepted_update():
             break
 
     if found_peer is None:
-        return {}, 404
+        return create_handler_response(
+            404, error="Failed to find the specified Peer"
+        )
 
     found_peer.update(payload)
-    return found_peer
+    return create_handler_response(200, **found_peer)
 
 
 def migux_apps_peers__POST_accepted_send_invitation():
@@ -276,14 +293,19 @@ def migux_apps_peers__POST_accepted_send_invitation():
     payload = request.json
     peer_dns_to_invite = set(payload.get("peers", []))
     if not peer_dns_to_invite:
-        return {"error": "No peers selected for invitation"}, 422
+        return create_handler_response(
+            422, error="No peers selected for invitation"
+        )
 
+    peer_invitations = {}
     example_data = EXAMPLE_DATA["GET /accepted"]
-    for item in example_data:
-        if item["distinguished_name"] in peer_dns_to_invite:
-            item["invitation_sent"] = True
+    for peer_dn in peer_dns_to_invite:
+        if peer_dn in example_data:
+            peer_invitations[peer_dn] = True
+        else:
+            peer_invitations[peer_dn] = False
 
-    return {}
+    return create_handler_response(200, peer_invitations=peer_invitations)
 
 
 def migux_apps_peers__POST_requested_accept():
@@ -311,8 +333,7 @@ def migux_apps_peers__POST_requested_accept():
 
     all_accepted = EXAMPLE_DATA["GET /accepted"]
     EXAMPLE_DATA["GET /accepted"] = all_accepted + accepted_dicts
-
-    return {}
+    return create_handler_response(200)
 
 
 def migux_apps_peers__POST_requested_delete():
@@ -332,7 +353,7 @@ def migux_apps_peers__POST_requested_delete():
     ]
     EXAMPLE_DATA["GET /requested"] = filtered_example_data
 
-    return {}
+    return create_handler_response(200)
 
 
 def migux_apps_peers__POST_new():
@@ -345,9 +366,13 @@ def migux_apps_peers__POST_new():
     payload = request.json
     should_simulate_error = payload["full_name"] == "ERROR"
 
-    response = _create_response(payload, simulate_error=should_simulate_error)
+    form_response = _create_form_response(
+        payload, simulate_error=should_simulate_error
+    )
     if should_simulate_error:
-        return response, 404
+        return create_handler_response(
+            404, error="Failed to create a new Peer", **form_response
+        )
 
     # simulate a valid user payload by only allowing values
     # for keys that we expect to be present in a user entry
@@ -357,11 +382,15 @@ def migux_apps_peers__POST_new():
     user_dict.update({"distinguished_name": _fill_distinguished_name(payload)})
     example_data.append(user_dict)
 
-    return response
+    return create_handler_response(
+        200, message="Created a new Peer", **form_response
+    )
 
 
 ROUTES = {
+    "POST /new": migux_apps_peers__POST_new,
     "GET /summary": migux_apps_peers__GET_summary,
+    "POST /send_invitation": migux_apps_peers__POST_accepted_send_invitation,
     "GET /requested": migux_apps_peers__GET_requested,
     "POST /requested/accept": migux_apps_peers__POST_requested_accept,
     "POST /requested/delete": migux_apps_peers__POST_requested_delete,
@@ -370,8 +399,6 @@ ROUTES = {
     "POST /accepted/fetch": migux_apps_peers__POST_accepted_fetch,
     "POST /accepted/import": migux_apps_peers__POST_accepted_import,
     "POST /accepted/update": migux_apps_peers__POST_accepted_update,
-    "POST /accepted/send_invitation": migux_apps_peers__POST_accepted_send_invitation,
-    "POST /new": migux_apps_peers__POST_new,
 }
 
 

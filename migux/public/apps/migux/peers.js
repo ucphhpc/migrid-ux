@@ -133,6 +133,13 @@ export class PeersApp extends AppBase {
     popupState.visible(false);
   }
 
+  setPopupDialog(title, message, { primary_label = "Close" } = {}) {
+    const popupState = this.state.namespace("popup");
+    popupState.title(title);
+    popupState.message(message);
+    popupState.primary_label(primary_label);
+  }
+
   disableToolTips() {
     // UI selection to disable tooltips
     this._disableToolTips();
@@ -449,7 +456,7 @@ export class PeersApp extends AppBase {
       method: "POST",
       data: { peers: peer_dns_for_invitation },
     };
-    return this.request("/peers/accepted/send_invitation", requestOptions)
+    return this.request("/peers/send_invitation", requestOptions)
       .then(async (res) => {
         const result = await res.json();
         if (typeof result.error === "string" && result.error) {
@@ -457,6 +464,31 @@ export class PeersApp extends AppBase {
           error.status = 422;
           throw error;
         }
+        const data = result.data || {};
+        const peerInvitations = data["peer_invitations"] || {};
+
+        // Create the popup message
+        const popupMsgs = {
+          success: "Succesfully invited the following peers: <br><br>",
+          failures: "Failed to invited the following peers: <br><br>",
+        };
+        for (const [peerDnInvitation, invited] of Object.entries(
+          peerInvitations,
+        )) {
+          const unpackedPeer = this._unpackPeerDN(peerDnInvitation);
+          if (invited) {
+            popupMsgs["success"] +=
+              `${unpackedPeer.CN} &lt;${unpackedPeer.emailAddress}&gt;<br>`;
+          } else {
+            popupMsgs["failures"] +=
+              `${unpackedPeer.CN} &lt;${unpackedPeer.emailAddress}&gt;<br>`;
+          }
+        }
+
+        const popupMsg = `${popupMsgs["success"]} <br><br> ${popupMsgs["failures"]}`;
+        // populate the popup with errors
+        this.setPopupDialog("Inviation Results", popupMsg);
+        this.showDialog();
       })
       .catch((error) => {
         if (error.message !== undefined && error.message !== "") {
@@ -672,25 +704,29 @@ export class PeersApp extends AppBase {
       data: {
         peer_dn,
       },
-    }).then(async (res) => {
-      const result = await res.json();
-      const peer = result.data;
+    })
+      .then(async (res) => {
+        const result = await res.json();
+        const peer = result.data;
 
-      // Set edit mode (i.e. disable any fields we do not allow editing)
-      newPeerNamespace._is_editing(true);
-      newPeerNamespace._editing_dn(peer_dn);
+        // Set edit mode (i.e. disable any fields we do not allow editing)
+        newPeerNamespace._is_editing(true);
+        newPeerNamespace._editing_dn(peer_dn);
 
-      // Atempt to fill in the peers fields
-      for (const fieldName of Object.keys(PeersApp.CONST_NEW_PEERS_FIELDS)) {
-        if (Object.prototype.hasOwnProperty.call(peer, fieldName)) {
-          const observed = newPeerNamespace[fieldName];
-          observed(peer[fieldName]);
+        // Atempt to fill in the peers fields
+        for (const fieldName of Object.keys(PeersApp.CONST_NEW_PEERS_FIELDS)) {
+          if (Object.prototype.hasOwnProperty.call(peer, fieldName)) {
+            const observed = newPeerNamespace[fieldName];
+            observed(peer[fieldName]);
+          }
         }
-      }
 
-      // Switch to the peer fields tab
-      this.changeTab(2);
-    });
+        // Switch to the peer fields tab
+        this.changeTab(2);
+      })
+      .catch((error) => {
+        newPeerNamespace._error_string(error.message);
+      });
   }
 
   editPeerCancel() {
@@ -752,6 +788,17 @@ export class PeersApp extends AppBase {
 
   static _fieldNameToFieldError(fieldName) {
     return `_${fieldName}_err`;
+  }
+
+  _unpackPeerDN(peerDN) {
+    let peer = Object.create({});
+    const peerSplit = peerDN.split("/");
+    for (const peerItem of peerSplit) {
+      // Split the key=value item
+      const peerKeyValue = peerItem.split("=");
+      peer[peerKeyValue[0]] = peerKeyValue[1];
+    }
+    return peer;
   }
 
   _unpackAndApplyErrorsMap(errorsMap, fieldNames, namespace) {

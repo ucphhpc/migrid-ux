@@ -396,7 +396,7 @@ describe("apps/peers", function () {
 
         assertTrue(app.request.calledOnce);
         const callArgs = app.request.getCall(0).args;
-        assertEqual(callArgs[0], "/peers/accepted/send_invitation");
+        assertEqual(callArgs[0], "/peers/send_invitation");
         assertEqual(callArgs[1].method, "POST");
         assertEqual(callArgs[1].data.peers.length, 2);
       });
