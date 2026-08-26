@@ -297,10 +297,13 @@ def migux_apps_peers__POST_accepted_send_invitation():
             422, error="No peers selected for invitation"
         )
 
+    accepted_distinguished_names = [
+        peer["distinguished_name"] for peer in EXAMPLE_DATA["GET /accepted"]
+    ]
+
     peer_invitations = {}
-    example_data = EXAMPLE_DATA["GET /accepted"]
     for peer_dn in peer_dns_to_invite:
-        if peer_dn in example_data:
+        if peer_dn in accepted_distinguished_names:
             peer_invitations[peer_dn] = True
         else:
             peer_invitations[peer_dn] = False
