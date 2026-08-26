@@ -469,25 +469,39 @@ export class PeersApp extends AppBase {
 
         // Create the popup message
         const popupMsgs = {
-          success: "Succesfully invited the following peers: <br>",
-          failures: "Failed to invited the following peers: <br>",
+          success: [],
+          failures: [],
         };
         for (const [peerDnInvitation, invited] of Object.entries(
           peerInvitations,
         )) {
           const unpackedPeer = this._unpackPeerDN(peerDnInvitation);
+          const parsedPeer = {
+            full_name: unpackedPeer.CN,
+            email: unpackedPeer.emailAddress,
+          };
           if (invited) {
-            popupMsgs["success"] +=
-              `${unpackedPeer.CN} &lt;${unpackedPeer.emailAddress}&gt;<br>`;
+            popupMsgs["success"].push(parsedPeer);
           } else {
-            popupMsgs["failures"] +=
-              `${unpackedPeer.CN} &lt;${unpackedPeer.emailAddress}&gt;<br>`;
+            popupMsgs["failures"].push(parsedPeer);
           }
         }
 
-        const popupMsg = `${popupMsgs["success"]} <br><br> ${popupMsgs["failures"]}`;
+        let popupMsg = "";
+        if (popupMsgs["success"].length > 0) {
+          popupMsg += "Succesfully invited the following peers: <br><br>";
+          popupMsg += popupMsgs["success"].map(
+            (p) => `${p.full_name} &lt;${p.email}&gt;<br>`,
+          );
+        }
+        if (popupMsgs["failures"].length > 0) {
+          popupMsg += "<br><br> Failed to invited the following peers: <br>";
+          popupMsg += popupMsgs["failures"].map(
+            (p) => `${p.full_name} &lt;${p.email}&gt;<br>`,
+          );
+        }
         // populate the popup with errors
-        this.setPopupDialog("Inviation Results", popupMsg);
+        this.setPopupDialog("Inviation Results.", popupMsg);
         this.showDialog();
       })
       .catch((error) => {
