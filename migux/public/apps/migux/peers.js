@@ -382,7 +382,7 @@ export class PeersApp extends AppBase {
 
   /* search accepted functions */
 
-  searchAcceptedQuery({ defaultEmptyQuery = "" } = {}) {
+  searchAcceptedQuery({ defaultEmptyQuery = "*" } = {}) {
     const namespace = this.state.formState("peers_accepted");
     // Empty query means that we will search for everything
     if (namespace.query() == "" && defaultEmptyQuery !== "") {
@@ -603,7 +603,7 @@ export class PeersApp extends AppBase {
       });
   }
 
-  searchRequestedQuery({ defaultEmptyQuery = "" } = {}) {
+  searchRequestedQuery({ defaultEmptyQuery = "*" } = {}) {
     const namespace = this.state.formState("peers_requested");
     // Empty query means that we will search for everything
     if (namespace.query() == "" && defaultEmptyQuery !== "") {
