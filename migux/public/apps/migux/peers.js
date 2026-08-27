@@ -228,7 +228,7 @@ export class PeersApp extends AppBase {
     namespace.count(rowCount);
     if (rowCount === 0) {
       namespace.results_rows([]);
-      namespace.results_placeholder("No results.");
+      namespace.results_placeholder("Found no Peer(s).");
     } else {
       namespace.results_rows(resultRows);
       namespace.results_placeholder("");
@@ -264,7 +264,7 @@ export class PeersApp extends AppBase {
       })
       .catch((error) => {
         if (error.status === 404) {
-          namespace.results_placeholder("No results.");
+          namespace.results_placeholder("Found no Peer(s).");
         } else {
           namespace.results_placeholder(error.message);
         }
