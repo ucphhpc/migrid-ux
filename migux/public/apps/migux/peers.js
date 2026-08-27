@@ -1061,6 +1061,15 @@ export const App = PeersApp;
         ...PeersApp._makeErrorFieldDefinitionsForFields(
           PeersApp.CONST_NEW_PEERS_FIELDS,
         ),
+        // Only show the State field in the form if
+        // the user selects one of the following countries
+        _show_state_field: (state) => {
+          const observing = new Set();
+          observing.add(state.forms.form__peers_new.country);
+          return computedValue((values) => {
+            return ["US", "CA", "AU"].includes(values[0]);
+          }, observing);
+        },
         invite_on_email: true,
         _is_editing: false,
         _editing_dn: NO_VALUE,
