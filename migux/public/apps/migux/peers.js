@@ -909,6 +909,15 @@ export class PeersApp extends AppBase {
     namespace[toolTipNamespaceKey](true);
   }
 
+  tooltipHover(_, namespace, inputEle, sourceElementId) {
+    // Used to extract the innerHTML content from the sourceElementId
+    // and add it as a title to the inputEle
+    if (inputEle.title !== undefined || inputEle.title === "") {
+      const sourceContent = document.getElementById(sourceElementId).innerHTML;
+      inputEle.title = sourceContent;
+    }
+  }
+
   /* common functions */
 
   static _makeErrorFieldDefinitionsForFields(fieldDefinitions) {
@@ -1061,6 +1070,7 @@ export const App = PeersApp;
         ...PeersApp._makeErrorFieldDefinitionsForFields(
           PeersApp.CONST_NEW_PEERS_FIELDS,
         ),
+        invite_on_email: true,
         // Only show the State field in the form if
         // the user selects one of the following countries
         _show_state_field: (state) => {
@@ -1070,7 +1080,6 @@ export const App = PeersApp;
             return ["US", "CA", "AU"].includes(values[0]);
           }, observing);
         },
-        invite_on_email: true,
         _is_editing: false,
         _editing_dn: NO_VALUE,
         _error_string: "",

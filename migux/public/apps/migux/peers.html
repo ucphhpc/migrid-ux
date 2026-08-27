@@ -93,6 +93,8 @@
                     class="fakelink"
                     data-bind-hide="tooltip"
                     data-bind-onclick="tooltipShow"
+                    data-bind-onmouseover="tooltipHover"
+                    data-bind-onmouseover-argument="peers_accepted_tooltip_source"
                   >
                     <i>&quest;</i>
                   </span>
@@ -103,7 +105,7 @@
                     data-bind-onclick="tooltipHide"
                   >
                     <i>&quest;</i>
-                    <span class="MiguxTooltip"
+                    <span class="MiguxTooltip" id="peers_accepted_tooltip_source"
                       >Accepted Peers: Accepted peers are people that you have vouched for to get an account on UCPH ERDA because they need it for a particular course/workshop, research project or for general long term collaboration with you.
                       The site admins will use this information to accept account requests and extensions from your peers until the given time of End Date.
                     </span>
@@ -117,6 +119,8 @@
                       class="fakelink"
                       data-bind-hide="_label_or_email_tooltip"
                       data-bind-onclick="tooltipShow"
+                      data-bind-onmouseover="tooltipHover"
+                      data-bind-onmouseover-argument="label_or_email_tooltip_source"
                     >
                       <i>&quest;</i>
                     </span>
@@ -127,7 +131,7 @@
                       data-bind-onclick="tooltipHide"
                       >
                       <i>&quest;</i>
-                      <span class="MiguxTooltip"
+                      <span class="MiguxTooltip" id="label_or_email_tooltip_source"
                         >You can use this field to search by the Label or Email that the Peer was accepted with.
                       </span>
                     </span>
@@ -268,8 +272,10 @@
                       class="fakelink"
                       data-bind-hide="_invitation_tooltip"
                       data-bind-onclick="tooltipShow"
+                      data-bind-onmouseover="tooltipHover"
+                      data-bind-onmouseover-argument="invitation_tooltip_source"
                     >
-                      <i>&quest;</i>
+                      <i class="invitation_tooltip_target">&quest;</i>
                     </span>
                     <span
                       id="migux_apps_peers__peers_accepted___invitation_tooltip"
@@ -278,7 +284,7 @@
                       data-bind-onclick="tooltipHide"
                     >
                       <i>&quest;</i>
-                      <span class="MiguxTooltip"
+                      <span class="MiguxTooltip" id="invitation_tooltip_source"
                         >By clicking this button, the selected Accepted Peers will receive an invitation email for creating an account on the system.
                       </span>
                     </span>
@@ -314,6 +320,8 @@
                     class="fakelink"
                     data-bind-hide="info_tooltip"
                     data-bind-onclick="tooltipShow"
+                    data-bind-onmouseover="tooltipHover"
+                    data-bind-onmouseover-argument="peers_requested_info_tooltip_source"
                   >
                     <i>&quest;</i>
                   </span>
@@ -324,7 +332,7 @@
                     data-bind-onclick="tooltipHide"
                   >
                     <i>&quest;</i>
-                    <span class="MiguxTooltip"
+                    <span class="MiguxTooltip" id="peers_requested_info_tooltip_source"
                       >Requested Peers: If someone requests an external user account on UCPH ERDA and explicitly references you as sponsor or contact person the site admins will generally forward the request, so that it shows up here for you to confirm.
                       You can then accept or reject the individual requests below to let the site admins proceed with account creation or rejection.
                       Please select an End Date to provide limited but sufficiently long account access - it can always be extended later.
@@ -345,6 +353,8 @@
                       class="fakelink"
                       data-bind-hide="_fullname_or_email_tooltip"
                       data-bind-onclick="tooltipShow"
+                      data-bind-onmouseover="tooltipHover"
+                      data-bind-onmouseover-argument="fullname_or_email_tooltip_source"
                     >
                       <i>&quest;</i>
                     </span>
@@ -355,7 +365,7 @@
                       data-bind-onclick="tooltipHide"
                       >
                       <i>&quest;</i>
-                      <span class="MiguxTooltip"
+                      <span class="MiguxTooltip" id="fullname_or_email_tooltip_source"
                         >You can use this field to search by the Full Name or Email the external used to request a Peer account with.
                       </span>
                     </span>
@@ -520,6 +530,8 @@
                         class="fakelink"
                         data-bind-hide="_label_tooltip"
                         data-bind-onclick="tooltipShow"
+                        data-bind-onmouseover="tooltipHover"
+                        data-bind-onmouseover-argument="peers_new_label_tooltip_source"
                       >
                         <i>&quest;</i>
                       </span>
@@ -530,7 +542,7 @@
                         data-bind-onclick="tooltipHide"
                         >
                         <i>&quest;</i>
-                        <span class="MiguxTooltip"
+                        <span class="MiguxTooltip" id="peers_new_label_tooltip_source"
                         >The Label is used as a free text identifer for the peer.
                         You can use this to group/organizee a collection of peers that you subsequently can search and or select against when going through your Accepted Peers.
                         </span>
@@ -558,6 +570,8 @@
                         class="fakelink"
                         data-bind-hide="_kind_tooltip"
                         data-bind-onclick="tooltipShow"
+                        data-bind-onmouseover="tooltipHover"
+                        data-bind-onmouseover-argument="peers_new_kind_tooltip_content"
                       >
                         <i>&quest;</i>
                       </span>
@@ -568,7 +582,7 @@
                         data-bind-onclick="tooltipHide"
                         >
                         <i>&quest;</i>
-                        <span class="MiguxTooltip"
+                        <span class="MiguxTooltip" id="peers_new_kind_tooltip_content"
                           > Is used to define the purpose for you granting the external peer access to ERDA. Be it for a Course, Project, or general Collaboration.
                           Like the Label, this can be used by you to select a particular kind of group when going through your Accepted Peers.
                         </span>
@@ -599,6 +613,8 @@
                         class="fakelink"
                         data-bind-hide="_expire_tooltip"
                         data-bind-onclick="tooltipShow"
+                        data-bind-onmouseover="tooltipHover"
+                        data-bind-onmouseover-argument="peers_new_expire_tooltip_source"
                       >
                         <i>&quest;</i>
                       </span>
@@ -609,7 +625,7 @@
                         data-bind-onclick="tooltipHide"
                         >
                         <i>&quest;</i>
-                        <span class="MiguxTooltip"
+                        <span class="MiguxTooltip" id="peers_new_expire_tooltip_source"
                           >For security reasons peer accounts should be closed when no longer required.
                           The End Date is used to limit account access time for that purpose, and you can always extend it later if needed.
                           For courses and workshops a few weeks or months should usually suffice, while projects and long-term collaboration often extend to months or years.
@@ -656,6 +672,8 @@
                         class="fakelink"
                         data-bind-hide="_organization_tooltip"
                         data-bind-onclick="tooltipShow"
+                        data-bind-onmouseover="tooltipHover"
+                        data-bind-onmouseover-argument="peers_new_organization_tooltip_source"
                       >
                         <i>&quest;</i>
                       </span>
@@ -666,7 +684,7 @@
                         data-bind-onclick="tooltipHide"
                       >
                         <i>&quest;</i>
-                        <span class="MiguxTooltip"
+                        <span class="MiguxTooltip" id="peers_new_organization_tooltip_source"
                           >The organization that the peer is associated with when the Peer account is created.
                         </span>
                       </span>
@@ -694,6 +712,8 @@
                         class="fakelink"
                         data-bind-hide="_email_tooltip"
                         data-bind-onclick="tooltipShow"
+                        data-bind-onmouseover="tooltipHover"
+                        data-bind-onmouseover-argument="peers_new_email_tooltip_source"
                       >
                         <i>&quest;</i>
                       </span>
@@ -704,7 +724,7 @@
                         data-bind-onclick="tooltipHide"
                       >
                         <i>&quest;</i>
-                        <span class="MiguxTooltip"
+                        <span class="MiguxTooltip" id="peers_new_email_tooltip_source"
                           >An email address you have verified belongs to the Peer. This will be the mailbox that receives the Peer invitation from you to create a user account on the service. Furthermore it will also be their username that they will use to login to the service with. Do note that the user will also receive expiration warnings (30, 10, and 3 days) before the specified End Date at this email.
                         </span>
                       </span>
@@ -732,6 +752,8 @@
                         class="fakelink"
                         data-bind-hide="_country_tooltip"
                         data-bind-onclick="tooltipShow"
+                        data-bind-onmouseover="tooltipHover"
+                        data-bind-onmouseover-argument="peers_new_country_tooltip_source"
                       >
                         <i>&quest;</i>
                       </span>
@@ -742,7 +764,7 @@
                         data-bind-onclick="tooltipHide"
                       >
                         <i>&quest;</i>
-                        <span class="MiguxTooltip"
+                        <span class="MiguxTooltip" id="peers_new_country_tooltip_source"
                           >The country where the peer's organisation is located.
                         </span>
                       </span>
@@ -1046,6 +1068,8 @@
                         class="fakelink"
                         data-bind-hide="_state_tooltip"
                         data-bind-onclick="tooltipShow"
+                        data-bind-onmouseover="tooltipHover"
+                        data-bind-onmouseover-argument="peers_new_state_tooltip_source"
                       >
                         <i>&quest;</i>
                       </span>
@@ -1056,7 +1080,7 @@
                         data-bind-onclick="tooltipHide"
                       >
                         <i>&quest;</i>
-                        <span class="MiguxTooltip"
+                        <span class="MiguxTooltip" id="peers_new_state_tooltip_source"
                           >State: The state code (2-letter) where the peer is located if applicable.
                         </span>
                       </span>
@@ -1092,6 +1116,8 @@
                         class="fakelink"
                         data-bind-hide="_invite_email_tooltip"
                         data-bind-onclick="tooltipShow"
+                        data-bind-onmouseover="tooltipHover"
+                        data-bind-onmouseover-argument="peers_new_invite_email_tooltip_source"
                       >
                         <i>&quest;</i>
                       </span>
@@ -1102,7 +1128,7 @@
                         data-bind-onclick="tooltipHide"
                       >
                         <i>&quest;</i>
-                        <span class="MiguxTooltip"
+                        <span class="MiguxTooltip" id="peers_new_invite_email_tooltip_source"
                           >By enabling this toogle, the stated Peer Email will receive an invitation to create a user account once you press the Create button.
                           If you don't enable this, you can send the invitation later in your list of Accepted Peers.
                         </span>
@@ -1166,6 +1192,8 @@
                     class="fakelink"
                     data-bind-hide="info_tooltip"
                     data-bind-onclick="tooltipShow"
+                    data-bind-onmouseover="tooltipHover"
+                    data-bind-onmouseover-argument="peers_import_info_tooltip_source"
                   >
                     <i>&quest;</i>
                   </span>
@@ -1176,7 +1204,7 @@
                     data-bind-onclick="tooltipHide"
                   >
                     <i>&quest;</i>
-                    <span class="MiguxTooltip"
+                    <span class="MiguxTooltip" id="peers_import_info_tooltip_source"
                       >Import Peers: You can paste or enter a CSV-formatted list in the righthanded box to create multiple peers.
                       The contents must start with a single header line to define the field order in the following individual user lines as shown in the example at the bottom.
                     </span>
@@ -1196,6 +1224,8 @@
                         class="fakelink"
                         data-bind-hide="_label_tooltip"
                         data-bind-onclick="tooltipShow"
+                        data-bind-onmouseover="tooltipHover"
+                        data-bind-onmouseover-argument="peers_import_label_tooltip_source"
                       >
                         <i>&quest;</i>
                       </span>
@@ -1206,7 +1236,7 @@
                         data-bind-onclick="tooltipHide"
                         >
                         <i>&quest;</i>
-                        <span class="MiguxTooltip"
+                        <span class="MiguxTooltip" id="peers_import_label_tooltip_source"
                         >Label: The label is used as a free text identifer for the peer.
                         You can use this to group/organize a collection of peers that you subsequently can search and or select against when going through your Accepted Peers.
                         </span>
@@ -1233,6 +1263,8 @@
                       class="fakelink"
                       data-bind-hide="_kind_tooltip"
                       data-bind-onclick="tooltipShow"
+                      data-bind-onmouseover="tooltipHover"
+                      data-bind-onmouseover-argument="peers_import_kind_tooltip_source"
                     >
                       <i>&quest;</i>
                     </span>
@@ -1243,7 +1275,7 @@
                       data-bind-onclick="tooltipHide"
                       >
                       <i>&quest;</i>
-                      <span class="MiguxTooltip"
+                      <span class="MiguxTooltip" id="peers_import_kind_tooltip_source"
                         >Kind: is used to define the purpose for you granting the external peer access to ERDA. Be it for a Course, Project, or general Collaboration.
                         Like the Label, this can be used by you to select a particular kind of group when going through your Accepted Peers.
                       </span>
@@ -1273,6 +1305,8 @@
                       class="fakelink"
                       data-bind-hide="_expire_tooltip"
                       data-bind-onclick="tooltipShow"
+                      data-bind-onmouseover="tooltipHover"
+                      data-bind-onmouseover-argument="peers_import_expire_tooltip_source"
                     >
                       <i>&quest;</i>
                     </span>
@@ -1283,7 +1317,7 @@
                       data-bind-onclick="tooltipHide"
                     >
                       <i>&quest;</i>
-                      <span class="MiguxTooltip"
+                      <span class="MiguxTooltip" id="peers_import_expire_tooltip_source"
                         >End Date: For security reasons peer accounts should be closed when no longer required.
                         The End Date is used to limit account access time for that purpose, and you can always extend it later if needed.
                         For courses and workshops a few weeks or months should usually suffice, while projects and long-term collaboration often extend to months or years.
@@ -1347,6 +1381,8 @@ John Doe;DTU;john.doe@dtu.dk;DK;
                         class="fakelink"
                         data-bind-hide="_invite_email_tooltip"
                         data-bind-onclick="tooltipShow"
+                        data-bind-onmouseover="tooltipHover"
+                        data-bind-onmouseover-argument="peers_import_invite_email_tooltip_source"
                       >
                         <i>&quest;</i>
                       </span>
@@ -1357,7 +1393,7 @@ John Doe;DTU;john.doe@dtu.dk;DK;
                         data-bind-onclick="tooltipHide"
                       >
                         <i>&quest;</i>
-                        <span class="MiguxTooltip"
+                        <span class="MiguxTooltip" id="peers_import_invite_email_tooltip_source"
                           >By enabling this toogle, the stated Peer(s) Email(s) will receive an invitation to create a user account once you press the Import button.
                           If you don't enable this, you can send the invitation later in your list of Accepted Peers.
                         </span>
