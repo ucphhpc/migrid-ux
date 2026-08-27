@@ -73,6 +73,24 @@
     };
   }
 
+  // refreshes the current page
+  function _pageRefresh() {
+    window.location.reload();
+  }
+
+  /**
+   * MiG specific method for checking if a session has expired and if so reload the page.
+   */
+  async function migSessionHandler(res) {
+    if (res.status === 401) {
+      alert(
+        "Your session seem to have expired, we have to reload at this point to continue",
+      );
+      _pageRefresh();
+    }
+    return res;
+  }
+
   /**
    * MiG specific response processing function - given a response, handle the
    * wrapping done by the MiG backend and hand back a response to the caller
@@ -244,6 +262,7 @@
   GLOBAL.MiG.loadAppStyles = loadAppStyles;
   GLOBAL.MiG.performAppLoad = performAppLoad;
   GLOBAL.MiG.migBuildUrl = migBuildUrl;
+  GLOBAL.MiG.migSessionHandler = migSessionHandler;
   GLOBAL.MiG.migResponse = migResponse;
 
   const MIG_URL_OPTIONS_PARTIAL = {
@@ -251,6 +270,7 @@
     baseUrl: "/assets/migux",
     buildUrl: migBuildUrl,
     migType: null,
+    processSessionExpire: migSessionHandler,
     processResponse: migResponse,
   };
 
