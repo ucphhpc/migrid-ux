@@ -318,7 +318,14 @@ export class PeersApp extends AppBase {
       if (absentRequiredFields.length > 0) {
         const errorsMap = {};
         for (const fieldName of absentRequiredFields) {
-          errorsMap[fieldName] = `${fieldName} value is required`;
+          // special case for expire
+          let errorMsg;
+          if (fieldName == "expire") {
+            errorMsg = `End Date is empty but is required to have content`;
+          } else {
+            errorMsg = `${fieldName} is empty but is required to have content`;
+          }
+          errorsMap[fieldName] = errorMsg;
         }
         const error = new Error("The form has failed to validate.");
         error.data = { errors_map: errorsMap };
@@ -653,8 +660,14 @@ export class PeersApp extends AppBase {
       if (absentRequiredFields.length > 0) {
         const errorsMap = { 0: {} };
         for (const fieldName of absentRequiredFields) {
-          errorsMap["0"][fieldName] =
-            `${fieldName} is empty but is required to have content`;
+          // special case for expire
+          let errorMsg;
+          if (fieldName == "expire") {
+            errorMsg = `End Date is empty but is required to have content`;
+          } else {
+            errorMsg = `${fieldName} is empty but is required to have content`;
+          }
+          errorsMap["0"][fieldName] = errorMsg;
         }
         const error = new Error("The form has failed to validate.");
         error.data = { errors_map: errorsMap };
