@@ -718,6 +718,8 @@ export class PeersApp extends AppBase {
     // clear the form values
     const newPeerForm = document.getElementById("peers_new_form");
     newPeerForm.reset();
+    // Switches back to the Accepted Peers Tab on cancel
+    this.changeTab(0);
   }
 
   // edit peer functions

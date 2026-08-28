@@ -25,7 +25,7 @@ import os
 class _FieldObjectIterator:
     """
     Allow for-in iteration of a known set of fields of an arbitrary
-    listing of similarly strutured result objects.
+    listing of similarly structured result objects.
 
     At present this is an implementation detail of FieldObjectListing
     and is not meant to be instantiated separately.
