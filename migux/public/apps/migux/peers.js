@@ -272,8 +272,14 @@ export class PeersApp extends AppBase {
   }
 
   peersListingColumnChange(_, namespace) {
+    const appState = this.state.namespace("__app__");
     namespace.results("");
-    this.searchAcceptedQuery();
+    if (appState.selected_tab_index() == 0) {
+      this.searchAcceptedQuery();
+    }
+    if (appState.selected_tab_index() === 1) {
+      this.searchRequestedQuery();
+    }
   }
 
   peersListingQuery(endpoint, namespace, additionalParams) {
