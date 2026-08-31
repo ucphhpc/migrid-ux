@@ -273,6 +273,7 @@ export class PeersApp extends AppBase {
 
   peersListingColumnChange(_, namespace) {
     namespace.results("");
+    this.searchAcceptedQuery();
   }
 
   peersListingQuery(endpoint, namespace, additionalParams) {
@@ -520,15 +521,6 @@ export class PeersApp extends AppBase {
           );
         }
       });
-  }
-
-  searchAcceptedSettingsHide(_, namespace) {
-    const wereResultsCleared = namespace.results() === "";
-    if (wereResultsCleared) {
-      // results are cleared when the column seleciton changes, so we infer
-      // infer such a change occurred and thus must be refresh the results
-      this.searchAcceptedQuery();
-    }
   }
 
   /* search requested functions */
