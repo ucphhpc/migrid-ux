@@ -1,0 +1,57 @@
+# -*- coding: utf-8 -*-
+#
+# --- BEGIN_HEADER ---
+#
+# 1.gocd.yml - the GoCD pipeline definition for MiGrid-UX
+# Copyright (C) 2025 - 2026  SCIENCE HPC Center at UCPH
+#
+# This file is part of MiGrid-UX.
+#
+# MiGrid-UX is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License version 2 (LICENSES/LICENSE.GPLv2 or
+# https://opensource.org/license/gpl-2.0) or any later version
+# at your option. The MiGrid-UX files may NOT be copied, modified, or
+# distributed except according to those terms.
+#
+# --- END_HEADER ---
+
+environments:
+  migrid-ux:
+    environment_variables:
+      GIT_USER: "{{SECRET:[github][username]}}"
+      PYPI_USERNAME: "{{SECRET:[migrid-ux][username]}}"
+      PYPI_PASSWORD: "{{SECRET:[migrid-ux][password]}}"
+    pipelines:
+      - migrid-ux
+format_version: 10
+pipelines:
+  migrid-ux:
+    display_order: -1
+    group: pypi_package
+    label_template: ${COUNT}
+    lock_behaviour: none
+    timer:
+      # Run on the 1st at 00:00 of every month
+      spec: "0 0 0 1 * ? *"
+      only_on_changes: no
+    materials:
+      migrid-ux_git:  # this is the name of material
+        # says about type of material and url at once
+        git: https://github.com/ucphhpc/migrid-ux.git
+        branch: main
+        destination: migrid-ux
+      publish_python_git:
+        git: https://github.com/rasmunk/publish-python-scripts.git
+        branch: main
+        username: ${GIT_USER}
+        password: "{{SECRET:[github][access_token]}}"
+        destination: publish-python-scripts
+    parameters:
+      SRC_DIRECTORY: migrid-ux
+      BUILD_MAKE_TARGET: all
+      BUILD_MAKE_ARGS: ''
+      TEST_DIRECTORY: migrid-ux
+      TEST_MAKE_TARGET: test
+      TEST_MAKE_ARGS: ''
+      PUSH_DIRECTORY: publish-python-scripts
+    template: pypi_package
