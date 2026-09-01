@@ -1,7 +1,7 @@
 /*
 # --- BEGIN_HEADER ---
 #
-# peers.js - dual licensed source code file
+# peers.js - peers app functionality for MiGrid-UX
 # Copyright (C) 2025 - 2026  SCIENCE HPC Center at UCPH
 #
 # This file is part of MiGrid-UX.

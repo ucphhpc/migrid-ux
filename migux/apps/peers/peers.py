@@ -2,7 +2,7 @@
 #
 # --- BEGIN_HEADER ---
 #
-# peers.py - dual licensed source code file
+# peers.py - functions for serving the peers app
 # Copyright (C) 2025 - 2026  SCIENCE HPC Center at UCPH
 #
 # This file is part of MiGrid-UX.

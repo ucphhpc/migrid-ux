@@ -2,7 +2,7 @@
 #
 # --- BEGIN_HEADER ---
 #
-# __init__.py - dual licensed source code file
+# __init__.py - expose migux.apps.peers definitions
 # Copyright (C) 2025 - 2026  SCIENCE HPC Center at UCPH
 #
 # This file is part of MiGrid-UX.
