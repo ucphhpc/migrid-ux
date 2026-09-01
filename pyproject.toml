@@ -3,9 +3,13 @@ name = "migux"
 version = "1.15.0"
 dependencies = []
 requires-python = ">=3.9"
-authors = [{ name = "Another person", email = "another.person@example.com" }]
+authors = [
+  { name = "Alex Jeff Burke"},
+  { name = "Rasmus Munk", email = "rasmunk@users.noreply.github.com"},
+  { name = "Jonas Bardino" }
+]
 maintainers = [
-  { name = "Another person", email = "another.person@example.com" },
+  { name = "Rasmus Munk", email = "rasmunk@users.noreply.github.com"},
 ]
 description = "Supporting libraries and applications for the MiGrid user-facing web interfaces."
 readme = "README.md"
