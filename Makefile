@@ -72,9 +72,10 @@ dist: ./envhelp/local.depends
 	git commit -m "Release $(VERSION)"
 
 .PHONY: test
-test: ./envhelp/local.depends
+test: ./envhelp/local.depends ./envhelp/test-requirements.depends
 	$(NPM_BIN) test
 
+.PHONY: build-css
 build-css: ./envhelp/local.depends
 	@mkdir -p ./public/build
 	@echo "building stylesheets"
@@ -93,6 +94,16 @@ development: ./envhelp/local.depends build-css
 	@make ./node_modules/
 	@touch ./envhelp/local.depends
 
+./envhelp/dev-requirements.depends:
+	@echo "installing development dependencies"
+	@./envhelp/venv/bin/pip install -q -r dev-requirements.txt
+	@touch ./envhelp/dev-requirements.depends
+
+./envhelp/test-requirements.depends:
+	@echo "installing test dependencies"
+	@./envhelp/venv/bin/pip install -q -r test-requirements.txt
+	@touch ./envhelp/test-requirements.depends
+
 ./envhelp/venv/pyvenv.cfg:
 	@echo "provisioning environment"
 	python3 -m venv ./envhelp/venv
@@ -104,29 +115,36 @@ development: ./envhelp/local.depends build-css
 	@echo "installing npm packages"
 	@$(NPM_BIN) install
 
+.PHONY: fmt
 fmt: ./envhelp/local.depends
 	make fmt-js
 	make fmt-py
 
+.PHONY: fmt-js
 fmt-js:
 	$(NPM_BIN) run fmt
 
-fmt-py:
+.PHONY: fmt-py
+fmt-py: ./envhelp/dev-requirements.depends
 	@$(LOCAL_PYTHON_BIN) -m black .
 	@$(LOCAL_PYTHON_BIN) -m isort .
 
+.PHONY: lint
 lint: ./envhelp/local.depends
 	make lint-js
 	make lint-py
 
+.PHONY: lint-js
 lint-js: ./envhelp/local.depends
 	$(NPM_BIN) run lint
 
-lint-py: ./envhelp/local.depends
+.PHONY: lint-py
+lint-py: ./envhelp/local.depends ./envhelp/dev-requirements.depends
 	@$(LOCAL_PYTHON_BIN) -m black . --check
 	@$(LOCAL_PYTHON_BIN) -m isort . --check-only
 	@$(LOCAL_PYTHON_BIN) -m pylint `find ./migux ./devserver -name '*.py'`
 
+.PHONY: local__bail
 local__bail:
 	@echo "The GNU parallel utility was not detected therefore this"
 	@echo "combination target cannot proceed. You can either install"
@@ -148,12 +166,15 @@ local: development
 	@echo "The result will be accessible at http://localhost:8880"
 	@parallel make ::: local-frontend local-backend watch-css
 
+.PHONY: local-backend
 local-backend: ./envhelp/local.depends
 	./envhelp/venv/bin/python -m flask --app ./devserver/devserver.py run --port 8881
 
+.PHONY: local-frontend
 local-frontend: ./envhelp/local.depends
 	./envhelp/lpython ./envhelp/scripts/serve_http.py
 
+.PHONY: watch-css
 watch-css: ./envhelp/local.depends
 	@$(NPM_BIN) exec -- sass --watch \
 		./src/scss/reset.scss:./public/build/reset.css \

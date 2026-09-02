@@ -7,6 +7,8 @@
 /envhelp/staging
 /envhelp/venv
 /envhelp/local.depends
+/envhelp/dev-requirements.depends
+/envhelp/test-requirements.depends
 
 # test
 /coverage/
