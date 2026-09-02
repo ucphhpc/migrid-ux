@@ -44,9 +44,9 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version-file: ".nvmrc"
-      - run: pip install -r local-requirements.txt
-      - run: pip install -r dev-requirements.txt
-      - run: pip install -r test-requirements.txt
+      - run: pip install -r requirements/local-requirements.txt
+      - run: pip install -r requirements/dev-requirements.txt
+      - run: pip install -r requirements/test-requirements.txt
       - run: black . --check
       - run: isort . --check-only
       - run: pylint `find ./migux ./devserver -name '*.py'`

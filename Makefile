@@ -90,18 +90,18 @@ development: ./envhelp/local.depends build-css
 
 ./envhelp/local.depends: ./envhelp/venv/pyvenv.cfg ./envhelp/nvm/nvm.sh
 	@echo "installing development dependencies"
-	@./envhelp/venv/bin/pip install -q -r local-requirements.txt
+	@./envhelp/venv/bin/pip install -q -r requirements/local-requirements.txt
 	@make ./node_modules/
 	@touch ./envhelp/local.depends
 
 ./envhelp/dev-requirements.depends:
 	@echo "installing development dependencies"
-	@./envhelp/venv/bin/pip install -q -r dev-requirements.txt
+	@./envhelp/venv/bin/pip install -q -r requirements/dev-requirements.txt
 	@touch ./envhelp/dev-requirements.depends
 
 ./envhelp/test-requirements.depends:
 	@echo "installing test dependencies"
-	@./envhelp/venv/bin/pip install -q -r test-requirements.txt
+	@./envhelp/venv/bin/pip install -q -r requirements/test-requirements.txt
 	@touch ./envhelp/test-requirements.depends
 
 ./envhelp/venv/pyvenv.cfg:
