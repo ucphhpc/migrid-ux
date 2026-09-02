@@ -48,7 +48,7 @@ pipelines:
         destination: publish-python-scripts
     parameters:
       SRC_DIRECTORY: migrid-ux
-      BUILD_MAKE_TARGET: all
+      BUILD_MAKE_TARGET: build
       BUILD_MAKE_ARGS: ''
       TEST_DIRECTORY: migrid-ux
       TEST_MAKE_TARGET: test
