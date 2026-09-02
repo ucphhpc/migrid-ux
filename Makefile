@@ -37,6 +37,8 @@ build: development
 .PHONY: clean
 clean:
 	@rm -f ./envhelp/local.depends
+	@rm -f ./envhelp/dev-requirements.depends
+	@rm -f ./envhelp/test-requirements.depends
 	@rm -rf ./envhelp/venv
 	@rm -rf ./envhelp/nvm
 	@rm -rf ./envhelp/output
