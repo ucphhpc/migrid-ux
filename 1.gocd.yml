@@ -18,6 +18,7 @@
 environments:
   migrid-ux:
     environment_variables:
+      GIT_TERMINAL_PROMPT: 0
       GIT_USER: "{{SECRET:[github][username]}}"
       PYPI_USERNAME: "{{SECRET:[migrid-ux][username]}}"
       PYPI_PASSWORD: "{{SECRET:[migrid-ux][password]}}"
