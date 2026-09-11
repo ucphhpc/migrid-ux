@@ -22,9 +22,11 @@
 Common functions used within the dev server and its exposed resources.
 """
 
+import hashlib
 import json
 import os
 import re
+from base64 import b16encode
 
 from flask import Blueprint, render_template
 
@@ -77,3 +79,14 @@ def routes_to_blueprint(name, import_name, routes, *, template_folder=None):
         wrap(route_handler)
 
     return bp
+
+
+def make_csrf_token(method, operation, limit=None):
+    """
+    Generate a CSRF token for the given method, operation, and limit.
+    """
+    # TODO, introduce a devserver secret
+    #    secret_salt = os.environ.get("DEVSERVER_CSRF_SECRET", "devserver_csrf_secret")
+    input_merger = f"{method}:{operation}:{limit}"
+    hex_token = hashlib.sha256(input_merger.encode()).hexdigest()
+    return hex_token

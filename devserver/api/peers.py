@@ -26,6 +26,7 @@ from flask import request
 
 import devserver.common as server_common
 import migux.apps.peers as migux_apps_peers
+from devserver.common import make_csrf_token
 
 EXAMPLE_DATA = {
     "GET /accepted": server_common.import_example_data("peers/accepted.json"),
@@ -69,6 +70,20 @@ def create_handler_response(
     A helper function to create route handler responses.
     """
     return {"message": message, "error": error, **ui_response_kwargs}, status
+
+
+def _validate_csrf_token(payload, expected_token):
+    """
+    Validates the csrf_token from the JSON payload.
+    Returns a tuple of (is_valid, error_message)
+    """
+    if "csrf_token" not in payload:
+        return False, "Missing csrf_token in request payload"
+
+    if payload["csrf_token"] != expected_token:
+        return False, "Invalid csrf_token"
+
+    return True, None
 
 
 def _create_form_response(payload, simulate_error=False):
@@ -148,6 +163,12 @@ def migux_apps_peers__POST_accepted_delete():
     """
 
     payload = request.json
+    expected_token = make_csrf_token("POST", "peers/accepted/delete")
+
+    is_valid, error = _validate_csrf_token(payload, expected_token)
+    if not is_valid:
+        return create_handler_response(403, error=error)
+
     peer_dns_to_delete = set(payload["peers"])
 
     example_data = EXAMPLE_DATA["GET /accepted"]
@@ -166,6 +187,12 @@ def migux_apps_peers__POST_accepted_import():
     """
 
     payload = request.json
+
+    expected_token = make_csrf_token("POST", "peers/accepted/import")
+
+    is_valid, error = _validate_csrf_token(payload, expected_token)
+    if not is_valid:
+        return create_handler_response(403, error=error)
 
     # Global values applied to all rows
     global_label = payload.get("label", "")
@@ -233,6 +260,13 @@ def migux_apps_peers__POST_accepted_fetch():
     """
 
     payload = request.json
+
+    expected_token = make_csrf_token("POST", "peers/accepted/fetch")
+
+    is_valid, error = _validate_csrf_token(payload, expected_token)
+    if not is_valid:
+        return create_handler_response(403, error=error)
+
     peer_dn = payload.get("peer_dn", None)
 
     example_data = EXAMPLE_DATA["GET /accepted"]
@@ -257,6 +291,13 @@ def migux_apps_peers__POST_accepted_update():
     """
 
     payload = request.json
+
+    expected_token = make_csrf_token("POST", "peers/accepted/update")
+
+    is_valid, error = _validate_csrf_token(payload, expected_token)
+    if not is_valid:
+        return create_handler_response(403, error=error)
+
     peer_dn = payload.pop("peer_dn", None)
 
     example_data = EXAMPLE_DATA["GET /accepted"]
@@ -291,6 +332,13 @@ def migux_apps_peers__POST_accepted_send_invitation():
     """
 
     payload = request.json
+
+    expected_token = make_csrf_token("POST", "peers/accepted/send_invitation")
+
+    is_valid, error = _validate_csrf_token(payload, expected_token)
+    if not is_valid:
+        return create_handler_response(403, error=error)
+
     peer_dns_to_invite = set(payload.get("peers", []))
     if not peer_dns_to_invite:
         return create_handler_response(
@@ -317,6 +365,12 @@ def migux_apps_peers__POST_requested_accept():
     """
 
     payload = request.json
+
+    expected_token = make_csrf_token("POST", "peers/requested/accept")
+
+    is_valid, error = _validate_csrf_token(payload, expected_token)
+    if not is_valid:
+        return create_handler_response(403, error=error)
 
     all_requested = EXAMPLE_DATA["GET /requested"]
     peer_dns_for_accept = set(payload["peers"])
@@ -346,6 +400,12 @@ def migux_apps_peers__POST_requested_delete():
 
     payload = request.json
 
+    expected_token = make_csrf_token("POST", "peers/requested/delete")
+
+    is_valid, error = _validate_csrf_token(payload, expected_token)
+    if not is_valid:
+        return create_handler_response(403, error=error)
+
     example_data = EXAMPLE_DATA["GET /requested"]
     peer_dns_for_removal = set(payload["peers"])
 
@@ -363,10 +423,17 @@ def migux_apps_peers__POST_new():
     """
     Request handler: POST /peers/new
     """
+    payload = request.json
+
+    expected_token = make_csrf_token("POST", "peers/new")
+
+    is_valid, error = _validate_csrf_token(payload, expected_token)
+    if not is_valid:
+        return create_handler_response(403, error=error)
+
     example_data = EXAMPLE_DATA["GET /accepted"]
     example_user_dict = EXAMPLE_DATA["GET /accepted"][0]
 
-    payload = request.json
     should_simulate_error = payload["full_name"] == "ERROR"
 
     form_response = _create_form_response(
