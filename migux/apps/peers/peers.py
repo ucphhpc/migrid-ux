@@ -117,6 +117,21 @@ def list_peers_requested(request, data=None):
     }
 
 
+def list_csrf_tokens(request, data=None):
+    """
+    Generate render_info for the listing of tokens.
+    """
+
+    csrf_tokens = request.args.get("csrf_tokens", [])
+
+    return {
+        "template_args": {
+            "tokens": FieldObjectListing(data, csrf_tokens),
+        },
+        "template_name": "csrf_tokens",
+    }
+
+
 TEMPLATE_FOLDER = os.path.join(os.path.dirname(__file__), "templates")
 TEMPLATE_ROUTES = {
     "GET /accepted": {
@@ -124,5 +139,8 @@ TEMPLATE_ROUTES = {
     },
     "GET /requested": {
         "generate_args": list_peers_requested,
+    },
+    "GET /csrf_tokens": {
+        "generate_args": list_csrf_tokens,
     },
 }

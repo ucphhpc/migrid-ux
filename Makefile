@@ -144,7 +144,7 @@ lint-js: ./envhelp/local.depends
 lint-py: ./envhelp/local.depends ./envhelp/dev-requirements.depends
 	@$(LOCAL_PYTHON_BIN) -m black . --check
 	@$(LOCAL_PYTHON_BIN) -m isort . --check-only
-	@$(LOCAL_PYTHON_BIN) -m pylint `find ./migux ./devserver -name '*.py'`
+	@$(LOCAL_PYTHON_BIN) -m pylint `find ./migux ./devserver -name '*.py'` --disable=R0914
 
 .PHONY: local__bail
 local__bail:

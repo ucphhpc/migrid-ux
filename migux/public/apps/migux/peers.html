@@ -37,6 +37,11 @@
           </div>
         </div>
       </div>
+      <div name="csrf_tokens"
+        data-bind-observe="csrf_tokens"
+        data-bind-array="csrf_tokens_entries"
+        data-bind-array-each="div">
+      </div>
       <div class="capture-user-clicks" data-bind-onclick="disableToolTips">
         <div class="modal-dialog modal-xl">
           <div class="modal-content">

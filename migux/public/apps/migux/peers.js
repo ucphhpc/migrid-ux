@@ -72,6 +72,9 @@ export class PeersApp extends AppBase {
     this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
     this.searchRequestedQuery({ defaultEmptyQuery: "*" });
 
+    // Get the initial csrf tokens for the available operations
+    this.refreshCsrfTokens();
+
     this._options.afterInitialization(this);
   }
 
@@ -121,6 +124,45 @@ export class PeersApp extends AppBase {
       };
     }
     appState._active_tooltips(newActiveTooltips);
+  }
+
+  async refreshCsrfTokens({
+    requests = PeersApp.CONST_STATE_CHANGE_REQUESTS,
+  } = {}) {
+    const namespace = this.state.namespace("__app__");
+
+    const requestOptions = {
+      query: {
+        requests: requests,
+      },
+    };
+
+    return this.request("/peers/csrf_tokens", requestOptions, namespace)
+      .then(async (res) => {
+        const html = await res.text();
+        this._csrfTokenUpdateElements(namespace, html);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
+  _csrfTokenUpdateElements(namespace, html) {
+    const elements = namespace.csrf_tokens(html);
+    if (elements.length === 0) {
+      namespace.csrf_tokens_entries([]);
+    } else {
+      namespace.csrf_tokens_entries(elements);
+    }
+  }
+
+  getCsrfToken(method, operation) {
+    const namespace = this.state.namespace("__app__");
+    const tokens = namespace.csrf_tokens_entries();
+    const token = tokens.find(
+      (token) => token.method() === method && token.operation() === operation,
+    );
+    return token;
   }
 
   showDialog() {
@@ -339,10 +381,14 @@ export class PeersApp extends AppBase {
         throw error;
       }
 
-      const requestOptions = {
+      let requestOptions = {
         method: "POST",
         data: payload,
       };
+      const csrfToken = this.getCsrfToken("POST", "/peers/accepted/import");
+      if (csrfToken) {
+        requestOptions.data.csrf_token = csrfToken.csrf_token();
+      }
       await this.request("/peers/accepted/import", requestOptions, namespace);
 
       await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
@@ -433,10 +479,15 @@ export class PeersApp extends AppBase {
       return;
     }
 
-    const requestOptions = {
+    let requestOptions = {
       method: "POST",
       data: { peers: distinguished_names_for_removal },
     };
+
+    const deleteToken = this.getCsrfToken("POST", "/peers/accepted/delete");
+    if (deleteToken) {
+      requestOptions.data.csrf_token = deleteToken.csrf_token();
+    }
     return this.request("/peers/accepted/delete", requestOptions)
       .then(async (res) => {
         const result = await res.json();
@@ -466,10 +517,14 @@ export class PeersApp extends AppBase {
       return;
     }
 
-    const requestOptions = {
+    let requestOptions = {
       method: "POST",
       data: { peers: peer_dns_for_invitation },
     };
+    const csrfToken = this.getCsrfToken("POST", "/peers/send_invitation");
+    if (csrfToken) {
+      requestOptions.data.csrf_token = csrfToken.csrf_token();
+    }
     return this.request("/peers/send_invitation", requestOptions)
       .then(async (res) => {
         const result = await res.json();
@@ -540,10 +595,14 @@ export class PeersApp extends AppBase {
       return;
     }
 
-    const requestOptions = {
+    let requestOptions = {
       method: "POST",
       data: { peers: distinguished_names_for_accept },
     };
+    const csrfToken = this.getCsrfToken("POST", "/peers/requested/accept");
+    if (csrfToken) {
+      requestOptions.data.csrf_token = csrfToken.csrf_token();
+    }
     return this.request("/peers/requested/accept", requestOptions)
       .then(async (res) => {
         const result = await res.json();
@@ -582,10 +641,14 @@ export class PeersApp extends AppBase {
       return;
     }
 
-    const requestOptions = {
+    let requestOptions = {
       method: "POST",
       data: { peers: distinguished_names_for_removal },
     };
+    const csrfToken = this.getCsrfToken("POST", "/peers/requested/delete");
+    if (csrfToken) {
+      requestOptions.data.csrf_token = csrfToken.csrf_token();
+    }
     return this.request("/peers/requested/delete", requestOptions)
       .then(async (res) => {
         const result = await res.json();
@@ -672,10 +735,14 @@ export class PeersApp extends AppBase {
         throw error;
       }
 
-      const requestOptions = {
+      let requestOptions = {
         method: "POST",
         data: values,
       };
+      const csrfToken = this.getCsrfToken("POST", "/peers/new");
+      if (csrfToken) {
+        requestOptions.data.csrf_token = csrfToken.csrf_token();
+      }
       await this.request("/peers/new", requestOptions, namespace);
       await this.searchAcceptedQuery({ defaultEmptyQuery: "*" });
       this.newPeerClear();
@@ -726,12 +793,15 @@ export class PeersApp extends AppBase {
     const newPeerNamespace = this.state.formState("peers_new");
     const peer_dn = entry.peer_dn();
 
-    return this.request("/peers/accepted/fetch", {
+    let requestOptions = {
       method: "POST",
-      data: {
-        peer_dn,
-      },
-    })
+      data: { peer_dn },
+    };
+    const csrfToken = this.getCsrfToken("POST", "/peers/accepted/fetch");
+    if (csrfToken) {
+      requestOptions.data.csrf_token = csrfToken.csrf_token();
+    }
+    return this.request("/peers/accepted/fetch", requestOptions)
       .then(async (res) => {
         const result = await res.json();
         const peer = result.data;
@@ -771,11 +841,16 @@ export class PeersApp extends AppBase {
       return;
     }
 
-    const values = {};
+    let values = {};
     for (const fieldName of PeersApp.CONST_EDIT_PEER_FIELD_NAMES) {
       values[fieldName] = newPeerNamespace[fieldName]();
     }
     values["peer_dn"] = peerDnBeingEdited;
+
+    const csrfToken = this.getCsrfToken("POST", "/peers/accepted/update");
+    if (csrfToken) {
+      values.csrf_token = csrfToken.csrf_token();
+    }
 
     return this.request(
       "/peers/accepted/update",
@@ -972,9 +1047,55 @@ PeersApp.CONST_PEERS_LISTING_COLNAMES = [
   "expire",
 ];
 
+PeersApp.CONST_STATE_CHANGE_REQUESTS = [
+  "method=POST&operation=/peers/new",
+  "method=POST&operation=/peers/send_invitation",
+  "method=POST&operation=/peers/requested/accept",
+  "method=POST&operation=/peers/requested/delete",
+  "method=POST&operation=/peers/accepted/delete",
+  "method=POST&operation=/peers/accepted/fetch",
+  "method=POST&operation=/peers/accepted/import",
+  "method=POST&operation=/peers/accepted/update",
+];
+
 export const App = PeersApp;
 
 (function () {
+  function makeCsrfTokenState() {
+    return {
+      csrf_tokens: observedHtml(NO_VALUE, {
+        select: "div",
+        // This is called when the csrf_tokens is changed
+        decodeHtml: (subtreeEl) => {
+          console.log("subtreeEl", subtreeEl);
+          const tokenEls = Array.from(
+            subtreeEl.querySelectorAll('div[class="csrf-token"]'),
+          );
+
+          const csrfElements = tokenEls.map((tokenEl) => {
+            return {
+              method: tokenEl.querySelector("div[class=csrf-token-method]")
+                .textContent,
+              operation: tokenEl.querySelector(
+                "div[class=csrf-token-operation]",
+              ).textContent,
+              csrf_token: tokenEl.querySelector("div[class=csrf-token-token]")
+                .textContent,
+            };
+          });
+          return csrfElements;
+        },
+      }),
+      csrf_tokens_entries: observedArray(NO_VALUE, {
+        definition: {
+          method: NO_VALUE,
+          operation: NO_VALUE,
+          csrf_token: NO_VALUE,
+        },
+      }),
+    };
+  }
+
   function makePeersListingState({
     showColLabel = true,
     showColKind = true,
@@ -1030,6 +1151,7 @@ export const App = PeersApp;
 
   PeersApp[APP_DEFINITION] = {
     __app__: {
+      ...makeCsrfTokenState(),
       disable_close: (state) => {
         const observing = new Set();
         for (const [, formNamespace] of Object.entries(state.forms)) {

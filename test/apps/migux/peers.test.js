@@ -112,6 +112,12 @@ function makeFakeFetch({ body = null, contentType = "text/html" } = {}) {
 }
 
 describe("apps/peers", function () {
+  before(async () => {
+    // Disable the refreshCsrfTokens that is for instance used during initialization
+    // We are not testing the csrf token functionality here.
+    sinon.stub(PeersApp.prototype, "refreshCsrfTokens");
+  });
+
   browserHooksEach(this);
 
   it("should allow being closed when there are no submissions", () => {

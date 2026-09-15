@@ -26,7 +26,6 @@ import hashlib
 import json
 import os
 import re
-from base64 import b16encode
 
 from flask import Blueprint, render_template
 

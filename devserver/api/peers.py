@@ -63,6 +63,23 @@ def _unconcatify(value, sep):
     return result
 
 
+def extract_csv_content_and_header(csv_input):
+    """
+    Extracts the CSV header and content from the given CSV input.
+    Returns a tuple of (header, content) where header is a list of strings
+    and content is a list of lists of strings.
+    """
+    # Parse CSV text
+    csv_lines = _unconcatify(csv_input, "\n")
+    if not csv_lines:
+        return {}, 400
+
+    # First line is the header
+    header = [col.strip() for col in csv_lines[0].split(";")]
+
+    return header, csv_lines
+
+
 def create_handler_response(
     status, message=None, error=None, **ui_response_kwargs
 ):
@@ -163,7 +180,7 @@ def migux_apps_peers__POST_accepted_delete():
     """
 
     payload = request.json
-    expected_token = make_csrf_token("POST", "peers/accepted/delete")
+    expected_token = make_csrf_token("POST", "/peers/accepted/delete")
 
     is_valid, error = _validate_csrf_token(payload, expected_token)
     if not is_valid:
@@ -185,40 +202,33 @@ def migux_apps_peers__POST_accepted_import():
     """
     Request handler: GET /peers/accepted/import
     """
-
     payload = request.json
-
-    expected_token = make_csrf_token("POST", "peers/accepted/import")
+    expected_token = make_csrf_token("POST", "/peers/accepted/import")
 
     is_valid, error = _validate_csrf_token(payload, expected_token)
     if not is_valid:
         return create_handler_response(403, error=error)
 
-    # Global values applied to all rows
-    global_label = payload.get("label", "")
-    global_kind = payload.get("kind", "")
-    global_expire = payload.get("expire", "")
+    global_payload = {
+        "csvtext": payload.get("csvtext", ""),
+        "label": payload.get("label", ""),
+        "kind": payload.get("kind", ""),
+        "expire": payload.get("expire", ""),
+    }
 
     input_label = payload.get("label", "")
     if input_label == "ERROR":
         errors_map = {
-            "csvtext": payload.get("csvtext", ""),
-            "label": global_label,
-            "kind": global_kind,
-            "expire": global_expire,
+            "csvtext": global_payload["csvtext"],
+            "label": global_payload["label"],
+            "kind": global_payload["kind"],
+            "expire": global_payload["expire"],
         }
+        return create_handler_response(404, errors_map=errors_map)
 
-        return {
-            "errors_map": errors_map,
-        }, 404
-
-    # Parse CSV text
-    csv_lines = _unconcatify(payload.get("csvtext", ""), "\n")
-    if not csv_lines:
-        return {}, 400
-
-    # First line is the header
-    header = [col.strip() for col in csv_lines[0].split(";")]
+    csv_lines, header = extract_csv_content_and_header(
+        payload.get("csvtext", "")
+    )
 
     # Iterate each body line
     for line in csv_lines[1:]:
@@ -233,12 +243,12 @@ def migux_apps_peers__POST_accepted_import():
                 user_dict[col_name] = values[i]
 
         # Apply global values
-        if global_label:
-            user_dict["label"] = global_label
-        if global_expire:
-            user_dict["expire"] = global_expire
-        if global_kind:
-            user_dict["kind"] = global_kind
+        if global_payload["label"]:
+            user_dict["label"] = global_payload["label"]
+        if global_payload["expire"]:
+            user_dict["expire"] = global_payload["expire"]
+        if global_payload["kind"]:
+            user_dict["kind"] = global_payload["kind"]
 
         # Since this is only a dev dummy endpoint, we fill in any missing values required
         # to make a distinguished name
@@ -251,7 +261,7 @@ def migux_apps_peers__POST_accepted_import():
         # Generate distinguished name
         user_dict["distinguished_name"] = _fill_distinguished_name(user_dict)
         EXAMPLE_DATA["GET /accepted"].append(user_dict)
-    return {}
+    return create_handler_response(200)
 
 
 def migux_apps_peers__POST_accepted_fetch():
@@ -261,7 +271,7 @@ def migux_apps_peers__POST_accepted_fetch():
 
     payload = request.json
 
-    expected_token = make_csrf_token("POST", "peers/accepted/fetch")
+    expected_token = make_csrf_token("POST", "/peers/accepted/fetch")
 
     is_valid, error = _validate_csrf_token(payload, expected_token)
     if not is_valid:
@@ -292,7 +302,7 @@ def migux_apps_peers__POST_accepted_update():
 
     payload = request.json
 
-    expected_token = make_csrf_token("POST", "peers/accepted/update")
+    expected_token = make_csrf_token("POST", "/peers/accepted/update")
 
     is_valid, error = _validate_csrf_token(payload, expected_token)
     if not is_valid:
@@ -333,7 +343,7 @@ def migux_apps_peers__POST_accepted_send_invitation():
 
     payload = request.json
 
-    expected_token = make_csrf_token("POST", "peers/accepted/send_invitation")
+    expected_token = make_csrf_token("POST", "/peers/accepted/send_invitation")
 
     is_valid, error = _validate_csrf_token(payload, expected_token)
     if not is_valid:
@@ -366,7 +376,7 @@ def migux_apps_peers__POST_requested_accept():
 
     payload = request.json
 
-    expected_token = make_csrf_token("POST", "peers/requested/accept")
+    expected_token = make_csrf_token("POST", "/peers/requested/accept")
 
     is_valid, error = _validate_csrf_token(payload, expected_token)
     if not is_valid:
@@ -400,7 +410,7 @@ def migux_apps_peers__POST_requested_delete():
 
     payload = request.json
 
-    expected_token = make_csrf_token("POST", "peers/requested/delete")
+    expected_token = make_csrf_token("POST", "/peers/requested/delete")
 
     is_valid, error = _validate_csrf_token(payload, expected_token)
     if not is_valid:
@@ -425,7 +435,7 @@ def migux_apps_peers__POST_new():
     """
     payload = request.json
 
-    expected_token = make_csrf_token("POST", "peers/new")
+    expected_token = make_csrf_token("POST", "/peers/new")
 
     is_valid, error = _validate_csrf_token(payload, expected_token)
     if not is_valid:
@@ -457,6 +467,35 @@ def migux_apps_peers__POST_new():
     )
 
 
+def migux_apps_peers__GET_csrf_tokens():
+    """
+    Request handler: GET /csrf_tokens
+    """
+    template_route = migux_apps_peers.TEMPLATE_ROUTES["GET /csrf_tokens"]
+    request_uri = request.values.get("requests", [])
+    request_objects = list(request_uri.split(","))
+
+    tokens = []
+    for request_object in request_objects:
+        method_obj, operation_obj = request_object.split("&")
+        method = method_obj.split("=")[1]
+        operation = operation_obj.split("=")[1]
+
+        token = make_csrf_token(method, operation)
+        tokens.append(
+            {"token": token, "method": method, "operation": operation}
+        )
+
+    request_info = SimpleNamespace(
+        args={"csrf_tokens": ["token", "method", "operation"]}
+    )
+
+    # Generate tokens based on the operation requested
+    return server_common.render_app_template(
+        template_route, request_info=request_info, data=tokens
+    )
+
+
 ROUTES = {
     "POST /new": migux_apps_peers__POST_new,
     "GET /summary": migux_apps_peers__GET_summary,
@@ -469,6 +508,7 @@ ROUTES = {
     "POST /accepted/fetch": migux_apps_peers__POST_accepted_fetch,
     "POST /accepted/import": migux_apps_peers__POST_accepted_import,
     "POST /accepted/update": migux_apps_peers__POST_accepted_update,
+    "GET /csrf_tokens": migux_apps_peers__GET_csrf_tokens,
 }
 
 
