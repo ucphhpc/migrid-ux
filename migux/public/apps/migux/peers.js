@@ -1067,7 +1067,6 @@ export const App = PeersApp;
         select: "div",
         // This is called when the csrf_tokens is changed
         decodeHtml: (subtreeEl) => {
-          console.log("subtreeEl", subtreeEl);
           const tokenEls = Array.from(
             subtreeEl.querySelectorAll('div[class="csrf-token"]'),
           );
