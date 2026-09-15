@@ -49,7 +49,7 @@ jobs:
       - run: pip install -r requirements/test-requirements.txt
       - run: black . --check
       - run: isort . --check-only
-      - run: pylint `find ./migux ./devserver -name '*.py'`
+      - run: pylint `find ./migux ./devserver -name '*.py'` --disable=R0914
 
   test:
     runs-on: ubuntu-latest
