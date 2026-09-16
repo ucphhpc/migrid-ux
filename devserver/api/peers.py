@@ -475,24 +475,26 @@ def migux_apps_peers__GET_csrf_tokens():
     request_uri = request.values.get("requests", [])
     request_objects = list(request_uri.split(","))
 
-    tokens = []
+    csrf_tokens = []
     for request_object in request_objects:
         method_obj, operation_obj = request_object.split("&")
         method = method_obj.split("=")[1]
         operation = operation_obj.split("=")[1]
 
         token = make_csrf_token(method, operation)
-        tokens.append(
+        csrf_tokens.append(
             {"token": token, "method": method, "operation": operation}
         )
 
+    # We artificially create the request_info here to align with the
+    # render_app_templates expectations
     request_info = SimpleNamespace(
-        args={"csrf_tokens": ["token", "method", "operation"]}
+        args={"fields": ["token", "method", "operation"]}
     )
 
     # Generate tokens based on the operation requested
     return server_common.render_app_template(
-        template_route, request_info=request_info, data=tokens
+        template_route, request_info=request_info, data=csrf_tokens
     )
 
 
