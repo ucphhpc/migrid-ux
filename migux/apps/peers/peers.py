@@ -122,11 +122,11 @@ def list_csrf_tokens(request, data=None):
     Generate render_info for the listing of tokens.
     """
 
-    csrf_tokens = request.args.get("csrf_tokens", [])
+    field_names = request.args.get("fields", [])
 
     return {
         "template_args": {
-            "tokens": FieldObjectListing(data, csrf_tokens),
+            "csrf_tokens": FieldObjectListing(data, field_names),
         },
         "template_name": "csrf_tokens",
     }

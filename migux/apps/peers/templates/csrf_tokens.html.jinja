@@ -1,4 +1,4 @@
-{% for entry in tokens %}
+{% for entry in csrf_tokens %}
 <div hidden class="csrf-token">
     <div class="csrf-token-method">{{ entry.method }}</div>
     <div class="csrf-token-operation">{{ entry.operation }}</div>
