@@ -825,10 +825,12 @@ export class PeersApp extends AppBase {
   }
 
   editPeerCancel() {
+    this.newPeerCreateReset();
+
     const newPeerNamespace = this.state.formState("peers_new");
-    this.resetNamespace(newPeerNamespace);
     newPeerNamespace._is_editing(false);
     newPeerNamespace._editing_dn(NO_VALUE);
+    this.changeTab(0);
   }
 
   editPeerSave() {
