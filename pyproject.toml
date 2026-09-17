@@ -1,6 +1,6 @@
 [project]
 name = "migux"
-version = "1.18.0"
+version = "1.19.0"
 dependencies = []
 requires-python = ">=3.9"
 authors = [
