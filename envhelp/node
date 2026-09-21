@@ -20,7 +20,7 @@
 SCRIPT_PATH=$(realpath "$0")
 SCRIPT_BASE=$(dirname -- "$SCRIPT_PATH")
 
-NODE_VERSION=${NODE_VERSION:-`cat .nvmrc`}
+NODE_VERSION=${NODE_VERSION:-`cat envhelp/.nvmrc`}
 if [ -z "${NODE_VERSION}" ]; then
     echo "No node version specified"
     exit 1
