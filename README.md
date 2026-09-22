@@ -1,5 +1,8 @@
 # migrid-ux
 
+[![Documentation Status](https://readthedocs.org/projects/migrid-ux/badge/)](https://migrid-ux.readthedocs.io/)
+
+
 This repository is intended as the source of truth for a series of small web
 applications and their supporting libraries which will form various portions
 of the MiGrid user-facing web interface. They are currently under extremely
