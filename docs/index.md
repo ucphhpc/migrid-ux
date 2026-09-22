@@ -10,6 +10,7 @@ until such time as they are merged to the main branch.
 :maxdepth: 1
 
 developer
+architecture
 ```
 
 ## Basic principles
