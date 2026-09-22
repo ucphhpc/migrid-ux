@@ -53,6 +53,11 @@ coverage:
 	$(NPM_BIN) run coverage
 	@echo "coverage report written to ./coverage"
 
+.PHONY: docs
+docs: ./envhelp/docs.depends
+	./envhelp/venv/bin/sphinx-build -b html ./docs ./docs/_build/html
+	@echo "docs written to ./docs/_build/html"
+
 .PHONY: major
 major:
 	BUMP=major make dist
@@ -89,6 +94,11 @@ build-css: ./envhelp/local.depends
 
 .PHONY: development
 development: ./envhelp/local.depends build-css
+
+./envhelp/docs.depends: ./envhelp/local.depends
+	@echo "installing docs dependencies"
+	@./envhelp/venv/bin/pip install -q -r docs/requirements.txt
+	@touch ./envhelp/docs.depends
 
 ./envhelp/local.depends: ./envhelp/venv/pyvenv.cfg ./envhelp/nvm/nvm.sh
 	@echo "installing development dependencies"

@@ -6,7 +6,7 @@ import eslintMocha from "eslint-plugin-mocha";
 const eslintMochaRecommended = eslintMocha.configs.recommended;
 
 export default defineConfig([
-  globalIgnores(["coverage/", "envhelp/"]),
+  globalIgnores(["coverage/", "envhelp/", "docs/_build"]),
   {
     plugins: { js: eslintJs },
     extends: ["js/recommended"],

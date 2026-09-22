@@ -7,6 +7,7 @@
 /envhelp/staging
 /envhelp/venv
 /envhelp/local.depends
+/envhelp/docs.depends
 /envhelp/dev-requirements.depends
 /envhelp/test-requirements.depends
 
@@ -15,6 +16,7 @@
 
 # build
 __pycache__/
+/docs/_build/
 /migux/public/apps/**/*.css
 /migux/public/apps/**/*.css.map
 /public/build/

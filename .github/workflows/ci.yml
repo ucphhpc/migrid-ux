@@ -62,3 +62,15 @@ jobs:
           node-version-file: "envhelp/.nvmrc"
       - run: npm install
       - run: npm test
+
+  docs:
+    runs-on: ubuntu-latest
+    name: Build docs
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install -r docs/requirements.txt
+      - run: sphinx-build -b html docs docs/_build/html
