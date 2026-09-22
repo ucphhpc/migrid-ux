@@ -36,7 +36,7 @@ These include the following:
 | `fmt` | Format all sources (JavaScript and Python) |
 | `build` | Build the distributable package |
 | `dist` | Build and commit a release |
-| `patch|minor|major` | Build and commit a patch/minor/major release |
+| `patch,minor,major` | Build and commit a patch/minor/major release |
 | `coverage` | Run the test suite with coverage reporting |
 
 ## Project layout
