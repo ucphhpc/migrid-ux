@@ -28,7 +28,7 @@ Finally, the `binding.js` file is used to define functions that help establishin
 
 ## How an application is introduced
 
-This section will present a barebone example for how you can introduce a new application to the `mig-ux` stack, that subsequently can be integrated as dynamic web applications in `migrid`
+This section will present a barebone example for how you can introduce a new application to the `mig-ux` stack, that subsequently can be integrated as dynamic web applications in `migrid`.
 
 ### Defining the application
 
@@ -108,7 +108,7 @@ In terms of structure, the `migrid-ux` architecture expects that the HTML file d
 </html>
 ```
 
-For CSS, we use the SCSS preprocessor to define the application's styles. The CSS file should be defined in the `src/apps` directory and should be named after the application name. For the profile example, this would mean the creation of the `profile.scss` file in the `src/apps` directory. After
+For CSS, we use the SCSS preprocessor to define the application's styles. The CSS file should be defined in the `src/apps` directory and should be named after the application name. For the profile example, this would mean the creation of the `profile.scss` file in the `src/apps` directory.
 
 After the appropriate styles are defined in the mentioned SCSS file, the file should be added as an entry to the `Makefile` `build-css` target.
 

@@ -20,7 +20,7 @@ $ make local
 This installs the necessary dependencies for local development, provisions a
 virtual environment, and starts a local web server and a fake backend
 intended to support rapid iteration. The application is then accessible at
-`http://localhost:8880`
+`http://localhost:8880`.
 
 ## Make targets
 
