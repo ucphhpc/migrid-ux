@@ -56,6 +56,9 @@ export class ProfileApp extends AppBase {
   }
 }
 
+// Required by performAppLoad to identify the application class
+export const App = ProfileApp;
+
 (function () {
   ProfileApp[APP_DEFINITION] = {
     __app__: {
@@ -67,7 +70,7 @@ export class ProfileApp extends AppBase {
 })();
 ```
 
-This puts in the foundational ProfileApp class and definition. You should note that every application class is expected to a general default/global namespace called `__app__` as part of their definition.
+This puts in the required foundational ProfileApp class, the export, and the definition. You should note that every application class is expected to a general default/global namespace called `__app__` as part of their definition.
 
 After this, the general bootstrap function for initialize the application should be defined in the same file following the above block.
 
@@ -89,8 +92,37 @@ As with the Javascript foundation, the application's HTML and CSS should be defi
 
 In terms of structure, the `migrid-ux` architecture expects that the HTML file defines a regular `body` that defines the `data-migrole="app"` and `data-migapp="profile"` attributes. After this is achived, the internal `body` structure can be defined as required by the application itself, with the ability to use the `data-bind-*` attributes to bind the application's state to the HTML elements and their events.
 
+```html
+<!doctype html>
+<html>
+    <head>
+        <title>apps/profile</title>
+    </head>
+
+    <body data-migrole="app" data-migapp="profile">
+        <h1>Profile</h1>
+        <p>This is the profile page</p>
+    </body>
+</html>
+```
+
 For CSS, we use the SCSS preprocessor to define the application's styles. The CSS file should be defined in the `src/apps` directory and should be named after the application name. For the profile example, this would mean the creation of the `profile.scss` file in the `src/apps` directory. After
 
-After the appropriate styles are defined in the mentioned SCSS file, the file should be added as an entry to the `Makefile` `build-css` target. This will ensure that the CSS file is built and placed in the expected `public/apps/migux` directory where it is required to be present when `mig-ux` tries to load the associated stylesheets via the `loadAppStyles` call in the `performAppLoad` function.
+After the appropriate styles are defined in the mentioned SCSS file, the file should be added as an entry to the `Makefile` `build-css` target.
+
+```Makefile
+.PHONY: build-css
+build-css: ./envhelp/local.depends
+...
+	@$(NPM_BIN) exec -- sass --quiet \
+...
+    \
+		./src/apps/profile.scss:./public/apps/migux/profile.css
+```
+
+This will ensure that the CSS file is built and placed in the expected `public/apps/migux` directory where it is required to be present when `mig-ux` tries to load the associated stylesheets via the `loadAppStyles` call in the `performAppLoad` function.
 
 
+#### Putting it all together
+
+After having completed the above steps in creating the 3 required files and generating the associated CSS, the application should be ready to be used for local development and iteration. The application can then be launched by executing the `make local` target, which will start the `migrid-ux` development server at `http://localhost:8080` and include the profile application in the default menu.
