@@ -83,7 +83,7 @@ Any new application must define and export the `bootstrap` function in their Jav
 After the basic Javascript infrastructure is implemented, the next step is to define the application's HTML and CSS.
 
 
-### Defining the application's HTML and CSS
+#### Defining the application's HTML and CSS
 
 As with the Javascript foundation, the application's HTML and CSS should be defined in the `public/apps/migux` directory that matches the application name. Following the profile example this would mean the creation of the `profile.html` and `profile.css` files.
 
@@ -92,6 +92,5 @@ In terms of structure, the `migrid-ux` architecture expects that the HTML file d
 For CSS, we use the SCSS preprocessor to define the application's styles. The CSS file should be defined in the `src/apps` directory and should be named after the application name. For the profile example, this would mean the creation of the `profile.scss` file in the `src/apps` directory. After
 
 After the appropriate styles are defined in the mentioned SCSS file, the file should be added as an entry to the `Makefile` `build-css` target. This will ensure that the CSS file is built and placed in the expected `public/apps/migux` directory where it is required to be present when `mig-ux` tries to load the associated stylesheets via the `loadAppStyles` call in the `performAppLoad` function.
-
 
 
