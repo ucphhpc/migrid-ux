@@ -113,10 +113,7 @@ After the appropriate styles are defined in the mentioned SCSS file, the file sh
 ```Makefile
 .PHONY: build-css
 build-css: ./envhelp/local.depends
-...
 	@$(NPM_BIN) exec -- sass --quiet \
-...
-    \
 		./src/apps/profile.scss:./public/apps/migux/profile.css
 ```
 
