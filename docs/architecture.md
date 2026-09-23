@@ -108,15 +108,10 @@ In terms of structure, the `migrid-ux` architecture expects that the HTML file d
 </html>
 ```
 
-For CSS, we use the SCSS preprocessor to define the application's styles. The CSS file should be defined in the `src/apps` directory and should be named after the application name. For the profile example, this would mean the creation of the `profile.scss` file in the `src/apps` directory.
+For CSS, we use the SCSS preprocessor to define the application's styles. The CSS file should be defined in the `src/apps` directory and should be named after the application name. For the profile example, this would mean the creation of the `profile.scss` file in the `src/apps` directory. After the appropriate styles are defined in the mentioned SCSS file, the Makefile `build-apps-css` target should be executed. 
 
-After the appropriate styles are defined in the mentioned SCSS file, the file should be added as an entry to the `Makefile` `build-css` target.
-
-```Makefile
-.PHONY: build-css
-build-css: ./envhelp/local.depends
-	@$(NPM_BIN) exec -- sass --quiet \
-		./src/apps/profile.scss:./public/apps/migux/profile.css
+```bash
+make build-apps-css
 ```
 
 This will ensure that the CSS file is built and placed in the expected `public/apps/migux` directory where it is required to be present when `mig-ux` tries to load the associated stylesheets via the `loadAppStyles` call in the `performAppLoad` function.

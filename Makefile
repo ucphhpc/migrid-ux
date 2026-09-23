@@ -85,15 +85,20 @@ test: ./envhelp/local.depends ./envhelp/test-requirements.depends
 .PHONY: build-css
 build-css: ./envhelp/local.depends
 	@mkdir -p ./public/build
-	@echo "building stylesheets"
+	@echo "building main stylesheets"
 	@$(NPM_BIN) exec -- sass --quiet \
 		./src/scss/reset.scss:./public/build/reset.css \
-		./src/scss/main.scss:./public/build/main.css \
+		./src/scss/main.scss:./public/build/main.css
+
+.PHONY: build-apps-css
+build-apps-css: ./envhelp/local.depends
+	@echo "building apps stylesheets"
+	@$(NPM_BIN) exec -- sass --quiet \
 		./src/components:./public/components \
-		./src/apps/peers.scss:./migux/public/apps/migux/peers.css
+		./src/apps:./migux/public/apps/migux/
 
 .PHONY: development
-development: ./envhelp/local.depends build-css
+development: ./envhelp/local.depends build-css build-apps-css
 
 ./envhelp/docs.depends: ./envhelp/local.depends
 	@echo "installing docs dependencies"
