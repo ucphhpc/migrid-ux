@@ -9,7 +9,7 @@ for environment setup, the Make targets, and the CI overview.
 ## Layout
 
 The architecture is defined by a set of browser runtime components that can be used to build dynamic web applications.
-These components include the javascript files contained in the `lib` directory.
+These components include the Javascript files contained in the `lib` directory.
 Namely:
 
 - `app.js` — the general `AppBase` class and request handling
@@ -30,11 +30,11 @@ Finally, the `binding.js` file is used to define functions that help establishin
 
 ### Defining the application
 
-Any additional introduced application is expected to create its resource files in the `public/apps/migux` directory.
+Any additional introduced application is expected to create its resource files in the `public/apps/migux` and `src/apps` directories. The `public/apps/migux` directory is used to store the Javascript/HTML files that define the application, while the `src/apps` directory is used to store the application specific stylesheets.
 
 #### Javascript foundation
 
-When establishing a new application, the first thing to do is to define the application class and the application definition. This is done by creating a new javascript file in the `public/apps/migux` directory. This filename must match the expected application name as it is used to be loaded by the general `loadAppScript` function in `public/migappBootstrap.js` at runtime.
+When establishing a new application, the first thing to do is to define the application class and the application definition. This is done by creating a new Javascript file in the `public/apps/migux` directory. This filename must match the expected application name as it is used to be loaded by the general `loadAppScript` function in `public/migappBootstrap.js` at runtime.
 
 To establish the application class and definition a set of expected structures must be created. For instance if you want to introduce a Profile app, a first thing to do is to create the `public/apps/migux/profile.js` file and add the following code to it:
 
