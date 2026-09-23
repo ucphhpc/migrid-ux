@@ -28,6 +28,8 @@ Finally, the `binding.js` file is used to define functions that help establishin
 
 ## How an application is introduced
 
+This section will present a barebone example for how you can introduce a new application to the `mig-ux` stack, that subsequently can be integrated as dynamic web applications in `migrid`
+
 ### Defining the application
 
 Any additional introduced application is expected to create its resource files in the `public/apps/migux` and `src/apps` directories. The `public/apps/migux` directory is used to store the Javascript/HTML files that define the application, while the `src/apps` directory is used to store the application specific stylesheets.
