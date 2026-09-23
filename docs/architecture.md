@@ -30,7 +30,13 @@ Finally, the `binding.js` file is used to define functions that help establishin
 
 ### Defining the application
 
-To define an application, you need to define the application class and the application definition, typically this is done in its own javascript file. For instance if you want to introduce a Profile app, a first thing to do is to create the `public/apps/migux/profile.js` file and add the following code to it:
+Any additional introduced application is expected to create its resource files in the `public/apps/migux` directory.
+
+#### Javascript foundation
+
+When establishing a new application, the first thing to do is to define the application class and the application definition. This is done by creating a new javascript file in the `public/apps/migux` directory. This filename must match the expected application name as it is used to be loaded by the general `loadAppScript` function in `public/migappBootstrap.js` at runtime.
+
+To establish the application class and definition a set of expected structures must be created. For instance if you want to introduce a Profile app, a first thing to do is to create the `public/apps/migux/profile.js` file and add the following code to it:
 
 ```js
 import { AppBase, APP_DEFINITION } from "../../lib/app.js";
@@ -72,5 +78,20 @@ export function bootstrap(root, options = {}) {
 ```
 If you want to add any serialization for data persitency, see the `public/apps/migux/peers.js` file for an example.
 
-Any new application must define and export the `bootstrap` function in their source file. The reason for this is that this function is used by the `migappBootstrap` function to load the application via the `performAppLoad` call when a user selects to launch the application in their browser. The application instance returned from this is then stored in the general `window.MiG.applications` object.
+Any new application must define and export the `bootstrap` function in their Javascript source file. The reason for this is that this function is used by the `migappBootstrap` function to load the application via the `performAppLoad` call when a user selects to launch the application in their browser. The application instance returned from this is then stored in the general `window.MiG.applications` object.
+
+After the basic Javascript infrastructure is implemented, the next step is to define the application's HTML and CSS.
+
+
+### Defining the application's HTML and CSS
+
+As with the Javascript foundation, the application's HTML and CSS should be defined in the `public/apps/migux` directory that matches the application name. Following the profile example this would mean the creation of the `profile.html` and `profile.css` files.
+
+In terms of structure, the `migrid-ux` architecture expects that the HTML file defines a regular `body` that defines the `data-migrole="app"` and `data-migapp="profile"` attributes. After this is achived, the internal `body` structure can be defined as required by the application itself, with the ability to use the `data-bind-*` attributes to bind the application's state to the HTML elements and their events.
+
+For CSS, we use the SCSS preprocessor to define the application's styles. The CSS file should be defined in the `src/apps` directory and should be named after the application name. For the profile example, this would mean the creation of the `profile.scss` file in the `src/apps` directory. After
+
+After the appropriate styles are defined in the mentioned SCSS file, the file should be added as an entry to the `Makefile` `build-css` target. This will ensure that the CSS file is built and placed in the expected `public/apps/migux` directory where it is required to be present when `mig-ux` tries to load the associated stylesheets via the `loadAppStyles` call in the `performAppLoad` function.
+
+
 
