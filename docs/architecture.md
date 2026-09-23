@@ -122,4 +122,4 @@ This will ensure that the CSS file is built and placed in the expected `public/a
 
 #### Putting it all together
 
-After having completed the above steps in creating the 3 required files and generating the associated CSS, the application should be ready to be used for local development and iteration. The application can then be launched by executing the `make local` target, which will start the `migrid-ux` development server at `http://localhost:8080` and include the profile application in the default menu.
+After having completed the above steps in creating the 3 required files and generating the associated CSS, the application should be ready to be used for local development and iteration. `mig-ux` can then be launched by executing the `make local` target, which will start the `migrid-ux` development server at `http://localhost:8080` and include the profile application in the default menu.
