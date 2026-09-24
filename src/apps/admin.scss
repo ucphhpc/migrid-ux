@@ -1,45 +1,8 @@
 .AdminApp {
   // Components
   @import "../components/Tabs.scss";
-
-  // Styles
-  @media (min-width: 992px) {
-    .modal-dialog {
-      min-height: 800px;
-    }
-  }
-
-  --mig-ux-header-margin: 1.5rem;
-
-  .modal-header {
-    display: flex;
-    flex-grow: 0;
-    flex-direction: column;
-  }
-
-  .modal-title {
-    display: flex;
-    flex-grow: 0;
-    width: 95%;
-    justify-content: space-between;
-    margin-top: var(--mig-ux-header-margin);
-  }
-
-  .modal-subtitle {
-    margin-top: 0.5rem;
-    width: 95%;
-    font-size: 1rem;
-    color: var(--bs-secondary-color);
-    line-height: 1.5;
-  }
-
-  .modal-footer {
-    flex-grow: 0;
-  }
-
-  .modal-content {
-    height: 100%;
-  }
+  @import "../components/modal.scss";
+  @import "../components/form.scss";
 
   .icon-button {
     cursor: pointer;
@@ -49,100 +12,6 @@
     justify-content: center;
     width: 1.5rem;
     height: 1.5rem;
-  }
-
-  .modal-body {
-    /*min-height: 500px;*/
-    flex-grow: 1;
-
-    /*myself*/
-    display: flex;
-    flex-direction: column;
-
-    @media (max-width: 992px) {
-      padding-top: 0;
-    }
-
-    .Tabs {
-      justify-content: right;
-    }
-
-    .tab-content {
-      height: 100%;
-
-      display: flex;
-      flex-direction: column;
-    }
-
-    .tab-content > .active {
-      height: 100%;
-
-      display: flex;
-      flex-direction: column;
-    }
-  }
-
-  --mig-ux-field-margin: 0.5rem;
-
-  .form-label {
-    margin-bottom: var(--mig-ux-field-margin);
-
-    &__error {
-      display: flex;
-      justify-content: center;
-      position: relative;
-
-      margin-left: var(--mig-ux-field-margin);
-      margin-right: var(--mig-ux-field-margin);
-      margin-bottom: 2em;
-
-      p {
-        display: flex;
-        justify-content: center;
-        width: 90%;
-        z-index: 1;
-
-        position: absolute;
-        background-color: var(--bs-warning);
-        border: var(--bs-border-width) solid var(--bs-warning);
-        border-radius: 0 0 var(--bs-border-radius) var(--bs-border-radius);
-        margin-bottom: 0;
-      }
-
-      &--compensate {
-        p {
-          top: calc(-1 * var(--mig-ux-field-margin));
-        }
-      }
-    }
-
-    /***
-      nested form fields
-      */
-    input,
-    select {
-      width: calc(100% - 2 * var(--mig-ux-field-margin));
-
-      margin-left: var(--mig-ux-field-margin);
-      margin-right: var(--mig-ux-field-margin);
-
-      margin-top: var(--mig-ux-field-margin);
-      /* align as are adjacent fields */
-    }
-  }
-
-  /***
-    form fields adacent to a form label
-    */
-  .form-label + input,
-  .form-label + select {
-    width: calc(100% - 2 * var(--mig-ux-field-margin));
-
-    margin-left: var(--mig-ux-field-margin);
-    margin-right: var(--mig-ux-field-margin);
-
-    margin-bottom: var(--mig-ux-field-margin);
-    /* consistent gap between fields */
   }
 
   .server-daemons {
