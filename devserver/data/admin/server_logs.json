@@ -1,0 +1,108 @@
+[
+  {
+    "timestamp": "2026-08-23T12:30:30.0000+01:00",
+    "message": "An informational log message in august",
+    "level": "INFO"
+  },
+  {
+    "timestamp": "2026-08-23T12:30:30.0011+01:00",
+    "message": "Another informational log message logged almost at the same time",
+    "level": "INFO"
+  },
+  {
+    "timestamp": "2026-08-23T12:31:31.1000+01:00",
+    "message": "A warning was logged a little later!",
+    "level": "WARNING"
+  },
+  {
+    "timestamp": "2026-08-23T13:37:13.3700+01:00",
+    "message": "A longer informational log message that contains a message that is spread\nover multiple lines, which of course needs a bit of care when displaying to the user, so they do not get confused.",
+    "level": "INFO"
+  },
+  {
+    "timestamp": "2026-08-23T14:15:16.1700+01:00",
+    "message": "Oh no! An error! Hope it's nothing too serious, although the severity should be indicated by the log level.",
+    "level": "ERROR"
+  },
+  {
+    "timestamp": "2026-08-24T00:05:30.0000+01:00",
+    "message": "A message from the dead of night",
+    "level": "INFO"
+  },
+  {
+    "timestamp": "2026-08-25T12:30:30.0000+01:00",
+    "message": "A debug message from the next day",
+    "level": "DEBUG"
+  },
+  {
+    "timestamp": "2026-09-23T12:30:30.0000+01:00",
+    "message": "An informational log message in september",
+    "level": "INFO"
+  },
+  {
+    "timestamp": "2026-09-23T12:30:30.0011+01:00",
+    "message": "Another informational log message logged almost at the same time",
+    "level": "INFO"
+  },
+  {
+    "timestamp": "2026-09-23T12:31:31.1000+01:00",
+    "message": "A warning was logged a little later!",
+    "level": "WARNING"
+  },
+  {
+    "timestamp": "2026-09-23T13:37:13.3700+01:00",
+    "message": "A longer informational log message that contains a message that is spread\nover multiple lines, which of course needs a bit of care when displaying to the user, so they do not get confused.",
+    "level": "INFO"
+  },
+  {
+    "timestamp": "2026-09-23T14:15:16.1700+01:00",
+    "message": "Oh no! An error! Hope it's nothing too serious, although the severity should be indicated by the log level.",
+    "level": "ERROR"
+  },
+  {
+    "timestamp": "2026-09-24T00:05:30.0000+01:00",
+    "message": "A message from the dead of night",
+    "level": "INFO"
+  },
+  {
+    "timestamp": "2026-09-25T12:30:30.0000+01:00",
+    "message": "A debug message from the next day",
+    "level": "DEBUG"
+  },
+
+  {
+    "timestamp": "2026-09-29T12:30:30.0000+01:00",
+    "message": "An informational log message after a few days",
+    "level": "INFO"
+  },
+  {
+    "timestamp": "2026-09-29T12:30:30.0011+01:00",
+    "message": "Another informational log message logged almost at the same time",
+    "level": "INFO"
+  },
+  {
+    "timestamp": "2026-09-29T12:31:31.1000+01:00",
+    "message": "A warning was logged a little later!",
+    "level": "WARNING"
+  },
+  {
+    "timestamp": "2026-09-29T13:37:13.3700+01:00",
+    "message": "A longer informational log message that contains a message that is spread\nover multiple lines, which of course needs a bit of care when displaying to the user, so they do not get confused.",
+    "level": "INFO"
+  },
+  {
+    "timestamp": "2026-09-29T14:15:16.1700+01:00",
+    "message": "Oh no! An error! Hope it's nothing too serious, although the severity should be indicated by the log level.",
+    "level": "ERROR"
+  },
+  {
+    "timestamp": "2026-09-30T00:05:30.0000+01:00",
+    "message": "A message from the dead of night",
+    "level": "INFO"
+  },
+  {
+    "timestamp": "2026-10-01T12:30:30.0000+01:00",
+    "message": "A debug message from the next day",
+    "level": "DEBUG"
+  }
+]

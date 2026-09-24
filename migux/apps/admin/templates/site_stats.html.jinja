@@ -1,0 +1,69 @@
+<div>
+  {% for stat in site_stats %}
+  <details class="site-stat">
+    <summary>{{ stat.name }} at {{ stat.timestamp }}</summary>
+
+    <h7>Disk usage</h7>
+    <table class="migux-table migux-table--striped">
+      <thead>
+        <tr>
+          <th>Filesystem</th>
+          <th>1K blocks</th>
+          <th>Used (bytes)</th>
+          <th>Available (bytes)</th>
+          <th>Use percentage</th>
+          <th>Mounted on</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for disk in stat.disks %}
+        <tr>
+          <td>{{disk.filesystem}}</td>
+          <td>{{disk.k_blocks}}</td>
+          <td>{{disk.used}}</td>
+          <td>{{disk.available}}</td>
+          <td>{{disk.use_percent}}</td>
+          <td>{{disk.mounted_on}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h7>Total and weekly usage</h7>
+    <table class="migux-table migux-table--striped">
+      <thead>
+        <tr>
+          <th>Timeframe</th>
+          <th>All users</th>
+          <th>Active users</th>
+          <th>VGrids</th>
+          <th>Archives</th>
+          <th>Registered users</th>
+          <th>Expired users</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Total</td>
+          <td>{{stat.total_usage.all_users}}</td>
+          <td>{{stat.total_usage.active_users}}</td>
+          <td>{{stat.total_usage.vgrids}}</td>
+          <td>{{stat.total_usage.archives}}</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td>Weekly</td>
+          <td>{{stat.weekly_usage.all_users}}</td>
+          <td>{{stat.weekly_usage.active_users}}</td>
+          <td>{{stat.weekly_usage.vgrids}}</td>
+          <td>{{stat.weekly_usage.archives}}</td>
+          <td>{{stat.weekly_usage.register_users}}</td>
+          <td>{{stat.weekly_usage.expire_users}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </details>
+  {% endfor %}
+</div>

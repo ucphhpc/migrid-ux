@@ -1,0 +1,359 @@
+.AdminApp {
+  // Components
+  @import "../components/Tabs.scss";
+
+  // Styles
+  @media (min-width: 992px) {
+    .modal-dialog {
+      min-height: 800px;
+    }
+  }
+
+  --mig-ux-header-margin: 1.5rem;
+
+  .modal-header {
+    display: flex;
+    flex-grow: 0;
+    flex-direction: column;
+  }
+
+  .modal-title {
+    display: flex;
+    flex-grow: 0;
+    width: 95%;
+    justify-content: space-between;
+    margin-top: var(--mig-ux-header-margin);
+  }
+
+  .modal-subtitle {
+    margin-top: 0.5rem;
+    width: 95%;
+    font-size: 1rem;
+    color: var(--bs-secondary-color);
+    line-height: 1.5;
+  }
+
+  .modal-footer {
+    flex-grow: 0;
+  }
+
+  .modal-content {
+    height: 100%;
+  }
+
+  .icon-button {
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .modal-body {
+    /*min-height: 500px;*/
+    flex-grow: 1;
+
+    /*myself*/
+    display: flex;
+    flex-direction: column;
+
+    @media (max-width: 992px) {
+      padding-top: 0;
+    }
+
+    .Tabs {
+      justify-content: right;
+    }
+
+    .tab-content {
+      height: 100%;
+
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tab-content > .active {
+      height: 100%;
+
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  --mig-ux-field-margin: 0.5rem;
+
+  .form-label {
+    margin-bottom: var(--mig-ux-field-margin);
+
+    &__error {
+      display: flex;
+      justify-content: center;
+      position: relative;
+
+      margin-left: var(--mig-ux-field-margin);
+      margin-right: var(--mig-ux-field-margin);
+      margin-bottom: 2em;
+
+      p {
+        display: flex;
+        justify-content: center;
+        width: 90%;
+        z-index: 1;
+
+        position: absolute;
+        background-color: var(--bs-warning);
+        border: var(--bs-border-width) solid var(--bs-warning);
+        border-radius: 0 0 var(--bs-border-radius) var(--bs-border-radius);
+        margin-bottom: 0;
+      }
+
+      &--compensate {
+        p {
+          top: calc(-1 * var(--mig-ux-field-margin));
+        }
+      }
+    }
+
+    /***
+      nested form fields
+      */
+    input,
+    select {
+      width: calc(100% - 2 * var(--mig-ux-field-margin));
+
+      margin-left: var(--mig-ux-field-margin);
+      margin-right: var(--mig-ux-field-margin);
+
+      margin-top: var(--mig-ux-field-margin);
+      /* align as are adjacent fields */
+    }
+  }
+
+  /***
+    form fields adacent to a form label
+    */
+  .form-label + input,
+  .form-label + select {
+    width: calc(100% - 2 * var(--mig-ux-field-margin));
+
+    margin-left: var(--mig-ux-field-margin);
+    margin-right: var(--mig-ux-field-margin);
+
+    margin-bottom: var(--mig-ux-field-margin);
+    /* consistent gap between fields */
+  }
+
+  .server-daemons {
+    .daemon-status {
+      font-weight: bold;
+
+      &.running {
+        color: green;
+      }
+
+      &.not_running {
+        color: rgb(173, 0, 0);
+      }
+    }
+
+    .daemon-pid {
+      color: white;
+      font-size: 0.8rem;
+      background-color: rgb(94, 107, 145);
+      border-radius: 5px;
+      margin-right: 2px;
+      padding: 2px;
+    }
+  }
+
+  .server-logs {
+    resize: vertical;
+    height: 300px;
+    overflow-y: scroll;
+
+    thead {
+      position: sticky;
+      top: 0;
+    }
+
+    .log-timestamp {
+      color: grey;
+    }
+
+    .log-level {
+      font-weight: bold;
+
+      &.info {
+        color: rgb(19, 19, 184);
+      }
+
+      &.warning {
+        color: rgb(180, 117, 0);
+      }
+
+      &.error {
+        color: rgb(173, 0, 0);
+      }
+
+      &.debug {
+        color: rgb(167, 0, 167);
+      }
+    }
+  }
+
+  [data-bind-observe="results_placeholder"] {
+    flex-grow: 1;
+    /* fill the height */
+    width: 100%;
+
+    align-content: center;
+    text-align: center;
+  }
+
+  form {
+    padding-top: 16px;
+  }
+
+  .settings-aid {
+    position: relative;
+    display: flex;
+    justify-content: right;
+
+    &_button {
+      cursor: pointer;
+
+      &::before {
+        content: "\2699";
+      }
+    }
+
+    &_toggles {
+      width: 120px;
+      background-color: white;
+      border: 1px solid black;
+      z-index: 6;
+
+      position: absolute;
+      right: 30px;
+      top: -50%;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: left;
+      padding: 5px;
+
+      label {
+        font-size: 12px;
+      }
+
+      input {
+        margin-right: 3px;
+      }
+    }
+  }
+
+  form.account_requests {
+    h5 {
+      padding-bottom: 24px;
+    }
+
+    .col-settings {
+      box-sizing: border-box;
+      width: 30px;
+    }
+
+    .sel-edit {
+      cursor: pointer;
+      display: block;
+      transform: rotate(135deg);
+
+      &::before {
+        content: "\270F";
+      }
+    }
+  }
+
+  /***
+    generic styles
+    */
+  .tab-actions {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: flex-end;
+    justify-content: right;
+  }
+
+  .tab-actions__grabheight {
+    flex-grow: 1;
+  }
+
+  .tab-actions__error {
+    width: 100%;
+    text-align: center;
+    margin: 0.25em;
+  }
+
+  .tab-actions__controls {
+    display: flex;
+
+    > :not(:last-child) {
+      margin-right: 1em;
+    }
+
+    .form-switch {
+      display: flex;
+      align-items: center;
+      gap: 3em;
+    }
+  }
+
+  .fields-grid {
+    margin-top: 1em;
+    display: grid;
+    grid-template-columns: 50% 50%;
+
+    .form-label {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .fields-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .fields-horizontal {
+    --gutter-x: 1.5rem;
+    --gutter-y: 1.5rem;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    > * {
+      flex-grow: 1;
+      margin-top: calc(-1 * var(--gutter-y));
+    }
+  }
+
+  @media (max-width: 992px) {
+    .fields-horizontal {
+      flex-direction: column;
+
+      .form-label {
+        margin-bottom: calc(3 * var(--mig-ux-field-margin));
+      }
+    }
+  }
+
+  @media (max-width: 992px) {
+    .fields-table {
+      display: block;
+      overflow-x: auto;
+    }
+  }
+}
