@@ -63,7 +63,7 @@ def GET_server_logs():
     template_route = TEMPLATE_ROUTES["GET /server/logs"]
     request_info = SimpleNamespace(
         args={
-            "count": request.values.get("count"),
+            "last_lines": request.values.get("last_lines"),
         },
     )
     example_data = EXAMPLE_DATA["GET /server/logs"]

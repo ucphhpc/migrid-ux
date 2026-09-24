@@ -70,14 +70,14 @@ def list_server_logs(
     Generate render_info for the listing of server logs.
     """
 
-    count = 10
+    last_lines = 10
     try:
-        count = int(request.args.get("count"))
+        last_lines = int(request.args.get("last_lines"))
     except (ValueError, TypeError):
         pass
 
     return {
-        "template_args": {"server_log_entries": (data or [])[-count:]},
+        "template_args": {"server_log_entries": (data or [])[-last_lines:]},
         "template_name": "server_logs",
     }
 

@@ -121,7 +121,7 @@ export class AdminApp extends AppBase {
     const namespace = this.state.formState("server_status");
     const requestOptions = {
       query: {
-        count: namespace.server_logs_request_count(),
+        last_lines: namespace.server_logs_last_lines(),
       },
     };
 
@@ -208,7 +208,7 @@ export const App = AdminApp;
     forms: {
       server_status: {
         // server logs requests
-        server_logs_request_count: 20,
+        server_logs_last_lines: 20,
         // server logs results handling
         server_logs: observedHtml(NO_VALUE, {
           select: "tbody",

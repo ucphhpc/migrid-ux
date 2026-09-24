@@ -65,7 +65,7 @@
                 </table>
                 <div data-bind-observe="server_daemons_placeholder" data-bind-show="server_daemons_placeholder"></div>
                 <h6>Server Logs</h6>
-                <label>Last lines <input type="number" data-bind-observe="server_logs_request_count"
+                <label>Last lines <input name="server_logs_last_lines" type="number" data-bind-observe="server_logs_last_lines"
                     data-bind-onenter="serverLogsRequest" /></label><span
                   data-tooltip="Fetch the N last lines of the server log. Write a value and press enter, and the logs will be fetched."
                   tabindex="0"><i>&quest;</i></span>
