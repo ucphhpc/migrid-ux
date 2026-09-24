@@ -27,6 +27,7 @@ import os
 from flask import Flask
 from flask_cors import CORS as cors
 
+from devserver.api.admin import BLUEPRINT as admin
 from devserver.api.peers import BLUEPRINT as peers
 from devserver.templating import load_templates_for_package
 
@@ -72,5 +73,6 @@ def create_app():
     # register any blueprints providing mock APIs here
 
     app.register_blueprint(peers, url_prefix="/api/peers")
+    app.register_blueprint(admin, url_prefix="/api/admin")
 
     return app

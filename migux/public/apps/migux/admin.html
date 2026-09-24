@@ -1,0 +1,171 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>apps/admin</title>
+  <link href="../build/reset.css" rel="stylesheet" />
+  <link href="../build/main.css" rel="stylesheet" />
+  <link href="./admin.css" rel="stylesheet" />
+</head>
+
+<body data-migrole="app" data-migapp="admin">
+  <div class="modal fade show" tabindex="-1" id="admin-modal" aria-labelledby="admin-modal-label" style="display: block"
+    aria-modal="true" role="dialog">
+    <div class="capture-user-clicks">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title">
+              <div class="modal-title-msg">
+                <h1 id="admin-modal-label">Administration Panel</h1>
+              </div>
+              <div class="modal-title-buttons">
+                <button class="modal-close CloseButton" data-bind-disabled="disable_close" data-bind-onclick="onClose"
+                  aria-label="Close"></button>
+              </div>
+            </div>
+            <div class="modal-subtitle">
+              <p class="modal-subtitle">
+                TODO: Admin UI description in subtitle.
+              </p>
+            </div>
+          </div>
+          <div class="modal-body" id="admin-modal-body">
+            <ul class="Tabs" data-bind-component="Tabs" data-bind-component-observe="selected_tab_index">
+              <li class="TabsItem">Server Status</li>
+              <li class="TabsItem">Account Request</li>
+              <li class="TabsItem">Site Stats</li>
+            </ul>
+            <form name="server_status" data-bind-form="DEFINED" data-bind-css="{ TabsPanel--active: $() === 0 }"
+              data-bind-css-watch="selected_tab_index" class="TabsPanel" id="server_status">
+              <h5>
+                Server Status
+              </h5>
+              <div>
+                <h6>
+                  Grid Daemons
+                  <span data-bind-onclick="serverDaemonsRequest" class="icon-button">&#x27F3;</span>
+                  <small>(last updated <i data-bind-observe="server_daemons_last_updated"></i>)</small>
+                </h6>
+                <table class="server-daemons migux-table migux-table--striped">
+                  <thead>
+                    <tr>
+                      <th>
+                        Name
+                      </th>
+                      <th>
+                        Status
+                      </th>
+                      <th>
+                        PIDs
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody data-bind-observe="server_daemons"></tbody>
+                </table>
+                <div data-bind-observe="server_daemons_placeholder" data-bind-show="server_daemons_placeholder"></div>
+                <h6>Server Logs</h6>
+                <label>Last lines <input name="server_logs_last_lines" type="number" data-bind-observe="server_logs_last_lines"
+                    data-bind-onenter="serverLogsRequest" /></label><span
+                  data-tooltip="Fetch the N last lines of the server log. Write a value and press enter, and the logs will be fetched."
+                  tabindex="0"><i>&quest;</i></span>
+                <div class="server-logs">
+                  <table class="migux-table migux-table--striped">
+                    <thead>
+                      <tr>
+                        <th>
+                          Timestamp
+                        </th>
+                        <th>
+                          Level
+                        </th>
+                        <th>
+                          Message
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody data-bind-observe="server_logs" data-bind-array="server_logs_rows" data-bind-array-each="tr">
+                    </tbody>
+                  </table>
+                  <div data-bind-observe="server_logs_placeholder" data-bind-show="server_logs_placeholder"></div>
+                </div>
+              </div>
+            </form>
+            <form name="account_requests" data-bind-form="DEFINED" data-bind-css="{ TabsPanel--active: $() === 1 }"
+              data-bind-css-watch="selected_tab_index" class="account_requests TabsPanel" id="account_requests">
+              <h5>
+                Account Requests (<span data-bind-observe="count"></span> of
+                <span data-bind-observe="total"></span>)
+                <span data-tooltip="TODO: Account requests tooltip text here" tabindex="0"><i>&quest;</i></span>
+              </h5>
+
+              <div class="fields-horizontal">
+                <span class="form-label">Account Request Query
+                  <span data-tooltip="TODO: Account request query tooltip." tabindex="0"><i>&quest;</i></span>
+                  <input type="text" class="form-control" id="account_requests_query" name="query"
+                    placeholder="Type to search..." data-bind-observe="query"
+                    data-bind-onenter="accountRequestsSearch" />
+                </span>
+              </div>
+              <table class="migux-table migux-table--striped fields-table" id="account_requests_table">
+                <thead>
+                  <tr>
+                    <th>
+                      <input type="checkbox" class="form-check-input" data-bind-checked="all"
+                        data-bind-onchange="accountRequestsSelectAll" />
+                    </th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th data-bind-show="col_organization">Organization</th>
+                    <th data-bind-show="col_country">Country</th>
+                    <th data-bind-show="col_state">State</th>
+                    <th data-bind-show="col_peer_contact_full_name">Contact Name</th>
+                    <th data-bind-show="col_peer_contact_email">Contact Email</th>
+                    <th data-bind-show="col_comment">Comment</th>
+                    <th data-bind-show="col_auth_access">Auth Access</th>
+                    <th data-bind-show="col_created">Created At</th>
+                    <th class="col-settings settings-aid" data-bind-onclick="tableSettingsToggle">
+                      <span class="settings-aid_button"></span>
+                      <div class="settings-aid_toggles" data-bind-show="show_toggles"
+                        data-bind-onhide="searchRequestedSettingsHide">
+                        <label><input type="checkbox" checked disabled />Full
+                          name</label>
+                        <label><input type="checkbox" checked disabled />Email</label>
+                        <label><input type="checkbox" data-bind-checked="col_organization" />Organization</label>
+                        <label><input type="checkbox" data-bind-checked="col_country" />Country</label>
+                        <label><input type="checkbox" data-bind-checked="col_state" />State</label>
+                        <label><input type="checkbox" data-bind-checked="col_peer_contact_full_name" />Contact
+                          Name</label>
+                        <label><input type="checkbox" data-bind-checked="col_peer_contact_email" />Contact Email</label>
+                        <label><input type="checkbox" data-bind-checked="col_comment" />Comment</label>
+                        <label><input type="checkbox" data-bind-checked="col_auth_access" />Auth Access</label>
+                        <label><input type="checkbox" data-bind-checked="col_created" />Created At</label>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody data-bind-observe="results" data-bind-array="results_rows" data-bind-array-each="tr"></tbody>
+              </table>
+              <div data-bind-observe="results_placeholder" data-bind-show="results_placeholder"></div>
+            </form>
+            <form name="site_stats" data-bind-form="DEFINED" data-bind-css="{ TabsPanel--active: $() === 2 }"
+              data-bind-css-watch="selected_tab_index" class="TabsPanel" id="site_stats">
+              <h5>
+                Site Stats
+              </h5>
+              <div data-bind-observe="stats"></div>
+              <div data-bind-observe="stats_placeholder" data-bind-show="stats_placeholder"></div>
+            </form>
+          </div>
+          <div class="modal-footer" id="admin-modal-footer">
+            <button class="btn btn-light" data-bind-disabled="disable_close" data-bind-onclick="onClose" type="button">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

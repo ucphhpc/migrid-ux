@@ -1,0 +1,9 @@
+<table>
+  {% for log_entry in server_log_entries %}
+  <tr>
+    <td class="log-timestamp">{{log_entry.timestamp}}</td>
+    <td class="log-level {{log_entry.level | lower}}">{{log_entry.level}}</td>
+    <td class="log-message">{{ log_entry.message }}</td>
+  </tr>
+  {% endfor %}
+</table>
