@@ -61,9 +61,9 @@
                       </th>
                     </tr>
                   </thead>
-                  <tbody data-bind-observe="server_daemons">
-                  </tbody>
+                  <tbody data-bind-observe="server_daemons"></tbody>
                 </table>
+                <div data-bind-observe="server_daemons_placeholder" data-bind-show="server_daemons_placeholder"></div>
                 <h6>Server Logs</h6>
                 <label>Last lines <input type="number" data-bind-observe="server_logs_request_count"
                     data-bind-onenter="serverLogsRequest" /></label><span
@@ -87,6 +87,7 @@
                     <tbody data-bind-observe="server_logs" data-bind-array="server_logs_rows" data-bind-array-each="tr">
                     </tbody>
                   </table>
+                  <div data-bind-observe="server_logs_placeholder" data-bind-show="server_logs_placeholder"></div>
                 </div>
               </div>
             </form>
@@ -145,6 +146,7 @@
                 </thead>
                 <tbody data-bind-observe="results" data-bind-array="results_rows" data-bind-array-each="tr"></tbody>
               </table>
+              <div data-bind-observe="results_placeholder" data-bind-show="results_placeholder"></div>
             </form>
             <form name="site_stats" data-bind-form="DEFINED" data-bind-css="{ TabsPanel--active: $() === 2 }"
               data-bind-css-watch="selected_tab_index" class="TabsPanel" id="site_stats">
@@ -152,6 +154,7 @@
                 Site Stats
               </h5>
               <div data-bind-observe="stats"></div>
+              <div data-bind-observe="stats_placeholder" data-bind-show="stats_placeholder"></div>
             </form>
           </div>
           <div class="modal-footer" id="admin-modal-footer">

@@ -41,8 +41,8 @@ export class AdminApp extends AppBase {
 
         namespace.total(result.data.account_requests_count);
       })
-      .catch((error) => {
-        namespace.results_placeholder(error.message);
+      .catch(() => {
+        // ignore
       });
   }
 
@@ -64,6 +64,9 @@ export class AdminApp extends AppBase {
         fields: includeColumns,
       },
     };
+
+    namespace.results("");
+    namespace.results_placeholder("Fetching account requests...");
 
     this.request("/admin/account_requests", requestOptions, namespace)
       .then(async (resp) => {
@@ -96,12 +99,16 @@ export class AdminApp extends AppBase {
   serverDaemonsRequest() {
     const namespace = this.state.formState("server_status");
     const requestOptions = { query: {} };
+
+    namespace.server_daemons("");
+    namespace.server_daemons_placeholder("Fetching server daemon status");
+
     this.request("/admin/server/daemons", requestOptions, namespace)
       .then(async (resp) => {
         const html = await resp.text();
         const { daemonCount } = namespace.server_daemons(html);
         namespace.server_daemons_placeholder(
-          daemonCount === 0 ? "Found no Server Logs." : "",
+          daemonCount === 0 ? "Found no Server Daemons." : "",
         );
         namespace.server_daemons_last_updated(new Date().toLocaleTimeString());
       })
@@ -117,6 +124,10 @@ export class AdminApp extends AppBase {
         count: namespace.server_logs_request_count(),
       },
     };
+
+    namespace.server_logs("");
+    namespace.server_logs_placeholder("Fetching server logs...");
+
     this.request("/admin/server/logs", requestOptions, namespace)
       .then(async (resp) => {
         const html = await resp.text();
@@ -133,6 +144,10 @@ export class AdminApp extends AppBase {
   siteStatsRequest() {
     const namespace = this.state.formState("site_stats");
     const requestOptions = { query: {} };
+
+    namespace.stats("");
+    namespace.stats_placeholder("Fetching site statistics...");
+
     this.request("/admin/site/stats", requestOptions, namespace)
       .then(async (resp) => {
         const html = await resp.text();

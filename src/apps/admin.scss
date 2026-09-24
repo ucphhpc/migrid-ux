@@ -72,7 +72,10 @@
     }
   }
 
-  [data-bind-observe="results_placeholder"] {
+  [data-bind-observe="results_placeholder"],
+  [data-bind-observe="server_logs_placeholder"],
+  [data-bind-observe="server_daemons_placeholder"],
+  [data-bind-observe="stats_placeholder"] {
     flex-grow: 1;
     /* fill the height */
     width: 100%;
