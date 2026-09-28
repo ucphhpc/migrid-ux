@@ -32,7 +32,7 @@ NVM_VERSION = '0.40.5'
 
 .PHONY: build
 build: development
-	./envhelp/venv/bin/python -m build -q
+	@$(LOCAL_PYTHON_BIN) -m build -q
 
 .PHONY: bump-release
 bump-release:
@@ -131,7 +131,7 @@ development: ./envhelp/local.depends build-css build-apps-css
 	python3 -m venv ./envhelp/venv
 
 ./envhelp/nvm/nvm.sh: ./envhelp/venv/pyvenv.cfg
-	@./envhelp/lpython ./envhelp/scripts/provision_npm.py $(NVM_VERSION)
+	@$(LOCAL_PYTHON_BIN) ./envhelp/scripts/provision_npm.py $(NVM_VERSION)
 
 ./node_modules/:
 	@echo "installing npm packages"
@@ -190,11 +190,11 @@ local: development
 
 .PHONY: local-backend
 local-backend: ./envhelp/local.depends
-	./envhelp/venv/bin/python -m flask --app ./devserver/devserver.py run --port 8881
+	@$(LOCAL_PYTHON_BIN) -m flask --app ./devserver/devserver.py run --port 8881
 
 .PHONY: local-frontend
 local-frontend: ./envhelp/local.depends
-	./envhelp/lpython ./envhelp/scripts/serve_http.py
+	@$(LOCAL_PYTHON_BIN) ./envhelp/scripts/serve_http.py
 
 .PHONY: watch-css
 watch-css: ./envhelp/local.depends
