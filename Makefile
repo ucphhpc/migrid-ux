@@ -34,6 +34,13 @@ NVM_VERSION = '0.40.5'
 build: development
 	./envhelp/venv/bin/python -m build -q
 
+.PHONY: bump-release
+bump-release:
+	$(eval VERSION = $(shell ./envhelp/lpython ./envhelp/scripts/dist_version.py $(BUMP)))
+	@if [ -z "$(VERSION)" ]; then exit 1; fi
+	git add .
+	git commit -m "Release $(VERSION)"
+
 .PHONY: clean
 clean:
 	@rm -f ./envhelp/local.depends
@@ -60,23 +67,21 @@ docs: ./envhelp/docs.depends
 
 .PHONY: major
 major:
-	BUMP=major make dist
+	BUMP=major make bump-release
+	make dist
 
 .PHONY: minor
 minor:
-	BUMP=minor make dist
+	BUMP=minor make bump-release
+	make dist
 
 .PHONY: patch
 patch:
-	BUMP=patch make dist
+	BUMP=patch make bump-release
+	make dist
 
 .PHONY: dist
-dist: ./envhelp/local.depends
-	$(eval VERSION = $(shell ./envhelp/lpython ./envhelp/scripts/dist_version.py $(BUMP)))
-	@if [ -z "$(VERSION)" ]; then exit 1; fi
-	make build
-	git add .
-	git commit -m "Release $(VERSION)"
+dist: ./envhelp/local.depends build
 
 .PHONY: test
 test: ./envhelp/local.depends ./envhelp/test-requirements.depends
