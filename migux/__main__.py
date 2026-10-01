@@ -33,6 +33,7 @@ def main(_):
     print("")
     print("template packages:")
     print(*("- %s" % (pkg,) for pkg in migux.TEMPLATE_PACKAGES), "\n")
+    print("init javascript loader: %s \n" % migux.INIT_JAVASCRIPT_LOADER)
 
     return 0
 
