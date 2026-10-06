@@ -15,8 +15,6 @@
 # --- END_HEADER ---
 */
 import { JSDOM } from "jsdom";
-import * as fsAsync from "fs/promises";
-import * as path from "path";
 import * as sinon from "sinon";
 
 import {
@@ -27,20 +25,13 @@ import {
   assertKeys,
 } from "../../support/assertions.js";
 import { browserHooksEach, grabBrowserGlobals } from "../../support/browser.js";
+import { loadTextualFixture, loadPublicFile } from "../../support/files.js";
 
 import { AppBase } from "../../../lib/app.js";
 import { NO_VALUE } from "../../../lib/observable.js";
 import { createNamespacedState as createState } from "../../../lib/state.js";
 
-const SCRIPT_DIR = path.dirname(import.meta.url.replace("file://", ""));
-const ROOT_DIR = path.join(SCRIPT_DIR, "../../..");
-
 import { bootstrap, PeersApp } from "../../../migux/public/apps/migux/peers.js";
-
-function loadTextualFixture(fixtureFilename) {
-  const fixureFile = path.join(ROOT_DIR, "test", "fixtures", fixtureFilename);
-  return fsAsync.readFile(fixureFile, "utf8");
-}
 
 const TEST_SEARCH_ACCEPTED_RESULT = await loadTextualFixture(
   "fragment_accepted.html",
@@ -824,10 +815,7 @@ describe("apps/peers", function () {
     before(async () => {
       const jsdom = new JSDOM("<!DOCTYPE html><html></html>");
       const DOMParser = jsdom.window.DOMParser;
-      const appFileHtml = await fsAsync.readFile(
-        path.join(ROOT_DIR, "public/apps/migux/peers.html"),
-        "utf8",
-      );
+      const appFileHtml = await loadPublicFile("public/apps/migux/peers.html");
 
       const dom = new DOMParser().parseFromString(appFileHtml, "text/html");
       const scriptEls = dom.querySelectorAll("script");

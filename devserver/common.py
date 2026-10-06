@@ -89,3 +89,12 @@ def make_csrf_token(method, operation, limit=None):
     input_merger = f"{method}:{operation}:{limit}"
     hex_token = hashlib.sha256(input_merger.encode()).hexdigest()
     return hex_token
+
+
+def unconcatify(value: str, sep: str):
+    """Splits the given value by the given separator."""
+    assert isinstance(value, str)
+    result = value.split(sep)
+    if len(result) == 1 and result[0] == "":
+        return []
+    return result

@@ -1,0 +1,9 @@
+<table>
+  {% for daemon in server_daemons %}
+  <tr>
+    <td class="daemon-name">{{daemon.name}}</td>
+    <td class="daemon-status {{daemon.status | lower}}">{{daemon.status | capitalize | replace("_", " ") }}</td>
+    <td class="daemon-pids">{% for pid in daemon.pids %}<span class="daemon-pid">{{pid}}</span>{% endfor %}</td>
+  </tr>
+  {% endfor %}
+</table>

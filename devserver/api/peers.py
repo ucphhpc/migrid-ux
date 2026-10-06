@@ -26,7 +26,7 @@ from flask import request
 
 import devserver.common as server_common
 import migux.apps.peers as migux_apps_peers
-from devserver.common import make_csrf_token
+from devserver.common import make_csrf_token, unconcatify
 
 EXAMPLE_DATA = {
     "GET /accepted": server_common.import_example_data("peers/accepted.json"),
@@ -55,14 +55,6 @@ def _fill_distinguished_name(user):
     return distinguished_name
 
 
-def _unconcatify(value, sep):
-    assert isinstance(value, str)
-    result = value.split(sep)
-    if len(result) == 1 and result[0] == "":
-        return []
-    return result
-
-
 def extract_csv_content_and_header(csv_input):
     """
     Extracts the CSV header and content from the given CSV input.
@@ -70,7 +62,7 @@ def extract_csv_content_and_header(csv_input):
     and content is a list of lists of strings.
     """
     # Parse CSV text
-    csv_lines = _unconcatify(csv_input, "\n")
+    csv_lines = unconcatify(csv_input, "\n")
     if not csv_lines:
         return {}, 400
 
@@ -139,7 +131,7 @@ def migux_apps_peers__GET_accepted():
     request_info = SimpleNamespace(
         args={
             "query": request.values.get("query"),
-            "fields": _unconcatify(request.values.get("fields", ""), ","),
+            "fields": unconcatify(request.values.get("fields", ""), ","),
             "kind": request.values.get("kind", ""),
         }
     )
@@ -164,7 +156,7 @@ def migux_apps_peers__GET_requested():
     request_info = SimpleNamespace(
         args={
             "query": request.values.get("query"),
-            "fields": _unconcatify(request.values.get("fields", ""), ","),
+            "fields": unconcatify(request.values.get("fields", ""), ","),
         }
     )
     example_data = EXAMPLE_DATA["GET /requested"]

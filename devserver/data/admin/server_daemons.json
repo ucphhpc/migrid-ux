@@ -1,0 +1,32 @@
+[
+    {
+        "name": "grid_webdavs.py",
+        "status": "not_running",
+        "pids": []
+    },
+    {
+        "name": "grid_ftps.py",
+        "status": "not_running",
+        "pids": []
+    },
+    {
+        "name": "grid_openid.py",
+        "status": "not_running",
+        "pids": []
+    },
+    {
+        "name": "grid_transfers.py",
+        "status": "running",
+        "pids": [420, 467]
+    },
+    {
+        "name": "grid_cron.py",
+        "status": "running",
+        "pids": [378, 425]
+    },
+    {
+        "name": "/sbin/sshd -f /etc/ssh/sshd_config-MiG-sftp-subsys",
+        "status": "not_running",
+        "pids": []
+    }
+]
