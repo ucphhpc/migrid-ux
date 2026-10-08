@@ -42,7 +42,7 @@ bump-release:
 	git commit -m "Release $(VERSION)"
 
 .PHONY: clean
-clean:
+clean: distclean
 	@rm -f ./envhelp/local.depends
 	@rm -f ./envhelp/dev-requirements.depends
 	@rm -f ./envhelp/test-requirements.depends
@@ -82,6 +82,10 @@ patch:
 
 .PHONY: dist
 dist: ./envhelp/local.depends build
+
+.PHONY: distclean
+distclean: clean
+	@rm -rf ./dist
 
 .PHONY: test
 test: ./envhelp/local.depends ./envhelp/test-requirements.depends
