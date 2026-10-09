@@ -164,7 +164,7 @@
     ); /* consistent gap between fields */
   }
 
-  [data-bind-observe="results_placeholder"] {
+  [data-bind-observe-html="results_placeholder"] {
     flex-grow: 1; /* fill the height */
     width: 100%;
 

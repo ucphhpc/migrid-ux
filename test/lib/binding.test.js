@@ -34,10 +34,11 @@ import { createState, createNamespacedState } from "../../lib/state.js";
 import {
   NO_VALUE,
   UNKNOWN_VALUE,
+  asObservable,
   observedValue,
-  observedHtml as htmlValue,
   _observedValueFrom,
   _Observable,
+  observedHtml,
 } from "../../lib/observable.js";
 
 function grabElementByTestId(fromElement, testId) {
@@ -352,10 +353,10 @@ describe("binding", function () {
   describe("when binding html", () => {
     it("should set the element inner html based on the observable", () => {
       document.body.innerHTML = `
-<table data-test-id="some-example-table" data-bind-observe="htmldata">
+<table data-test-id="some-example-table" data-bind-observe-html="htmldata">
 </table>`;
       const state = createState({
-        htmldata: htmlValue(NO_VALUE, {
+        htmldata: observedHtml(NO_VALUE, {
           select: "tbody",
         }),
       });
@@ -369,7 +370,7 @@ describe("binding", function () {
 
       assertEqual(
         tableEl.outerHTML,
-        '<table data-test-id="some-example-table" data-bind-observe="htmldata"><tbody><tr><td>NEW ROW</td></tr></tbody></table>',
+        '<table data-test-id="some-example-table" data-bind-observe-html="htmldata"><tbody><tr><td>NEW ROW</td></tr></tbody></table>',
       );
     });
 
@@ -378,7 +379,7 @@ describe("binding", function () {
 <table data-test-id="some-example-table" data-bind-observe="htmldata">
 </table>`;
       const state = createState({
-        htmldata: htmlValue(NO_VALUE, {
+        htmldata: observedHtml(NO_VALUE, {
           select: "tbody",
           decodeHtml: (subtreeEl) => {
             const rowCount = subtreeEl.querySelectorAll("tr").length;
@@ -392,6 +393,98 @@ describe("binding", function () {
       const result = state.htmldata("<table><tr><td>NEW ROW</td></tr></table>");
 
       assertEqual(result.rowCount, 1);
+    });
+  });
+
+  describe("when observing html", () => {
+    it("should render the observable value at bind time", () => {
+      document.body.innerHTML = `<span data-bind-observe-html="a_field">`;
+      const spanEl = document.querySelectorAll("span")[0];
+      const state = createState({
+        a_field: "<div>initial</div>",
+      });
+
+      binder(document.body, { state });
+      assertEqual(spanEl.innerHTML, "<div>initial</div>");
+    });
+
+    it("should update the element when the observable changes", () => {
+      document.body.innerHTML = `<span data-bind-observe-html="a_field">`;
+      const spanEl = document.querySelectorAll("span")[0];
+      const state = createState({
+        a_field: "initial",
+      });
+
+      binder(document.body, { state });
+
+      state.a_field("changed");
+      assertEqual(spanEl.innerHTML, "changed");
+
+      state.a_field("changed again");
+      assertEqual(spanEl.innerHTML, "changed again");
+    });
+
+    it("should preserve the element content when the value is NO_VALUE", () => {
+      document.body.innerHTML = `
+<span data-bind-observe-html="a_field">static</span>`;
+      const spanEl = document.querySelectorAll("span")[0];
+      const state = createState({
+        a_field: observedValue(),
+      });
+
+      binder(document.body, { state });
+
+      assertEqual(spanEl.innerHTML, "static");
+
+      state.a_field("changed");
+      assertEqual(spanEl.innerHTML, "changed");
+
+      asObservable(state.a_field).setValue(NO_VALUE);
+      assertEqual(spanEl.innerHTML, "changed");
+    });
+
+    it("should set the element inner html based on an observed html observable", () => {
+      document.body.innerHTML = `
+<table data-test-id="some-example-table" data-bind-observe-html="htmldata">
+</table>`;
+      const state = createState({
+        htmldata: observedHtml(NO_VALUE, {
+          select: "tbody",
+        }),
+      });
+      const tableEl = document.body.querySelectorAll(
+        '[data-test-id="some-example-table"]',
+      )[0];
+
+      binder(document.body, { state });
+
+      state.htmldata("<table><tr><td>NEW ROW</td></tr></table>");
+
+      assertEqual(
+        tableEl.outerHTML,
+        '<table data-test-id="some-example-table" data-bind-observe-html="htmldata"><tbody><tr><td>NEW ROW</td></tr></tbody></table>',
+      );
+    });
+
+    it("should bind within a form namespace", () => {
+      document.body.innerHTML = `
+<form name="a_form" data-bind-form="DEFINED">
+  <span data-bind-observe-html="a_field"></span>
+</form>`;
+      const spanEl = document.querySelectorAll("span")[0];
+      const state = createNamespacedState({
+        forms: {
+          a_form: {
+            a_field: observedValue(),
+          },
+        },
+      });
+
+      binder(document.body, state);
+
+      state.namespace("form__a_form").a_field("a value");
+
+      assertEqual(spanEl.innerHTML, "a value");
     });
   });
 
