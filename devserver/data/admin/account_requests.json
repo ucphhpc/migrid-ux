@@ -6,14 +6,14 @@
     "distinguished_name": "/C=DK/ST=NA/L=NA/O=Test Org/OU=NA/CN=Test User/emailAddress=requested_1@example.com",
     "email": "requested_1@example.com",
     "expire": null,
-    "full_name": "Test Peer User",
+    "full_name": "Test Peer User 1",
     "locality": "",
     "openid_names": [],
     "organization": "Test Org",
     "organizational_unit": "",
     "state": "NA",
-    "peer_contact_full_name": "Test Peer Contact",
-    "peer_contact_email": "abc123@ku.dk"
+    "peers_full_name": "Test Peer Contact",
+    "peers_email": "aaa111@ku.dk"
   },
   {
     "comment": "requested_2@example.com",
@@ -22,14 +22,14 @@
     "distinguished_name": "/C=DK/ST=NA/L=NA/O=Test Org/OU=NA/CN=Test User/emailAddress=requested_2@example.com",
     "email": "requested_2@example.com",
     "expire": null,
-    "full_name": "Test Peer User",
+    "full_name": "Test Peer User 2",
     "locality": "",
     "openid_names": [],
     "organization": "Test Org",
     "organizational_unit": "",
     "state": "NA",
-    "peer_contact_full_name": "Test Peer Contact",
-    "peer_contact_email": "abc123@ku.dk"
+    "peers_full_name": "Test Peer Contact 2",
+    "peers_email": "bbb222@ku.dk"
   },
   {
     "comment": "requested_3@example.com",
@@ -38,13 +38,13 @@
     "distinguished_name": "/C=DK/ST=NA/L=NA/O=Test Org/OU=NA/CN=Test User/emailAddress=requested_3@example.com",
     "email": "requested_3@example.com",
     "expire": null,
-    "full_name": "Test Peer User",
+    "full_name": "Test Peer User 3",
     "locality": "",
     "openid_names": [],
     "organization": "Test Org",
     "organizational_unit": "",
     "state": "NA",
-    "peer_contact_full_name": "Test Peer Contact",
-    "peer_contact_email": "abc123@ku.dk"
+    "peers_full_name": "Test Peer Contact 2",
+    "peers_email": "bbb222@ku.dk"
   }
 ]
