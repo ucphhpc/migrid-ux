@@ -25,7 +25,7 @@ import {
   assertFalse,
   assertTrue,
   assertValuesEach,
-} from "../support/assertions.js";
+} from "./support/assertions.js";
 
 import {
   asObservable,
@@ -36,8 +36,8 @@ import {
   NO_VALUE,
   _valueOfObserved,
   observedArray,
-} from "../../lib/observable.js";
-import { createState, createNamespacedState } from "../../lib/state.js";
+} from "../src/observable.js";
+import { createState, createNamespacedState } from "../src/state.js";
 
 function asNullPrototype(obj) {
   return Object.assign(Object.create(null), obj);

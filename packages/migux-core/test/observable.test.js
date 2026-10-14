@@ -20,7 +20,7 @@
 
 import { deepStrictEqual as equal, ok } from "assert";
 import * as sinon from "sinon";
-import { assertTrue, assertFalse } from "../support/assertions.js";
+import { assertTrue, assertFalse } from "./support/assertions.js";
 
 import {
   NO_VALUE,
@@ -28,7 +28,7 @@ import {
   observedValue,
   computedValue,
   anyChangeValue,
-} from "../../lib/observable.js";
+} from "../src/observable.js";
 
 const precondition = (bool) => ok(bool, "precondition");
 

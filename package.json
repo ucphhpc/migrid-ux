@@ -4,9 +4,11 @@
     "coverage": "c8 -r html mocha",
     "fmt": "prettier --write '**/*.{css,html,js,scss}'",
     "lint": "prettier --check '**/*.{css,html,js,scss}' && eslint",
-    "test": "mocha"
+    "test": "mocha",
+    "test:package": "cd packages/migux-core && npm test",
+    "test:all": "npm test && cd packages/migux-core && npm test"
   },
-  "author": "",
+  "author": "SCIENCE HPC Center at UCPH",
   "license": "(GPL-2.0-or-later OR MIT)",
   "private": true,
   "devDependencies": {
