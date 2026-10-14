@@ -84,7 +84,7 @@ patch:
 dist: ./envhelp/local.depends build
 
 .PHONY: distclean
-distclean: clean
+distclean:
 	@rm -rf ./dist
 
 .PHONY: test
