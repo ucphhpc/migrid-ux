@@ -98,7 +98,7 @@ test-migux-core: ./envhelp/local.depends ./envhelp/test-requirements.depends
 .PHONY: publish-migux-core
 publish-migux-core: ./envhelp/local.depends
 	@echo "publishing @migrid/migux-core to npm"
-	cd ./packages/migux-core && $(NPM_BIN) publish --access public
+	$(NPM_BIN) publish ./packages/migux-core --access public
 
 .PHONY: build-css
 build-css: ./envhelp/local.depends
