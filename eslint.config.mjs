@@ -13,7 +13,7 @@ export default defineConfig([
   },
   {
     files: [
-      "lib/**/*.js",
+      "packages/migux-core/src/*.js",
       "migux/**/*.js",
       "public/**/*.js",
       "test/apps/**/*.js",
@@ -24,11 +24,17 @@ export default defineConfig([
     },
   },
   {
-    files: ["test/**/*.js"],
+    files: [
+      "packages/migux-core/test/*.js",
+      "test/**/*.js"
+    ],
     ...eslintMochaRecommended,
   },
   {
-    files: ["test/**/*.js"],
+    files: [
+      "packages/migux-core/test/*.js",
+      "test/**/*.js"
+    ],
     rules: {
       "mocha/no-mocha-arrows": "off",
       "mocha/no-setup-in-describe": "off",

@@ -27,7 +27,7 @@ import {
   isObservedArray,
   isObservedHtml,
   NO_VALUE,
-} from "../lib/observable.js";
+} from "./observable.js";
 
 const _EMPTY_SET = new Set();
 

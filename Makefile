@@ -91,6 +91,15 @@ distclean:
 test: ./envhelp/local.depends ./envhelp/test-requirements.depends
 	$(NPM_BIN) test
 
+.PHONY: test-migux-core
+test-migux-core: ./envhelp/local.depends ./envhelp/test-requirements.depends
+	$(NPM_BIN) test packages/migux-core
+
+.PHONY: publish-migux-core
+publish-migux-core: ./envhelp/local.depends
+	@echo "publishing @migrid/migux-core to npm"
+	cd ./packages/migux-core && $(NPM_BIN) publish --access public
+
 .PHONY: build-css
 build-css: ./envhelp/local.depends
 	@mkdir -p ./public/build
@@ -207,3 +216,4 @@ watch-css: ./envhelp/local.depends
 		./src/scss/main.scss:./public/build/main.css \
 		./src/components:./public/components \
 		./src/apps/peers.scss:./migux/public/apps/migux/peers.css
+

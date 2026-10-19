@@ -26,11 +26,11 @@ import {
   assertTrue,
   assertFalse,
   assertStringEqual,
-} from "../support/assertions.js";
-import { browserHooksEach, grabBrowserGlobals } from "../support/browser.js";
+} from "./support/assertions.js";
+import { browserHooksEach, grabBrowserGlobals } from "./support/browser.js";
 
-import { binder, _Binder } from "../../lib/binding.js";
-import { createState, createNamespacedState } from "../../lib/state.js";
+import { binder, _Binder } from "../src/binding.js";
+import { createState, createNamespacedState } from "../src/state.js";
 import {
   NO_VALUE,
   UNKNOWN_VALUE,
@@ -39,7 +39,7 @@ import {
   _observedValueFrom,
   _Observable,
   observedHtml,
-} from "../../lib/observable.js";
+} from "../src/observable.js";
 
 function grabElementByTestId(fromElement, testId) {
   return fromElement.querySelector(`[data-testid=${testId}]`);

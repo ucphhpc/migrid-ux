@@ -1,0 +1,44 @@
+{
+  "name": "@migrid/migux-core",
+  "version": "0.1.0",
+  "description": "Foundation library for MiGrid-UX",
+  "type": "module",
+  "exports": {
+    "./observable": "./src/observable.js",
+    "./binding": "./src/binding.js",
+    "./state": "./src/state.js",
+    "./app": "./src/app.js"
+  },
+  "files": [
+    "src/",
+    "test/",
+    "LICENSES/",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "mocha",
+    "coverage": "c8 -r html mocha"
+  },
+  "keywords": [
+    "migrid",
+    "migux"
+  ],
+  "author": "SCIENCE HPC Center at UCPH",
+  "license": "(GPL-2.0-or-later OR MIT)",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ucphhpc/migrid-ux.git",
+    "directory": "packages/migux-core"
+  },
+  "bugs": {
+    "url": "https://github.com/ucphhpc/migrid-ux/issues"
+  },
+  "homepage": "https://github.com/ucphhpc/migrid-ux/tree/main/packages/migux-core#readme",
+  "devDependencies": {
+    "c8": "^10.1.3",
+    "jsdom": "^26.1.0",
+    "mocha": "^12.0.2",
+    "sinon": "^22.1.0"
+  }
+}
