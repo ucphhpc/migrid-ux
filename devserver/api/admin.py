@@ -4,114 +4,71 @@ Development facing implementation of a admin API.
 
 from types import SimpleNamespace
 
-from flask import request
+from flask import Blueprint, request
 
 import devserver.common as server_common
-from devserver.common import unconcatify
 from migux.apps.admin import TEMPLATE_FOLDER, TEMPLATE_ROUTES
 
 EXAMPLE_DATA = {
-    "GET /account_requests": server_common.import_example_data(
-        "admin/account_requests.json"
+    "GET /logs": server_common.import_example_data("admin/logs.json"),
+    "GET /daemons": server_common.import_example_data(
+        json_file_name="admin/daemons.json"
     ),
-    "GET /server/logs": server_common.import_example_data(
-        "admin/server_logs.json"
-    ),
-    "GET /server/daemons": server_common.import_example_data(
-        "admin/server_daemons.json"
-    ),
-    "GET /site/stats": server_common.import_example_data(
-        "admin/site_stats.json"
-    ),
+    "GET /stats": server_common.import_example_data("admin/stats.json"),
 }
 
 
-def GET_account_requests_summary():
-    """
-    Request handler: GET /summary
-    """
-
-    return {
-        "account_requests_count": len(EXAMPLE_DATA["GET /account_requests"]),
-    }
+blueprint = Blueprint(
+    "admin",
+    __name__,
+    template_folder=TEMPLATE_FOLDER,
+)
 
 
-def GET_account_requests():
+@blueprint.get("/logs")
+def logs():
     """
-    Request handler: GET /account_requests
+    Request handler: GET /logs
     """
 
-    template_route = TEMPLATE_ROUTES["GET /account_requests"]
-    request_info = SimpleNamespace(
-        args={
-            "query": request.values.get("query"),
-            "fields": unconcatify(request.values.get("fields", ""), ","),
-        },
-    )
-    example_data = EXAMPLE_DATA["GET /account_requests"]
-
-    return server_common.render_app_template(
-        template_route, request_info=request_info, data=example_data
-    )
-
-
-def GET_server_logs():
-    """
-    Request handler: GET /server/logs
-    """
-
-    template_route = TEMPLATE_ROUTES["GET /server/logs"]
+    template_route = TEMPLATE_ROUTES["GET /logs"]
     request_info = SimpleNamespace(
         args={
             "last_lines": request.values.get("last_lines"),
         },
     )
-    example_data = EXAMPLE_DATA["GET /server/logs"]
+    example_data = EXAMPLE_DATA["GET /logs"]
 
     return server_common.render_app_template(
         template_route, request_info=request_info, data=example_data
     )
 
 
-def GET_server_daemons():
+@blueprint.get("/daemons")
+def daemons():
     """
-    Request handler: GET /server/daemons
+    Request handler: GET /daemons
     """
 
-    template_route = TEMPLATE_ROUTES["GET /server/daemons"]
+    template_route = TEMPLATE_ROUTES["GET /daemons"]
     request_info = SimpleNamespace(args={})
-    example_data = EXAMPLE_DATA["GET /server/daemons"]
+    example_data = EXAMPLE_DATA["GET /daemons"]
 
     return server_common.render_app_template(
         template_route, request_info=request_info, data=example_data
     )
 
 
-def GET_site_stats():
+@blueprint.get("/stats")
+def stats():
     """
-    Request handler: GET /site/stats
+    Request handler: GET /stats
     """
 
-    template_route = TEMPLATE_ROUTES["GET /site/stats"]
+    template_route = TEMPLATE_ROUTES["GET /stats"]
     request_info = SimpleNamespace(args={})
-    example_data = EXAMPLE_DATA["GET /site/stats"]
+    example_data = EXAMPLE_DATA["GET /stats"]
 
     return server_common.render_app_template(
         template_route, request_info=request_info, data=example_data
     )
-
-
-ROUTES = {
-    "GET /account_requests/summary": GET_account_requests_summary,
-    "GET /account_requests": GET_account_requests,
-    "GET /server/logs": GET_server_logs,
-    "GET /server/daemons": GET_server_daemons,
-    "GET /site/stats": GET_site_stats,
-}
-
-BLUEPRINT = server_common.routes_to_blueprint(
-    "admin",
-    __name__,
-    ROUTES,
-    template_folder=TEMPLATE_FOLDER,
-)

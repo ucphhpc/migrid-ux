@@ -198,4 +198,5 @@ watch-css: ./envhelp/local.depends
 		./src/scss/main.scss:./public/build/main.css \
 		./src/components:./public/components \
 		./src/apps/peers.scss:./migux/public/apps/migux/peers.css \
+		./src/apps/accountreqs.scss:./migux/public/apps/migux/accountreqs.css \
 		./src/apps/admin.scss:./migux/public/apps/migux/admin.css

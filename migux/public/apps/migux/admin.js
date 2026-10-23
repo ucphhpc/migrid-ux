@@ -2,10 +2,7 @@ import { AppBase, APP_COMPONENTS, APP_DEFINITION } from "../../lib/app.js";
 import { Tabs } from "../../components/Tabs.js";
 import {
   NO_VALUE,
-  anyChangeValue,
-  asObservable,
   computedValue,
-  observedArray,
   observedHtml,
 } from "../../lib/observable.js";
 
@@ -18,84 +15,6 @@ export class AdminApp extends AppBase {
     super(state, options);
   }
 
-  tableSettingsToggle(_, namespace) {
-    namespace.show_toggles(!namespace.show_toggles());
-  }
-
-  accountRequestsSummary() {
-    const namespace = this.state.formState("account_requests");
-    const requestOptions = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    this.request("/admin/account_requests/summary", requestOptions, namespace)
-      .then(async (resp) => {
-        const result = await resp.json();
-        if (typeof result.error === "string" && result.error) {
-          const error = new Error(result.error);
-          error.status = 422;
-          throw error;
-        }
-
-        namespace.total(result.data.account_requests_count);
-      })
-      .catch(() => {
-        // ignore
-      });
-  }
-
-  accountRequestsSearch() {
-    const namespace = this.state.formState("account_requests");
-
-    const includeColumns = ["full_name", "email"];
-
-    for (const colName of AdminApp.CONST_ACCOUNT_REQUESTS_LISTING_COLNAMES) {
-      const columnIsShown = namespace[`col_${colName}`];
-      if (columnIsShown()) {
-        includeColumns.push(colName);
-      }
-    }
-
-    const requestOptions = {
-      query: {
-        query: namespace.query(),
-        fields: includeColumns,
-      },
-    };
-
-    namespace.results("");
-    namespace.results_placeholder("Fetching account requests...");
-
-    this.request("/admin/account_requests", requestOptions, namespace)
-      .then(async (resp) => {
-        const html = await resp.text();
-        const { rowCount, resultRows } = namespace.results(html);
-        namespace.count(rowCount);
-        if (rowCount === 0) {
-          namespace.results_rows([]);
-          namespace.results_placeholder("Found no Account Requests.");
-        } else {
-          namespace.results_rows(resultRows);
-          namespace.results_placeholder("");
-        }
-
-        if (rowCount !== 0) {
-          this.rebind(namespace, "array", "results_rows");
-        }
-      })
-      .catch((error) => {
-        namespace.results_placeholder(error.message);
-      });
-  }
-
-  accountRequestsSelectAll({ value: selectedValue }, namespace) {
-    for (const item of namespace.results_rows()) {
-      item.selected(selectedValue);
-    }
-  }
-
   serverDaemonsRequest() {
     const namespace = this.state.formState("server_status");
     const requestOptions = { query: {} };
@@ -103,7 +22,7 @@ export class AdminApp extends AppBase {
     namespace.server_daemons("");
     namespace.server_daemons_placeholder("Fetching server daemon status");
 
-    this.request("/admin/server/daemons", requestOptions, namespace)
+    this.request("/admin/daemons", requestOptions, namespace)
       .then(async (resp) => {
         const html = await resp.text();
         const { daemonCount } = namespace.server_daemons(html);
@@ -128,7 +47,7 @@ export class AdminApp extends AppBase {
     namespace.server_logs("");
     namespace.server_logs_placeholder("Fetching server logs...");
 
-    this.request("/admin/server/logs", requestOptions, namespace)
+    this.request("/admin/logs", requestOptions, namespace)
       .then(async (resp) => {
         const html = await resp.text();
         const { entryCount } = namespace.server_logs(html);
@@ -148,7 +67,7 @@ export class AdminApp extends AppBase {
     namespace.stats("");
     namespace.stats_placeholder("Fetching site statistics...");
 
-    this.request("/admin/site/stats", requestOptions, namespace)
+    this.request("/admin/stats", requestOptions, namespace)
       .then(async (resp) => {
         const html = await resp.text();
         const { statCount } = namespace.stats(html);
@@ -164,19 +83,7 @@ export class AdminApp extends AppBase {
   onInitialize() {
     this.serverDaemonsRequest();
     this.serverLogsRequest();
-    this.accountRequestsSummary();
-    this.accountRequestsSearch("");
     this.siteStatsRequest();
-    this._initializeAccountRequestsTable();
-  }
-
-  _initializeAccountRequestsTable() {
-    const namespace = this.state.formState("account_requests");
-    // update table when column selection is changed
-    asObservable(namespace.changed_column).addEventListener("change", () => {
-      namespace.results("");
-      this.accountRequestsSearch();
-    });
   }
 }
 
@@ -185,7 +92,7 @@ AdminApp.CONST_ACCOUNT_REQUESTS_LISTING_COLNAMES = [
   "country",
   "state",
   "peers_full_name",
-  "peers_full_email",
+  "peers_email",
   "comment",
   "created",
 ];
@@ -229,59 +136,6 @@ export const App = AdminApp;
         }),
         server_daemons_last_updated: "never",
         server_daemons_placeholder: observedHtml(NO_VALUE),
-      },
-      account_requests: {
-        all: false,
-        // column chooser
-        show_toggles: false,
-        // columns to show
-        col_organization: true,
-        col_country: false,
-        col_state: false,
-        col_peers_full_name: true,
-        col_peers_full_email: true,
-        col_comment: false,
-        col_auth_access: false,
-        col_created: true,
-        changed_column: (state, namespace) => {
-          return anyChangeValue([
-            namespace.col_organization,
-            namespace.col_country,
-            namespace.col_state,
-            namespace.col_peers_full_name,
-            namespace.col_peers_full_email,
-            namespace.col_comment,
-            namespace.col_auth_access,
-            namespace.col_created,
-          ]);
-        },
-        // search
-        query: "",
-        // results handling
-        count: 0,
-        total: 0,
-        results: observedHtml(NO_VALUE, {
-          select: "tbody",
-          decodeHtml: (subtreeEl) => {
-            const rowEls = Array.from(subtreeEl.querySelectorAll("tr"));
-
-            const rowCount = rowEls.length;
-            const resultRows = rowEls.map((rowEl) => {
-              return {
-                peer_dn: rowEl.querySelector('input[type="hidden"]').value,
-                selected: rowEl.querySelector('input[type="checkbox"]').checked,
-              };
-            });
-            return { rowCount, resultRows };
-          },
-        }),
-        results_rows: observedArray(NO_VALUE, {
-          definition: {
-            peer_dn: NO_VALUE,
-            selected: false,
-          },
-        }),
-        results_placeholder: observedHtml(NO_VALUE),
       },
       site_stats: {
         stats: observedHtml(NO_VALUE, {

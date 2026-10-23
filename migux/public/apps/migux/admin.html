@@ -33,7 +33,6 @@
           <div class="modal-body" id="admin-modal-body">
             <ul class="Tabs" data-bind-component="Tabs" data-bind-component-observe="selected_tab_index">
               <li class="TabsItem">Server Status</li>
-              <li class="TabsItem">Account Request</li>
               <li class="TabsItem">Site Stats</li>
             </ul>
             <form name="server_status" data-bind-form="DEFINED" data-bind-css="{ TabsPanel--active: $() === 0 }"
@@ -91,64 +90,7 @@
                 </div>
               </div>
             </form>
-            <form name="account_requests" data-bind-form="DEFINED" data-bind-css="{ TabsPanel--active: $() === 1 }"
-              data-bind-css-watch="selected_tab_index" class="account_requests TabsPanel" id="account_requests">
-              <h5>
-                Account Requests (<span data-bind-observe="count"></span> of
-                <span data-bind-observe="total"></span>)
-                <span data-tooltip="TODO: Account requests tooltip text here" tabindex="0"><i>&quest;</i></span>
-              </h5>
-
-              <div class="fields-horizontal">
-                <span class="form-label">Account Request Query
-                  <span data-tooltip="TODO: Account request query tooltip." tabindex="0"><i>&quest;</i></span>
-                  <input type="text" class="form-control" id="account_requests_query" name="query"
-                    placeholder="Type to search..." data-bind-observe="query"
-                    data-bind-onenter="accountRequestsSearch" />
-                </span>
-              </div>
-              <table class="migux-table migux-table--striped fields-table" id="account_requests_table">
-                <thead>
-                  <tr>
-                    <th>
-                      <input type="checkbox" class="form-check-input" data-bind-checked="all"
-                        data-bind-onchange="accountRequestsSelectAll" />
-                    </th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th data-bind-show="col_organization">Organization</th>
-                    <th data-bind-show="col_country">Country</th>
-                    <th data-bind-show="col_state">State</th>
-                    <th data-bind-show="col_peers_full_name">Contact Name</th>
-                    <th data-bind-show="col_peers_full_email">Contact Email</th>
-                    <th data-bind-show="col_comment">Comment</th>
-                    <th data-bind-show="col_auth_access">Auth Access</th>
-                    <th data-bind-show="col_created">Created At</th>
-                    <th class="col-settings settings-aid" data-bind-onclick="tableSettingsToggle">
-                      <span class="settings-aid_button"></span>
-                      <div class="settings-aid_toggles" data-bind-show="show_toggles"
-                        data-bind-onhide="searchRequestedSettingsHide">
-                        <label><input type="checkbox" checked disabled />Full
-                          name</label>
-                        <label><input type="checkbox" checked disabled />Email</label>
-                        <label><input type="checkbox" data-bind-checked="col_organization" />Organization</label>
-                        <label><input type="checkbox" data-bind-checked="col_country" />Country</label>
-                        <label><input type="checkbox" data-bind-checked="col_state" />State</label>
-                        <label><input type="checkbox" data-bind-checked="col_peers_full_name" />Contact
-                          Name</label>
-                        <label><input type="checkbox" data-bind-checked="col_peers_full_email" />Contact Email</label>
-                        <label><input type="checkbox" data-bind-checked="col_comment" />Comment</label>
-                        <label><input type="checkbox" data-bind-checked="col_auth_access" />Auth Access</label>
-                        <label><input type="checkbox" data-bind-checked="col_created" />Created At</label>
-                      </div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody data-bind-observe="results" data-bind-array="results_rows" data-bind-array-each="tr"></tbody>
-              </table>
-              <div data-bind-observe="results_placeholder" data-bind-show="results_placeholder"></div>
-            </form>
-            <form name="site_stats" data-bind-form="DEFINED" data-bind-css="{ TabsPanel--active: $() === 2 }"
+            <form name="site_stats" data-bind-form="DEFINED" data-bind-css="{ TabsPanel--active: $() === 1 }"
               data-bind-css-watch="selected_tab_index" class="TabsPanel" id="site_stats">
               <h5>
                 Site Stats

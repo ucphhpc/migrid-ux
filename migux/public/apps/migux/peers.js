@@ -570,7 +570,7 @@ export class PeersApp extends AppBase {
             .join("<br>");
         }
         // populate the popup with errors
-        this.setPopupDialog("Inviation Results.", popupMsg);
+        this.setPopupDialog("Invitation Results.", popupMsg);
         this.showDialog();
       })
       .catch((error) => {

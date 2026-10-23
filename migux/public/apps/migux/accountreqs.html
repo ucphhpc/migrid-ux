@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>apps/accountreqs</title>
+  <link href="../build/reset.css" rel="stylesheet" />
+  <link href="../build/main.css" rel="stylesheet" />
+  <link href="./accountreqs.css" rel="stylesheet" />
+</head>
+
+<body data-migrole="app" data-migapp="accountreqs">
+  <div name="csrf_tokens" data-bind-observe="csrf_tokens" data-bind-array="csrf_tokens_entries"
+    data-bind-array-each="div">
+  </div>
+  <div class="modal fade show" tabindex="-1" id="accountreqs-modal" aria-labelledby="accountreqs-modal-label"
+    style="display: block" aria-modal="true" role="dialog">
+    <div class="capture-user-clicks">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title">
+              <div class="modal-title-msg">
+                <h1 id="accountreqs-modal-label">Administration Panel</h1>
+              </div>
+              <div class="modal-title-buttons">
+                <button class="modal-close CloseButton" data-bind-disabled="disable_close" data-bind-onclick="onClose"
+                  aria-label="Close"></button>
+              </div>
+            </div>
+            <div class="modal-subtitle">
+              <p class="modal-subtitle">
+                TODO: Admin UI description in subtitle.
+              </p>
+            </div>
+          </div>
+          <div class="modal-body" id="accountreqs-modal-body">
+            <ul class="Tabs" data-bind-component="Tabs" data-bind-component-observe="selected_tab_index">
+              <li class="TabsItem">Account Request</li>
+            </ul>
+            <form name="account_requests" data-bind-form="DEFINED" data-bind-css="{ TabsPanel--active: $() === 0 }"
+              data-bind-css-watch="selected_tab_index" class="account_requests TabsPanel" id="account_requests">
+              <h5>
+                Account Requests (<span data-bind-observe="count"></span> of
+                <span data-bind-observe="summary_total"></span>)
+                <span data-tooltip="TODO: Account requests tooltip text here" tabindex="0"><i>&quest;</i></span>
+              </h5>
+
+              <div class="fields-horizontal">
+                <span class="form-label">Account Request Query
+                  <span data-tooltip="TODO: Account request query tooltip." tabindex="0"><i>&quest;</i></span>
+                  <input type="text" class="form-control" id="account_requests_query" name="query"
+                    placeholder="Type to search..." data-bind-observe="search_query"
+                    data-bind-onenter="searchRequest" />
+                </span>
+
+                <span class="form-label">Account Request State
+                  <span
+                    data-tooltip="An account request can be either requested &mdash; if an external user has create a request, but it has not been forwarded yet"
+                    tabindex="0"><i>&quest;</i></span>
+                  <select data-bind-observe="search_state" data-bind-onchange="searchRequest">
+                    <option value="" data-bind-observe="summary_all_label"></option>
+                    <option value="requested" data-bind-observe="summary_requested_label"></option>
+                    <option value="pending" data-bind-observe="summary_pending_label"></option>
+                    <option value="accepted" data-bind-observe="summary_accepted_label"></option>
+                    <option value="invalid_peer_contact" data-bind-observe="summary_invalid_peer_contact_label">
+                    </option>
+                  </select>
+                </span>
+              </div>
+              <table class="migux-table migux-table--striped fields-table" id="account_requests_table">
+                <thead>
+                  <tr>
+                    <th>
+                      <input type="checkbox" class="form-check-input" data-bind-checked="all"
+                        data-bind-onchange="accountRequestsSelectAll" />
+                    </th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th data-bind-show="col_organization">Organization</th>
+                    <th data-bind-show="col_country">Country</th>
+                    <th data-bind-show="col_state">State</th>
+                    <th data-bind-show="col_peers_full_name">Contact Name</th>
+                    <th data-bind-show="col_peers_email">Contact Email</th>
+                    <th data-bind-show="col_comment">Comment</th>
+                    <th data-bind-show="col_auth_access">Auth Access</th>
+                    <th data-bind-show="col_created">Created At</th>
+                    <th class="col-settings settings-aid" data-bind-onclick="tableSettingsToggle">
+                      <span class="settings-aid_button"></span>
+                      <div class="settings-aid_toggles" data-bind-show="show_toggles"
+                        data-bind-onhide="searchRequestedSettingsHide">
+                        <label><input type="checkbox" checked disabled />Full
+                          name</label>
+                        <label><input type="checkbox" checked disabled />Email</label>
+                        <label><input type="checkbox" data-bind-checked="col_organization" />Organization</label>
+                        <label><input type="checkbox" data-bind-checked="col_country" />Country</label>
+                        <label><input type="checkbox" data-bind-checked="col_state" />State</label>
+                        <label><input type="checkbox" data-bind-checked="col_peers_full_name" />Contact
+                          Name</label>
+                        <label><input type="checkbox" data-bind-checked="col_peers_email" />Contact Email</label>
+                        <label><input type="checkbox" data-bind-checked="col_comment" />Comment</label>
+                        <label><input type="checkbox" data-bind-checked="col_auth_access" />Auth Access</label>
+                        <label><input type="checkbox" data-bind-checked="col_created" />Created At</label>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody data-bind-observe="results" data-bind-array="results_rows" data-bind-array-each="tr"></tbody>
+              </table>
+              <div data-bind-observe="results_placeholder" data-bind-show="results_placeholder"></div>
+              <div class="tab-actions">
+                <span class="tab-actions__grabheight"></span>
+                <span class="tab-actions__error"></span>
+                <div class="tab-actions__controls">
+                  <button class="btn btn-secondary"
+                    data-bind-onclick="rejectRequest">
+                    Reject
+                  </button>
+                  <button data-bind-show="account_request_state_selected_requested" class="btn btn-primary"
+                    data-bind-onclick="forwardRequest">
+                    Forward
+                  </button>
+                  <button data-bind-show="account_request_state_selected_accepted" class="btn btn-primary"
+                    data-bind-onclick="createRequest">
+                    Create user
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer" id="accountreqs-modal-footer">
+            <button class="btn btn-light" data-bind-disabled="disable_close" data-bind-onclick="onClose" type="button">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

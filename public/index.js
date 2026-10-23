@@ -35,12 +35,21 @@ async function populateAppList(appSelectEl, baseUrl) {
   const apiUrl = "http://localhost:8881";
   const formEl = document.querySelector("form");
   const formSelectEl = formEl.querySelector("select");
-  let rootEl = null;
+  let rootEl = document.createElement("div");
+  document.body.appendChild(rootEl);
 
   await import("./migappBootstrap.js");
 
-  function performAppLoad(appname, rootEl, appOptions) {
-    const urlOptions = appOptions.urlOptions || {};
+  function performAppLoad(appname) {
+    if (appname === "" || appname === "index") {
+      return;
+    }
+
+    const urlOptions = {
+      apiUrl: `${apiUrl}/api`,
+      baseUrl: "",
+    };
+    const appOptions = { urlOptions }
     const baseUrl = urlOptions.baseUrl;
 
     return Promise.all([
@@ -68,23 +77,16 @@ async function populateAppList(appSelectEl, baseUrl) {
   formEl.addEventListener("submit", (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
-
     const appname = data.get("app");
-    if (appname === "" || appname === "index") {
-      return;
-    }
-
-    if (!rootEl) {
-      rootEl = document.createElement("div");
-      document.body.appendChild(rootEl);
-    }
-
-    const urlOptions = {
-      apiUrl: `${apiUrl}/api`,
-      baseUrl: "",
-    };
-    performAppLoad(appname, rootEl, { urlOptions });
+    performAppLoad(appname);
   });
 
   populateAppList(formSelectEl, apiUrl);
+
+  const searchParams = new URLSearchParams(window.location.search)
+  if (searchParams.has("app")) {
+    const appname = searchParams.get("app");
+    performAppLoad(appname);
+  }
+
 })(typeof window !== "undefined" ? window : {});

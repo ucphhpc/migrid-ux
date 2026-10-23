@@ -1,5 +1,6 @@
 [
   {
+    "account_request_id": "tmp111111",
     "comment": "requested_1@example.com",
     "country": "DK",
     "created": 1727434813.0792377,
@@ -13,9 +14,11 @@
     "organizational_unit": "",
     "state": "NA",
     "peers_full_name": "Test Peer Contact",
-    "peers_email": "aaa111@ku.dk"
+    "peers_email": "aaa111@ku.dk",
+    "account_request_state": "requested"
   },
   {
+    "account_request_id": "tmp222222",
     "comment": "requested_2@example.com",
     "country": "DK",
     "created": 1727434813.0792377,
@@ -29,9 +32,11 @@
     "organizational_unit": "",
     "state": "NA",
     "peers_full_name": "Test Peer Contact 2",
-    "peers_email": "bbb222@ku.dk"
+    "peers_email": "bbb222@ku.dk",
+    "account_request_state": "pending"
   },
   {
+    "account_request_id": "tmp333333",
     "comment": "requested_3@example.com",
     "country": "DK",
     "created": 1727434813.0792377,
@@ -45,6 +50,7 @@
     "organizational_unit": "",
     "state": "NA",
     "peers_full_name": "Test Peer Contact 2",
-    "peers_email": "bbb222@ku.dk"
+    "peers_email": "bbb222@ku.dk",
+    "account_request_state": "accepted"
   }
 ]

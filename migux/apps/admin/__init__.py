@@ -1,5 +1,5 @@
 """
-Expose migux.apps.peers definitions.
+Expose migux.apps.admin definitions.
 """
 
 from .admin import TEMPLATE_FOLDER, TEMPLATE_ROUTES

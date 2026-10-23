@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # --- BEGIN_HEADER ---
 #
@@ -24,10 +23,13 @@ Common functions used within the dev server and its exposed resources.
 
 import hashlib
 import json
+import logging
 import os
 import re
 
 from flask import Blueprint, render_template
+
+log = logging.getLogger(__name__)
 
 _SCRIPT_DIR = os.path.dirname(__file__)
 _ROUTE_RE = re.compile("^(?P<method>[A-Z]+) (?P<path>.*)")
@@ -80,6 +82,34 @@ def routes_to_blueprint(name, import_name, routes, *, template_folder=None):
     return bp
 
 
+def validate_csrf_token(payload, expected_token):
+    """
+    Validates the csrf_token from the JSON payload.
+    Returns a tuple of (is_valid, error_message)
+    """
+    if "csrf_token" not in payload:
+        return False, "Missing csrf_token in request payload"
+
+    if payload["csrf_token"] != expected_token:
+        log.info(
+            "invalid csrf_token payload=%r expected=%r",
+            payload["csrf_token"],
+            expected_token,
+        )
+        return False, "Invalid csrf_token"
+
+    return True, None
+
+
+def create_handler_response(
+    status, message=None, error=None, **ui_response_kwargs
+):
+    """
+    A helper function to create route handler responses.
+    """
+    return {"message": message, "error": error, **ui_response_kwargs}, status
+
+
 def make_csrf_token(method, operation, limit=None):
     """
     Generate a CSRF token for the given method, operation, and limit.
@@ -88,6 +118,7 @@ def make_csrf_token(method, operation, limit=None):
     #    secret_salt = os.environ.get("DEVSERVER_CSRF_SECRET", "devserver_csrf_secret")
     input_merger = f"{method}:{operation}:{limit}"
     hex_token = hashlib.sha256(input_merger.encode()).hexdigest()
+    log.info("make_csrf_token(%r, %r, limit=%r) -> %r", method, operation, limit, hex_token)
     return hex_token
 
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # --- BEGIN_HEADER ---
 #
@@ -22,14 +21,18 @@
 Local server supporting the development of applications.
 """
 
+import logging
 import os
 
 from flask import Flask
 from flask_cors import CORS as cors
 
-from devserver.api.admin import BLUEPRINT as admin
+from devserver.api.accountreqs import blueprint as accountreqs
+from devserver.api.admin import blueprint as admin
 from devserver.api.peers import BLUEPRINT as peers
 from devserver.templating import load_templates_for_package
+
+logging.basicConfig(level=logging.DEBUG)
 
 SCRIPT_DIR = os.path.dirname(__file__)
 ROOT_DIR = os.path.normpath(os.path.join(SCRIPT_DIR, ".."))
@@ -71,8 +74,8 @@ def create_app():
         return fragment.render(appnames=appnames)
 
     # register any blueprints providing mock APIs here
-
     app.register_blueprint(peers, url_prefix="/api/peers")
     app.register_blueprint(admin, url_prefix="/api/admin")
+    app.register_blueprint(accountreqs, url_prefix="/api/accountreqs")
 
     return app

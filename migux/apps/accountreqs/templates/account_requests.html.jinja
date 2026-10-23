@@ -2,7 +2,7 @@
   {% for entry in account_requests %}
   <tr>
     <td>
-      <input type="hidden" name="peers" value="{{ entry.distinguished_name }}" data-bind-observe="peer_dn">
+      <input type="hidden" name="account_request_ids" value="{{ entry.account_request_id }}" data-bind-observe="account_request_id">
       <input type="checkbox" data-bind-checked="selected">
     </td>
     {% for field_content in entry %}
