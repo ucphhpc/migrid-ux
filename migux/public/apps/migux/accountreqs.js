@@ -405,7 +405,7 @@ export const App = AccountRequestsApp;
   };
 })();
 
-const MIGAPP_NAME = "admin";
+const MIGAPP_NAME = "accountreqs";
 
 function _decodeStorage(namespace) {
   try {
