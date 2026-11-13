@@ -151,16 +151,15 @@ export class AccountRequestsApp extends AppBase {
 
   forwardRequest() {
     const namespace = this.state.formState("account_requests");
-    const account_request_ids_to_forward =
+    const account_request_ids =
       this.getSelectedAccountRequestIDs(namespace);
-    if (account_request_ids_to_forward.length === 0) {
-      // no account requests were selected - nothing to do
+    if (account_request_ids.length === 0) {
       return;
     }
 
     let requestOptions = {
       method: "POST",
-      data: { account_request_ids: account_request_ids_to_forward },
+      data: { account_request_ids: account_request_ids },
     };
     const csrfToken = this.getCsrfToken("POST", "/accountreqs/forward");
     if (csrfToken) {
@@ -184,8 +183,38 @@ export class AccountRequestsApp extends AppBase {
       });
   }
 
-  createRequest() {
+  createUserRequest() {
+    const namespace = this.state.formState("account_requests");
+    const account_request_ids = this.getSelectedAccountRequestIDs(namespace)
+    if (account_request_ids.length === 0) {
+      return;
+    }
 
+    let requestOptions = {
+      method: "POST",
+      data: { account_request_ids: account_request_ids },
+    };
+
+    const csrfToken = this.getCsrfToken("POST", "/accountreqs/create_user");
+
+    if (csrfToken) {
+      requestOptions.data.csrf_token = csrfToken.csrf_token();
+    }
+
+    return this.request("/accountreqs/create_user", requestOptions)
+      .then(async (res) => {
+        const result = await res.json();
+        if (typeof result.error === "string" && result.error) {
+          throw new Error(result.error);
+        }
+
+        // update total
+        this.summaryRequest();
+        await this.searchRequest();
+      })
+      .catch((error) => {
+        console.error(error)
+      });
   }
 
   rejectRequest() {
@@ -209,7 +238,7 @@ export class AccountRequestsApp extends AppBase {
       .then(async (res) => {
         const result = await res.json();
         if (typeof result.error === "string" && result.error) {
-          throw new Error(result.error);;
+          throw new Error(result.error);
         }
 
         // update total
@@ -217,6 +246,7 @@ export class AccountRequestsApp extends AppBase {
         await this.searchRequest();
       })
       .catch((error) => {
+        console.error(error)
       });
   }
 
@@ -278,6 +308,7 @@ AccountRequestsApp.CONST_ACCOUNT_REQUESTS_LISTING_COLNAMES = [
 ];
 
 AccountRequestsApp.CONST_STATE_CHANGE_REQUESTS = [
+  "method=POST&operation=/accountreqs/create_user",
   "method=POST&operation=/accountreqs/forward",
   "method=POST&operation=/accountreqs/reject",
 ];
