@@ -2,6 +2,7 @@
 Development facing implementation of a admin API.
 """
 
+from collections import defaultdict
 from types import SimpleNamespace
 from typing import Any
 
@@ -26,7 +27,7 @@ EXAMPLE_DATA = {
 blueprint = Blueprint("accountreqs", __name__, template_folder=TEMPLATE_FOLDER)
 
 
-def account_requests_of_state(state: str) -> list[dict[str, Any]]:
+def _accountreqs_of_state(state: str) -> list[dict[str, Any]]:
     """Filters the example data for account requests of a given state."""
     return [
         entry
@@ -43,9 +44,12 @@ def summary():
 
     return {
         "total": len(EXAMPLE_DATA["GET /"]),
-        "requested": len(account_requests_of_state("requested")),
-        "pending": len(account_requests_of_state("pending")),
-        "accepted": len(account_requests_of_state("accepted")),
+        "invalid_peer_contact": len(
+            _accountreqs_of_state("invalid_peer_contact")
+        ),
+        "requested": len(_accountreqs_of_state("requested")),
+        "pending": len(_accountreqs_of_state("pending")),
+        "accepted": len(_accountreqs_of_state("accepted")),
     }
 
 
@@ -55,7 +59,7 @@ def csrf_tokens():
     Request handler: GET /csrf_tokens
     """
     template_route = TEMPLATE_ROUTES["GET /csrf_tokens"]
-    request_uri = request.values.get("requests", [])
+    request_uri = request.values.get("requests", "")
     request_objects = list(request_uri.split(","))
 
     csrf_tokens = []
@@ -95,7 +99,7 @@ def account_requests():
     query = request.values.get("query", "").lower()
     example_data = EXAMPLE_DATA["GET /"]
     if state := request.values.get("state"):
-        example_data = account_requests_of_state(state)
+        example_data = _accountreqs_of_state(state)
 
     def matches_query(entry) -> bool:
         return any(query in str(val).lower() for val in entry.values())
@@ -125,33 +129,33 @@ def reject():
             422, error="No account requests selected for rejecting"
         )
 
-    errors = []
-    rejected = []
-    for reject_id in accreq_ids_to_reject:
+    errors: dict[str, list[str]] = defaultdict(list)
+    successes: list[str] = []
+    for accreq_id in accreq_ids_to_reject:
         accreq = next(
             (
                 entry
                 for entry in EXAMPLE_DATA["GET /"]
-                if entry["account_request_id"] == reject_id
+                if entry["account_request_id"] == accreq_id
             ),
             None,
         )
         if accreq is None:
-            errors.append("Account request {!r} not found".format(reject_id))
+            errors[accreq_id].append("account request not found")
             continue
 
-        rejected.append(reject_id)
+        successes.append(accreq_id)
 
     # remove from exampel data
     EXAMPLE_DATA["GET /"] = [
         entry
         for entry in EXAMPLE_DATA["GET /"]
-        if entry["account_request_id"] not in rejected
+        if entry["account_request_id"] not in successes
     ]
 
     return create_handler_response(
         400 if errors else 200,
-        data={"forwarded": rejected, "errors": errors},
+        data={"successes": successes, "errors": errors},
     )
 
 
@@ -173,34 +177,34 @@ def forward():
             422, error="No account requests selected for forwarding"
         )
 
-    errors = []
-    forwarded = []
-    for forward_id in accreq_ids_to_forward:
+    errors: dict[str, list[str]] = defaultdict(list)
+    successes: list[str] = []
+    for accreq_id in accreq_ids_to_forward:
         accreq = next(
             (
                 entry
                 for entry in EXAMPLE_DATA["GET /"]
-                if entry["account_request_id"] == forward_id
+                if entry["account_request_id"] == accreq_id
             ),
             None,
         )
         if accreq is None:
-            errors.append("Account request {!r} not found".format(forward_id))
+            errors[accreq_id].append("account request not found")
             continue
 
         if accreq["account_request_state"] != "requested":
-            errors.append(
-                "Account request {!r} is in state {!r}, only 'requested' "
+            errors[accreq_id].append(
+                "account request is in state {!r}, only 'requested' "
                 "account requests can be forwarded".format(
-                    forward_id, accreq["account_request_state"]
+                    accreq["account_request_state"]
                 )
             )
             continue
 
         accreq["account_request_state"] = "pending"
-        forwarded.append(forward_id)
+        successes.append(accreq_id)
 
     return create_handler_response(
         400 if errors else 200,
-        data={"forwarded": forwarded, "errors": errors},
+        data={"forwarded": successes, "errors": errors},
     )
