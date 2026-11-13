@@ -8,9 +8,7 @@ from typing import Any, Optional
 from flask import Request
 
 
-def list_logs(
-    request: Request, data: Optional[list[dict[str, Any]]] = None
-):
+def list_logs(request: Request, data: Optional[list[dict[str, Any]]] = None):
     """
     Generate render_info for the listing of server logs.
     """
@@ -40,9 +38,7 @@ def list_daemons(
     }
 
 
-def list_stats(
-    _request: Request, data: Optional[list[dict[str, Any]]] = None
-):
+def list_stats(_request: Request, data: Optional[list[dict[str, Any]]] = None):
     """
     Generate render_info for the listing of site stats.
     """

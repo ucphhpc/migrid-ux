@@ -43,7 +43,6 @@ const TEST_SEARCH_REQUESTED_RESULT = await loadTextualFixture(
 );
 const TEST_SEARCH_REQUESTED_RESULT_TOTAL = 3;
 
-
 describe("apps/peers", function () {
   before(async () => {
     // Disable the refreshCsrfTokens that is for instance used during initialization
@@ -70,7 +69,9 @@ describe("apps/peers", function () {
 
   describe("when listing accepted peers", () => {
     it("should issue a request for an empty search term", async () => {
-      const fakeFetch = sinon.stub().returns(fakeResponse(TEST_SEARCH_REQUESTED_RESULT));
+      const fakeFetch = sinon
+        .stub()
+        .returns(fakeResponse(TEST_SEARCH_REQUESTED_RESULT));
       const state = createState(AppBase.definition(PeersApp));
       const instance = new PeersApp(state, { _fetch: fakeFetch });
 
@@ -105,7 +106,9 @@ describe("apps/peers", function () {
     });
 
     it("should clear the results while searching", async () => {
-      const fakeFetch = sinon.stub().returns(fakeResponse(TEST_SEARCH_REQUESTED_RESULT));
+      const fakeFetch = sinon
+        .stub()
+        .returns(fakeResponse(TEST_SEARCH_REQUESTED_RESULT));
       const state = createState(AppBase.definition(PeersApp));
       const namespace = state.formState("peers_accepted");
       const instance = new PeersApp(state, { _fetch: fakeFetch });

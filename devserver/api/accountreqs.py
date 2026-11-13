@@ -11,6 +11,7 @@ from flask import Blueprint, request
 import devserver.common as server_common
 from devserver.common import (
     create_handler_response,
+    extract_csrf_tokens_from_request,
     make_csrf_token,
     unconcatify,
     validate_csrf_token,
@@ -59,24 +60,12 @@ def csrf_tokens():
     Request handler: GET /csrf_tokens
     """
     template_route = TEMPLATE_ROUTES["GET /csrf_tokens"]
-    request_uri = request.values.get("requests", "")
-    request_objects = list(request_uri.split(","))
-
-    csrf_tokens = []
-    for request_object in request_objects:
-        method_obj, operation_obj = request_object.split("&")
-        method = method_obj.split("=")[1]
-        operation = operation_obj.split("=")[1]
-
-        token = make_csrf_token(method, operation)
-        csrf_tokens.append(
-            {"token": token, "method": method, "operation": operation}
-        )
+    req_csrf_tokens = extract_csrf_tokens_from_request(request)
 
     request_info = SimpleNamespace()
     # Generate tokens based on the operation requested
     return server_common.render_app_template(
-        template_route, request_info=request_info, data=csrf_tokens
+        template_route, request_info=request_info, data=req_csrf_tokens
     )
 
 

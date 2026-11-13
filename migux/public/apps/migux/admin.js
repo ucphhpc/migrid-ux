@@ -1,10 +1,6 @@
 import { AppBase, APP_COMPONENTS, APP_DEFINITION } from "../../lib/app.js";
 import { Tabs } from "../../components/Tabs.js";
-import {
-  NO_VALUE,
-  computedValue,
-  observedHtml,
-} from "../../lib/observable.js";
+import { NO_VALUE, computedValue, observedHtml } from "../../lib/observable.js";
 
 function _someTruthyValue(arrayOfValues) {
   return arrayOfValues.some((value) => !!value);

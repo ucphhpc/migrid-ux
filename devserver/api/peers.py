@@ -27,6 +27,7 @@ import devserver.common as server_common
 import migux.apps.peers as migux_apps_peers
 from devserver.common import (
     create_handler_response,
+    extract_csrf_tokens_from_request,
     make_csrf_token,
     unconcatify,
     validate_csrf_token,
@@ -74,7 +75,6 @@ def extract_csv_content_and_header(csv_input):
     header = [col.strip() for col in csv_lines[0].split(";")]
 
     return header, csv_lines
-
 
 
 def _create_form_response(payload, simulate_error=False):
@@ -446,19 +446,8 @@ def migux_apps_peers__GET_csrf_tokens():
     Request handler: GET /csrf_tokens
     """
     template_route = migux_apps_peers.TEMPLATE_ROUTES["GET /csrf_tokens"]
-    request_uri = request.values.get("requests", [])
-    request_objects = list(request_uri.split(","))
 
-    csrf_tokens = []
-    for request_object in request_objects:
-        method_obj, operation_obj = request_object.split("&")
-        method = method_obj.split("=")[1]
-        operation = operation_obj.split("=")[1]
-
-        token = make_csrf_token(method, operation)
-        csrf_tokens.append(
-            {"token": token, "method": method, "operation": operation}
-        )
+    csrf_tokens = extract_csrf_tokens_from_request(request)
 
     # We artificially create the request_info here to align with the
     # render_app_templates expectations

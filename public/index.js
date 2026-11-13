@@ -49,7 +49,7 @@ async function populateAppList(appSelectEl, baseUrl) {
       apiUrl: `${apiUrl}/api`,
       baseUrl: "",
     };
-    const appOptions = { urlOptions }
+    const appOptions = { urlOptions };
     const baseUrl = urlOptions.baseUrl;
 
     return Promise.all([
@@ -83,10 +83,9 @@ async function populateAppList(appSelectEl, baseUrl) {
 
   populateAppList(formSelectEl, apiUrl);
 
-  const searchParams = new URLSearchParams(window.location.search)
+  const searchParams = new URLSearchParams(window.location.search);
   if (searchParams.has("app")) {
     const appname = searchParams.get("app");
     performAppLoad(appname);
   }
-
 })(typeof window !== "undefined" ? window : {});

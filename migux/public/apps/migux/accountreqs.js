@@ -16,7 +16,6 @@ function _someTruthyValue(arrayOfValues) {
 export class AccountRequestsApp extends AppBase {
   constructor(state, options) {
     super(state, options);
-    const namespace = this.state.formState("account_requests");
   }
 
   tableSettingsToggle(_, namespace) {
@@ -42,7 +41,9 @@ export class AccountRequestsApp extends AppBase {
         namespace.summary_requested(result.data.requested);
         namespace.summary_pending(result.data.pending);
         namespace.summary_accepted(result.data.accepted);
-        namespace.summary_invalid_peer_contact(result.data.invalid_peer_contact);
+        namespace.summary_invalid_peer_contact(
+          result.data.invalid_peer_contact,
+        );
       })
       .catch(() => {
         // ignore
@@ -151,8 +152,7 @@ export class AccountRequestsApp extends AppBase {
 
   forwardRequest() {
     const namespace = this.state.formState("account_requests");
-    const account_request_ids =
-      this.getSelectedAccountRequestIDs(namespace);
+    const account_request_ids = this.getSelectedAccountRequestIDs(namespace);
     if (account_request_ids.length === 0) {
       return;
     }
@@ -179,13 +179,13 @@ export class AccountRequestsApp extends AppBase {
         await this.searchRequest();
       })
       .catch((error) => {
-        console.error(error)
+        console.error(error);
       });
   }
 
   createUserRequest() {
     const namespace = this.state.formState("account_requests");
-    const account_request_ids = this.getSelectedAccountRequestIDs(namespace)
+    const account_request_ids = this.getSelectedAccountRequestIDs(namespace);
     if (account_request_ids.length === 0) {
       return;
     }
@@ -213,13 +213,14 @@ export class AccountRequestsApp extends AppBase {
         await this.searchRequest();
       })
       .catch((error) => {
-        console.error(error)
+        console.error(error);
       });
   }
 
   rejectRequest() {
     const namespace = this.state.formState("account_requests");
-    const account_request_ids_to_remove = this.getSelectedAccountRequestIDs(namespace)
+    const account_request_ids_to_remove =
+      this.getSelectedAccountRequestIDs(namespace);
     if (account_request_ids_to_remove.length === 0) {
       return;
     }
@@ -246,28 +247,28 @@ export class AccountRequestsApp extends AppBase {
         await this.searchRequest();
       })
       .catch((error) => {
-        console.error(error)
+        console.error(error);
       });
   }
 
   tooltipHide(_details, _namespace, element) {
-    const elem = element.querySelector(".MiguxTooltip")
+    const elem = element.querySelector(".MiguxTooltip");
     if (!elem) {
-      console.error("cannot toggle non-existing tooltip")
-      return
+      console.error("cannot toggle non-existing tooltip");
+      return;
     }
 
-    elem.style.display = "none"
+    elem.style.display = "none";
   }
 
   tooltipShow(_details, _namespace, element) {
-    const elem = element.querySelector(".MiguxTooltip")
+    const elem = element.querySelector(".MiguxTooltip");
     if (!elem) {
-      console.error("cannot toggle non-existing tooltip")
-      return
+      console.error("cannot toggle non-existing tooltip");
+      return;
     }
 
-    elem.style.display = ""
+    elem.style.display = "";
   }
 
   onInitialize() {
@@ -283,27 +284,47 @@ export class AccountRequestsApp extends AppBase {
 
   _initializeSummaryLabel(stateEntry, labelEntry, label) {
     asObservable(stateEntry).addEventListener("change", () => {
-      labelEntry(`${label} (${stateEntry()})`)
-    })
+      labelEntry(`${label} (${stateEntry()})`);
+    });
   }
 
   _initializeSummaryLabels() {
     const namespace = this.state.formState("account_requests");
-    this._initializeSummaryLabel(namespace.summary_total, namespace.summary_all_label, "All")
-    this._initializeSummaryLabel(namespace.summary_requested, namespace.summary_requested_label, "Requested")
-    this._initializeSummaryLabel(namespace.summary_pending, namespace.summary_pending_label, "Peer Pending")
-    this._initializeSummaryLabel(namespace.summary_accepted, namespace.summary_accepted_label, "Peer Accepted")
-    this._initializeSummaryLabel(namespace.summary_invalid_peer_contact, namespace.summary_invalid_peer_contact_label, "Invalid Peer Contact")
+    this._initializeSummaryLabel(
+      namespace.summary_total,
+      namespace.summary_all_label,
+      "All",
+    );
+    this._initializeSummaryLabel(
+      namespace.summary_requested,
+      namespace.summary_requested_label,
+      "Requested",
+    );
+    this._initializeSummaryLabel(
+      namespace.summary_pending,
+      namespace.summary_pending_label,
+      "Peer Pending",
+    );
+    this._initializeSummaryLabel(
+      namespace.summary_accepted,
+      namespace.summary_accepted_label,
+      "Peer Accepted",
+    );
+    this._initializeSummaryLabel(
+      namespace.summary_invalid_peer_contact,
+      namespace.summary_invalid_peer_contact_label,
+      "Invalid Peer Contact",
+    );
   }
 
   _initializeSearchStateHandling() {
     const namespace = this.state.formState("account_requests");
     asObservable(namespace.search_state).addEventListener("change", () => {
-      const state = namespace.search_state()
-      namespace.account_request_state_selected_any(state == "")
-      namespace.account_request_state_selected_requested(state == "requested")
-      namespace.account_request_state_selected_pending(state == "pending")
-      namespace.account_request_state_selected_accepted(state == "accepted")
+      const state = namespace.search_state();
+      namespace.account_request_state_selected_any(state == "");
+      namespace.account_request_state_selected_requested(state == "requested");
+      namespace.account_request_state_selected_pending(state == "pending");
+      namespace.account_request_state_selected_accepted(state == "accepted");
     });
   }
 

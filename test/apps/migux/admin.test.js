@@ -7,7 +7,7 @@ import {
 } from "../../support/assertions.js";
 import { browserHooksEach, grabBrowserGlobals } from "../../support/browser.js";
 import { parseHtmlFromString } from "../../support/dom.js";
-import { loadTextualFixture, loadPublicFile } from "../../support/files.js";
+import { loadPublicFile } from "../../support/files.js";
 import { AppBase } from "../../../lib/app.js";
 import { createNamespacedState as createState } from "../../../lib/state.js";
 import { bootstrap, AdminApp } from "../../../migux/public/apps/migux/admin.js";

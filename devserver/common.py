@@ -27,7 +27,7 @@ import logging
 import os
 import re
 
-from flask import Blueprint, render_template
+from flask import Blueprint, Request, render_template
 
 log = logging.getLogger(__name__)
 
@@ -118,8 +118,32 @@ def make_csrf_token(method, operation, limit=None):
     #    secret_salt = os.environ.get("DEVSERVER_CSRF_SECRET", "devserver_csrf_secret")
     input_merger = f"{method}:{operation}:{limit}"
     hex_token = hashlib.sha256(input_merger.encode()).hexdigest()
-    log.info("make_csrf_token(%r, %r, limit=%r) -> %r", method, operation, limit, hex_token)
+    log.info(
+        "make_csrf_token(%r, %r, limit=%r) -> %r",
+        method,
+        operation,
+        limit,
+        hex_token,
+    )
     return hex_token
+
+
+def extract_csrf_tokens_from_request(request: Request) -> list[dict[str, str]]:
+    """Extract the csrf tokens from the given request object."""
+    request_uri = request.values.get("requests", "")
+    request_objects = list(request_uri.split(","))
+    req_csrf_tokens: list[dict[str, str]] = []
+    for request_object in request_objects:
+        method_obj, operation_obj = request_object.split("&")
+        method = method_obj.split("=")[1]
+        operation = operation_obj.split("=")[1]
+
+        token = make_csrf_token(method, operation)
+        req_csrf_tokens.append(
+            {"token": token, "method": method, "operation": operation}
+        )
+
+    return req_csrf_tokens
 
 
 def unconcatify(value: str, sep: str):
