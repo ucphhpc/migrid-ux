@@ -250,6 +250,26 @@ export class AccountRequestsApp extends AppBase {
       });
   }
 
+  tooltipHide(_details, _namespace, element) {
+    const elem = element.querySelector(".MiguxTooltip")
+    if (!elem) {
+      console.error("cannot toggle non-existing tooltip")
+      return
+    }
+
+    elem.style.display = "none"
+  }
+
+  tooltipShow(_details, _namespace, element) {
+    const elem = element.querySelector(".MiguxTooltip")
+    if (!elem) {
+      console.error("cannot toggle non-existing tooltip")
+      return
+    }
+
+    elem.style.display = ""
+  }
+
   onInitialize() {
     this.summaryRequest();
     this.searchRequest("");

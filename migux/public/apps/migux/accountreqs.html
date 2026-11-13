@@ -43,12 +43,34 @@
               <h5>
                 Account Requests (<span data-bind-observe="count"></span> of
                 <span data-bind-observe="summary_total"></span>)
-                <span data-tooltip="TODO: Account requests tooltip text here" tabindex="0"><i>&quest;</i></span>
+                <span
+                  class="tooltip-button"
+                  data-bind-onfocus="tooltipShow"
+                  data-bind-onfocusout="tooltipHide"
+                  tabindex="0"
+                >
+                  <i>&quest;</i>
+                  <div class="MiguxTooltip" style="display: none">
+                    The number of <strong>currently visible</strong> account requests out of the
+                    <strong>total number</strong> of account requests.
+                  </div>
+                </span>
               </h5>
 
               <div class="fields-horizontal">
                 <span class="form-label">Account Request Query
-                  <span data-tooltip="TODO: Account request query tooltip." tabindex="0"><i>&quest;</i></span>
+                  <span
+                    class="tooltip-button"
+                    data-bind-onfocus="tooltipShow"
+                    data-bind-onfocusout="tooltipHide"
+                    tabindex="0"
+                  >
+                    <i>&quest;</i>
+                    <div class="MiguxTooltip" style="display: none">
+                      Case insensitive free text search of account requests
+                      applied to every field.
+                    </div>
+                  </span>
                   <input type="text" class="form-control" id="account_requests_query" name="query"
                     placeholder="Type to search..." data-bind-observe="search_query"
                     data-bind-onenter="searchRequest" />
@@ -56,8 +78,24 @@
 
                 <span class="form-label">Account Request State
                   <span
-                    data-tooltip="An account request can be either requested &mdash; if an external user has created it, but it has not been forwarded yet, pending &mdash; if it has been forwarded, but not yet accepted by the peer contact, or accepted &mdash; if it has been accepted by the peer contact, but not yet created by an supporter or operator."
-                    tabindex="0"><i>&quest;</i></span>
+                    class="tooltip-button"
+                    data-bind-onfocus="tooltipShow"
+                    data-bind-onfocusout="tooltipHide"
+                    tabindex="0"
+                  >
+                    <i>&quest;</i>
+                    <div class="MiguxTooltip" style="display: none">
+                      An account request can be either:<br />
+                      <strong>Requested</strong> if an external user has created
+                      it, but it has not been forwarded yet.<br />
+                      <strong>Pending</strong> if it has been forwarded, but not
+                      yet accepted by the peer contact.<br />
+                      <strong>Accepted</strong> if it has been accepted by the
+                      peer contact, but not yet created by an supporter or
+                      operator.
+                    </div>
+                  </span>
+
                   <select data-bind-observe="search_state" data-bind-onchange="searchRequest">
                     <option value="" data-bind-observe="summary_all_label"></option>
                     <option value="requested" data-bind-observe="summary_requested_label"></option>
