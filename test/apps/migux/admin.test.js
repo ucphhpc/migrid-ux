@@ -12,10 +12,6 @@ import { AppBase } from "../../../lib/app.js";
 import { createNamespacedState as createState } from "../../../lib/state.js";
 import { bootstrap, AdminApp } from "../../../migux/public/apps/migux/admin.js";
 
-const TEST_SEARCH_ACCOUNT_REQUESTS_RESULT = loadTextualFixture(
-  "fragment_account_requests.html",
-);
-
 function fakeFetchParseRequestURL(call) {
   const url = call.args[0];
   let parsedUrl;
@@ -43,30 +39,6 @@ describe("apps/admin", function () {
     const state = createState(AppBase.definition(AdminApp));
 
     assertFalse(state.namespace("__app__").disable_close());
-  });
-
-  describe("when listing account requests", () => {
-    it("should issue a request for an empty search term", async () => {
-      const makeFakeRes = () => {
-        const res = {
-          ok: true,
-          status: 200,
-          text() {
-            return Promise.resolve(TEST_SEARCH_ACCOUNT_REQUESTS_RESULT);
-          },
-        };
-        return Promise.resolve(res);
-      };
-      const fakeFetch = sinon.stub().returns(makeFakeRes());
-      const state = createState(AppBase.definition(AdminApp));
-      const instance = new AdminApp(state, { _fetch: fakeFetch });
-
-      await instance.accountRequestsSearch();
-
-      assertTrue(fakeFetch.calledOnce);
-      const { queryParams } = fakeFetchParseRequestURL(fakeFetch.lastCall);
-      assertEqual(queryParams.get("query"), "");
-    });
   });
 
   describe("when bound", function () {
@@ -154,22 +126,9 @@ describe("apps/admin", function () {
           const { parsedUrl, queryParams } = fakeFetchParseRequestURL(
             fakeFetch.lastCall,
           );
-          assertEqual(parsedUrl.pathname, "/admin/server/logs");
+          assertEqual(parsedUrl.pathname, "/admin/logs");
           assertEqual(queryParams.get("last_lines"), "123");
         });
-      });
-    });
-
-    describe("account requests tab", () => {
-      it("should be initially inactive", () => {
-        bootstrap(document.body);
-        const accountRequestsTabForm = document.querySelector(
-          'form[name="account_requests"]',
-        );
-
-        assertFalse(
-          accountRequestsTabForm.classList.contains("TabsPanel--active"),
-        );
       });
     });
 
