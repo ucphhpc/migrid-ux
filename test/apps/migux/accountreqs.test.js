@@ -4,6 +4,7 @@ import {
   assertTrue,
   assertFalse,
   assertEqual,
+  assertNotEqual,
 } from "../../support/assertions.js";
 import { browserHooksEach, grabBrowserGlobals } from "../../support/browser.js";
 import { parseHtmlFromString } from "../../support/dom.js";
@@ -11,6 +12,7 @@ import { loadTextualFixture, loadPublicFile } from "../../support/files.js";
 import { AppBase } from "../../../lib/app.js";
 import { createNamespacedState as createState } from "../../../lib/state.js";
 import { bootstrap, AccountRequestsApp } from "../../../public/apps/migux/accountreqs.js";
+import { makeFakeFetch } from "./fakefetch.js";
 
 const TEST_SEARCH_ACCOUNT_REQUESTS_RESULT = loadTextualFixture(
   "accountreqs/fragment_requested.html",
@@ -232,6 +234,34 @@ describe("apps/accountreqs", function () {
       closeIconEl.dispatchEvent(new window.MouseEvent("click"));
 
       assertEqual(document.body.children.length, 0);
+    });
+
+    it("should show a placeholder with no search", () => {
+      bootstrap(document);
+
+      const tbodyEl = document.querySelector('[data-bind-observe="results"]');
+      assertEqual(tbodyEl.children.length, 0);
+      const placeholderEl = document.querySelector('[data-bind-observe="results_placeholder"]');
+      assertNotEqual(placeholderEl, null)
+      assertEqual(placeholderEl.style.display, "")
+    });
+
+    it("should toggle submitted when searching", async () => {
+      const app = bootstrap(document);
+      app._fetch = makeFakeFetch({ body: TEST_SEARCH_ACCOUNT_REQUESTS_RESULT });
+      const searchRequestSpy = sinon.spy(app, "searchRequest");
+      const namespace = app.state.formState("account_requests");
+
+      const queryEl = document.querySelector("#account_requests_query");
+      queryEl.value = "foo";
+      queryEl.dispatchEvent(new window.InputEvent("input"));
+      queryEl.dispatchEvent(new window.KeyboardEvent("keyup", { key: "Enter" }));
+
+      assertTrue(namespace.submitted());
+
+      await searchRequestSpy.returnValues[0]
+
+      assertFalse(namespace.submitted());
     });
   });
 });
