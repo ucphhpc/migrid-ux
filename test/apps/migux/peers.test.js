@@ -32,7 +32,7 @@ import { createNamespacedState as createState } from "../../../lib/state.js";
 
 import { bootstrap, PeersApp } from "../../../migux/public/apps/migux/peers.js";
 
-import { makeFakeFetch } from "./fakefetch.js";
+import { makeFakeFetch, fakeResponse } from "./fakefetch.js";
 
 const TEST_SEARCH_ACCEPTED_RESULT = await loadTextualFixture(
   "peers/fragment_accepted.html",
@@ -70,17 +70,7 @@ describe("apps/peers", function () {
 
   describe("when listing accepted peers", () => {
     it("should issue a request for an empty search term", async () => {
-      const makeFakeRes = () => {
-        const res = {
-          ok: true,
-          status: 200,
-          text() {
-            return Promise.resolve(TEST_SEARCH_REQUESTED_RESULT);
-          },
-        };
-        return Promise.resolve(res);
-      };
-      const fakeFetch = sinon.stub().returns(makeFakeRes());
+      const fakeFetch = sinon.stub().returns(fakeResponse(TEST_SEARCH_REQUESTED_RESULT));
       const state = createState(AppBase.definition(PeersApp));
       const instance = new PeersApp(state, { _fetch: fakeFetch });
 
@@ -115,17 +105,7 @@ describe("apps/peers", function () {
     });
 
     it("should clear the results while searching", async () => {
-      const makeFakeRes = () => {
-        const res = {
-          ok: true,
-          status: 200,
-          text() {
-            return Promise.resolve(TEST_SEARCH_REQUESTED_RESULT);
-          },
-        };
-        return Promise.resolve(res);
-      };
-      const fakeFetch = sinon.stub().returns(makeFakeRes());
+      const fakeFetch = sinon.stub().returns(fakeResponse(TEST_SEARCH_REQUESTED_RESULT));
       const state = createState(AppBase.definition(PeersApp));
       const namespace = state.formState("peers_accepted");
       const instance = new PeersApp(state, { _fetch: fakeFetch });

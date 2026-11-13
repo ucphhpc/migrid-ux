@@ -17,7 +17,9 @@ export function makeFakeFetch({ body = null, contentType = "text/html" } = {}) {
             return 200 <= res.status && res.status < 299;
         },
     };
+
     const stub = sinon.stub().named("fakeFetch").resolves(res);
+
     stub.getCallQueryArgs = (callIndex) => {
         const [url, fetchOptions] = stub.getCall(callIndex).args;
         if (fetchOptions.method !== "GET") {
@@ -43,6 +45,7 @@ export function makeFakeFetch({ body = null, contentType = "text/html" } = {}) {
         }
         return queryArgs;
     };
+
     stub.programResponse = ({ status = null, body = null }) => {
         if (status !== null) {
             res.status = status;
@@ -60,3 +63,19 @@ export function makeFakeFetch({ body = null, contentType = "text/html" } = {}) {
 
     return stub;
 }
+
+/**
+ * Create a fake response to be returned by a fake/stub fetch.
+ * @param {string} text The resolved text response.
+ * @returns A promise of a response.
+ */
+export function fakeResponse(text) {
+    const res = {
+        ok: true,
+        status: 200,
+        text() {
+            return Promise.resolve(text);
+        },
+    };
+    return Promise.resolve(res);
+};

@@ -12,45 +12,15 @@ import { loadTextualFixture, loadPublicFile } from "../../support/files.js";
 import { AppBase } from "../../../lib/app.js";
 import { createNamespacedState as createState } from "../../../lib/state.js";
 import { bootstrap, AccountRequestsApp } from "../../../public/apps/migux/accountreqs.js";
-import { makeFakeFetch } from "./fakefetch.js";
+import { makeFakeFetch, fakeResponse } from "./fakefetch.js";
 
 const TEST_SEARCH_ACCOUNT_REQUESTS_RESULT = loadTextualFixture(
   "accountreqs/fragment_requested.html",
 );
 
-function fakeResponse(text) {
-  const res = {
-    ok: true,
-    status: 200,
-    text() {
-      return Promise.resolve(text);
-    },
-  };
-  return Promise.resolve(res);
-};
-
-function fakeFetchParseRequestURL(call) {
-  const url = call.args[0];
-  let parsedUrl;
-  try {
-    parsedUrl = new URL(url);
-  } catch (e) {
-    if (e.message !== "Invalid URL") {
-      throw e;
-    }
-
-    // assume we have only a path
-    const prefixedUrl = `http://testhost${url}`;
-    parsedUrl = new URL(prefixedUrl);
-  }
-
-  const queryParams = new URLSearchParams(parsedUrl.search);
-
-  return { parsedUrl, queryParams };
-}
 
 function arrangeAppInstance() {
-  const fakeFetch = sinon.stub();
+  const fakeFetch = makeFakeFetch({body: TEST_SEARCH_ACCOUNT_REQUESTS_RESULT})
   const state = createState(AppBase.definition(AccountRequestsApp));
   const accountRequestsNamespace = state.formState("account_requests")
   const instance = new AccountRequestsApp(state, { _fetch: fakeFetch });
@@ -75,26 +45,24 @@ describe("apps/accountreqs", function () {
   describe("when searching account requests", () => {
     it("should issue a request for an empty search term", async () => {
       const { instance, fakeFetch } = arrangeAppInstance()
-      fakeFetch.returns(fakeResponse(TEST_SEARCH_ACCOUNT_REQUESTS_RESULT));
 
       await instance.searchRequest();
 
       assertTrue(fakeFetch.calledOnce);
-      const { queryParams } = fakeFetchParseRequestURL(fakeFetch.lastCall);
-      assertEqual(queryParams.get("query"), "");
+      const queryParams = fakeFetch.getCallQueryArgs(0);
+      assertEqual(queryParams.query, "");
     });
 
     describe("and search state is empty", () => {
       it("should issue a request with empty state", async () => {
         const { instance, fakeFetch, accountRequestsNamespace: namespace } = arrangeAppInstance()
         namespace.search_state("")
-        fakeFetch.returns(fakeResponse(TEST_SEARCH_ACCOUNT_REQUESTS_RESULT));
 
         await instance.searchRequest();
 
         assertTrue(fakeFetch.calledOnce);
-        const { queryParams } = fakeFetchParseRequestURL(fakeFetch.lastCall);
-        assertEqual(queryParams.get("state"), "");
+        const queryParams = fakeFetch.getCallQueryArgs(0);
+        assertEqual(queryParams.state, "");
       })
     })
 
@@ -102,13 +70,12 @@ describe("apps/accountreqs", function () {
       it("should issue a request with requested state", async () => {
         const { instance, fakeFetch, accountRequestsNamespace: namespace } = arrangeAppInstance()
         namespace.search_state("requested")
-        fakeFetch.returns(fakeResponse(TEST_SEARCH_ACCOUNT_REQUESTS_RESULT));
 
         await instance.searchRequest();
 
         assertTrue(fakeFetch.calledOnce);
-        const { queryParams } = fakeFetchParseRequestURL(fakeFetch.lastCall);
-        assertEqual(queryParams.get("state"), "requested");
+        const queryParams = fakeFetch.getCallQueryArgs(0);
+        assertEqual(queryParams.state, "requested");
       })
     })
 
@@ -116,13 +83,12 @@ describe("apps/accountreqs", function () {
       it("should issue a request with pending state", async () => {
         const { instance, fakeFetch, accountRequestsNamespace: namespace } = arrangeAppInstance()
         namespace.search_state("pending")
-        fakeFetch.returns(fakeResponse(TEST_SEARCH_ACCOUNT_REQUESTS_RESULT));
 
         await instance.searchRequest();
 
         assertTrue(fakeFetch.calledOnce);
-        const { queryParams } = fakeFetchParseRequestURL(fakeFetch.lastCall);
-        assertEqual(queryParams.get("state"), "pending");
+        const queryParams = fakeFetch.getCallQueryArgs(0);
+        assertEqual(queryParams.state, "pending");
       })
     })
 
@@ -130,13 +96,12 @@ describe("apps/accountreqs", function () {
       it("should issue a request with accepted state", async () => {
         const { instance, fakeFetch, accountRequestsNamespace: namespace } = arrangeAppInstance()
         namespace.search_state("accepted")
-        fakeFetch.returns(fakeResponse(TEST_SEARCH_ACCOUNT_REQUESTS_RESULT));
 
         await instance.searchRequest();
 
         assertTrue(fakeFetch.calledOnce);
-        const { queryParams } = fakeFetchParseRequestURL(fakeFetch.lastCall);
-        assertEqual(queryParams.get("state"), "accepted");
+        const queryParams = fakeFetch.getCallQueryArgs(0);
+        assertEqual(queryParams.state, "accepted");
       })
     })
   })
