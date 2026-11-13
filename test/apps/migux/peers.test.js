@@ -34,11 +34,11 @@ import { createNamespacedState as createState } from "../../../lib/state.js";
 import { bootstrap, PeersApp } from "../../../migux/public/apps/migux/peers.js";
 
 const TEST_SEARCH_ACCEPTED_RESULT = await loadTextualFixture(
-  "fragment_accepted.html",
+  "peers/fragment_accepted.html",
 );
 const TEST_SEARCH_ACCEPTED_RESULT_TOTAL = 2;
 const TEST_SEARCH_REQUESTED_RESULT = await loadTextualFixture(
-  "fragment_requested.html",
+  "peers/fragment_requested.html",
 );
 const TEST_SEARCH_REQUESTED_RESULT_TOTAL = 3;
 

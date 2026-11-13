@@ -13,7 +13,7 @@ import { createNamespacedState as createState } from "../../../lib/state.js";
 import { bootstrap, AccountRequestsApp } from "../../../public/apps/migux/accountreqs.js";
 
 const TEST_SEARCH_ACCOUNT_REQUESTS_RESULT = loadTextualFixture(
-  "fragment_account_requests.html",
+  "accountreqs/fragment_requested.html",
 );
 
 function fakeFetchParseRequestURL(call) {
