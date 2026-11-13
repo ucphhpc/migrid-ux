@@ -16,6 +16,17 @@ const TEST_SEARCH_ACCOUNT_REQUESTS_RESULT = loadTextualFixture(
   "accountreqs/fragment_requested.html",
 );
 
+function fakeResponse(text) {
+  const res = {
+    ok: true,
+    status: 200,
+    text() {
+      return Promise.resolve(text);
+    },
+  };
+  return Promise.resolve(res);
+};
+
 function fakeFetchParseRequestURL(call) {
   const url = call.args[0];
   let parsedUrl;
@@ -36,6 +47,14 @@ function fakeFetchParseRequestURL(call) {
   return { parsedUrl, queryParams };
 }
 
+function arrangeAppInstance() {
+  const fakeFetch = sinon.stub();
+  const state = createState(AppBase.definition(AccountRequestsApp));
+  const accountRequestsNamespace = state.formState("account_requests")
+  const instance = new AccountRequestsApp(state, { _fetch: fakeFetch });
+  return { instance, state, accountRequestsNamespace, fakeFetch }
+}
+
 describe("apps/accountreqs", function () {
   before(async () => {
     // Disable the refreshCsrfTokens that is for instance used during initialization
@@ -53,19 +72,8 @@ describe("apps/accountreqs", function () {
 
   describe("when searching account requests", () => {
     it("should issue a request for an empty search term", async () => {
-      const makeFakeRes = () => {
-        const res = {
-          ok: true,
-          status: 200,
-          text() {
-            return Promise.resolve(TEST_SEARCH_ACCOUNT_REQUESTS_RESULT);
-          },
-        };
-        return Promise.resolve(res);
-      };
-      const fakeFetch = sinon.stub().returns(makeFakeRes());
-      const state = createState(AppBase.definition(AccountRequestsApp));
-      const instance = new AccountRequestsApp(state, { _fetch: fakeFetch });
+      const { instance, fakeFetch } = arrangeAppInstance()
+      fakeFetch.returns(fakeResponse(TEST_SEARCH_ACCOUNT_REQUESTS_RESULT));
 
       await instance.searchRequest();
 
@@ -73,7 +81,113 @@ describe("apps/accountreqs", function () {
       const { queryParams } = fakeFetchParseRequestURL(fakeFetch.lastCall);
       assertEqual(queryParams.get("query"), "");
     });
-  });
+
+    describe("and search state is empty", () => {
+      it("should issue a request with empty state", async () => {
+        const { instance, fakeFetch, accountRequestsNamespace: namespace } = arrangeAppInstance()
+        namespace.search_state("")
+        fakeFetch.returns(fakeResponse(TEST_SEARCH_ACCOUNT_REQUESTS_RESULT));
+
+        await instance.searchRequest();
+
+        assertTrue(fakeFetch.calledOnce);
+        const { queryParams } = fakeFetchParseRequestURL(fakeFetch.lastCall);
+        assertEqual(queryParams.get("state"), "");
+      })
+    })
+
+    describe("and search state is requested", () => {
+      it("should issue a request with requested state", async () => {
+        const { instance, fakeFetch, accountRequestsNamespace: namespace } = arrangeAppInstance()
+        namespace.search_state("requested")
+        fakeFetch.returns(fakeResponse(TEST_SEARCH_ACCOUNT_REQUESTS_RESULT));
+
+        await instance.searchRequest();
+
+        assertTrue(fakeFetch.calledOnce);
+        const { queryParams } = fakeFetchParseRequestURL(fakeFetch.lastCall);
+        assertEqual(queryParams.get("state"), "requested");
+      })
+    })
+
+    describe("and search state is pending", () => {
+      it("should issue a request with pending state", async () => {
+        const { instance, fakeFetch, accountRequestsNamespace: namespace } = arrangeAppInstance()
+        namespace.search_state("pending")
+        fakeFetch.returns(fakeResponse(TEST_SEARCH_ACCOUNT_REQUESTS_RESULT));
+
+        await instance.searchRequest();
+
+        assertTrue(fakeFetch.calledOnce);
+        const { queryParams } = fakeFetchParseRequestURL(fakeFetch.lastCall);
+        assertEqual(queryParams.get("state"), "pending");
+      })
+    })
+
+    describe("and search state is accepted", () => {
+      it("should issue a request with accepted state", async () => {
+        const { instance, fakeFetch, accountRequestsNamespace: namespace } = arrangeAppInstance()
+        namespace.search_state("accepted")
+        fakeFetch.returns(fakeResponse(TEST_SEARCH_ACCOUNT_REQUESTS_RESULT));
+
+        await instance.searchRequest();
+
+        assertTrue(fakeFetch.calledOnce);
+        const { queryParams } = fakeFetchParseRequestURL(fakeFetch.lastCall);
+        assertEqual(queryParams.get("state"), "accepted");
+      })
+    })
+  })
+
+  describe("when changing search state", () => {
+    let namespace;
+
+    beforeEach(() => {
+      const { instance, accountRequestsNamespace } = arrangeAppInstance()
+      instance._initializeSearchStateHandling()
+      namespace = accountRequestsNamespace
+    })
+
+    describe("to any", () => {
+      it("it updates expected indicators", () => {
+        namespace.search_state("")
+        assertTrue(namespace.account_request_state_selected_any())
+        assertFalse(namespace.account_request_state_selected_requested())
+        assertFalse(namespace.account_request_state_selected_pending())
+        assertFalse(namespace.account_request_state_selected_accepted())
+      })
+    })
+
+    describe("to requested", () => {
+      it("it updates expected indicators", () => {
+        namespace.search_state("requested")
+        assertFalse(namespace.account_request_state_selected_any())
+        assertTrue(namespace.account_request_state_selected_requested())
+        assertFalse(namespace.account_request_state_selected_pending())
+        assertFalse(namespace.account_request_state_selected_accepted())
+      })
+    })
+
+    describe("to pending", () => {
+      it("it updates expected indicators", () => {
+        namespace.search_state("pending")
+        assertFalse(namespace.account_request_state_selected_any())
+        assertFalse(namespace.account_request_state_selected_requested())
+        assertTrue(namespace.account_request_state_selected_pending())
+        assertFalse(namespace.account_request_state_selected_accepted())
+      })
+    })
+
+    describe("to accepted", () => {
+      it("it updates expected indicators", () => {
+        namespace.search_state("accepted")
+        assertFalse(namespace.account_request_state_selected_any())
+        assertFalse(namespace.account_request_state_selected_requested())
+        assertFalse(namespace.account_request_state_selected_pending())
+        assertTrue(namespace.account_request_state_selected_accepted())
+      })
+    })
+  })
 
   describe("when bound", function () {
     let appHtml;
