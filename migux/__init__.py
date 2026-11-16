@@ -25,3 +25,5 @@ TEMPLATE_PACKAGES = [
     "migux.apps.peers",
     "migux.apps.admin",
 ]
+
+INIT_JAVASCRIPT_LOADER = "migappBootstrap.js"

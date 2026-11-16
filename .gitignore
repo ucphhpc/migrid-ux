@@ -25,6 +25,7 @@ __pycache__/
 /public/coverage/
 /migux.egg-info/
 /packages.lst
+dist/
 
 # diff files
 *.diff

@@ -765,7 +765,7 @@ describe("apps/peers", function () {
 
     function assertPlaceholderVisibility(visible) {
       const placeholderEl = document.querySelector(
-        '[data-bind-observe="results_placeholder"]',
+        '[data-bind-observe-html="results_placeholder"]',
       );
       assertTrue(!!placeholderEl);
       return placeholderEl.style.display === (visible ? "" : "none");
@@ -773,7 +773,7 @@ describe("apps/peers", function () {
 
     function assertPlaceholderValue(value) {
       const placeholderEl = document.querySelector(
-        '[data-bind-observe="results_placeholder"]',
+        '[data-bind-observe-html="results_placeholder"]',
       );
       assertTrue(!!placeholderEl);
       assertEqual(placeholderEl.innerHTML, value);
@@ -823,7 +823,9 @@ describe("apps/peers", function () {
     it("should show a placeholder with no search", () => {
       bootstrap(document);
 
-      const tbodyEl = document.querySelector('[data-bind-observe="results"]');
+      const tbodyEl = document.querySelector(
+        '[data-bind-observe-html="results"]',
+      );
       assertEqual(tbodyEl.children.length, 0);
       assertPlaceholderVisibility(true);
     });
@@ -883,7 +885,9 @@ describe("apps/peers", function () {
 
       await unpackReturnedPromise(searchAcceptedQuerySpy);
 
-      const tbodyEl = document.querySelector('[data-bind-observe="results"]');
+      const tbodyEl = document.querySelector(
+        '[data-bind-observe-html="results"]',
+      );
       assertTrue(tbodyEl.innerHTML.trimStart().startsWith("<tr>"));
       assertPlaceholderVisibility(false);
     });
@@ -951,7 +955,7 @@ describe("apps/peers", function () {
 
         const formEl = document.querySelector('form[name="peers_accepted"]');
         const placeholderEl = formEl.querySelector(
-          'div[data-bind-observe="results_placeholder"]',
+          'div[data-bind-observe-html="results_placeholder"]',
         );
         assertEqual(placeholderEl.innerHTML, "Searching...");
       });
@@ -995,7 +999,7 @@ describe("apps/peers", function () {
 
         const formEl = document.querySelector('form[name="peers_requested"]');
         const placeholderEl = formEl.querySelector(
-          'div[data-bind-observe="results_placeholder"]',
+          'div[data-bind-observe-html="results_placeholder"]',
         );
         assertEqual(placeholderEl.innerHTML, "Searching...");
       });
@@ -1130,7 +1134,9 @@ describe("apps/peers", function () {
         });
         const peersRequestedState = app.state.formState("peers_requested");
         const formEl = document.querySelector('form[name="peers_requested"]');
-        const tableEl = formEl.querySelector('[data-bind-observe="results"]');
+        const tableEl = formEl.querySelector(
+          '[data-bind-observe-html="results"]',
+        );
 
         // preconditions
         assertTrue(app._fetch.notCalled);

@@ -38,7 +38,7 @@
         </div>
       </div>
       <div name="csrf_tokens"
-        data-bind-observe="csrf_tokens"
+        data-bind-observe-html="csrf_tokens"
         data-bind-array="csrf_tokens_entries"
         data-bind-array-each="div">
       </div>
@@ -255,13 +255,13 @@ The site admins will use this information to accept account requests and extensi
                     </tr>
                   </thead>
                   <tbody
-                    data-bind-observe="results"
+                    data-bind-observe-html="results"
                     data-bind-array="results_rows"
                     data-bind-array-each="tr"
                   ></tbody>
                 </table>
                 <div
-                  data-bind-observe="results_placeholder"
+                  data-bind-observe-html="results_placeholder"
                   data-bind-show="results_placeholder"
                 ></div>
                 <div class="tab-actions">
@@ -473,13 +473,13 @@ Please select an End Date to provide limited but sufficiently long account acces
                     </tr>
                   </thead>
                   <tbody
-                    data-bind-observe="results"
+                    data-bind-observe-html="results"
                     data-bind-array="results_rows"
                     data-bind-array-each="tr"
                   ></tbody>
                 </table>
                 <div
-                  data-bind-observe="results_placeholder"
+                  data-bind-observe-html="results_placeholder"
                   data-bind-show="results_placeholder"
                 ></div>
                 <div class="tab-actions">

@@ -32,10 +32,17 @@ NVM_VERSION = '0.40.5'
 
 .PHONY: build
 build: development
-	./envhelp/venv/bin/python -m build -q
+	@$(LOCAL_PYTHON_BIN) -m build -q
+
+.PHONY: bump-release
+bump-release:
+	$(eval VERSION = $(shell ./envhelp/lpython ./envhelp/scripts/dist_version.py $(BUMP)))
+	@if [ -z "$(VERSION)" ]; then exit 1; fi
+	git add .
+	git commit -m "Release $(VERSION)"
 
 .PHONY: clean
-clean:
+clean: distclean
 	@rm -f ./envhelp/local.depends
 	@rm -f ./envhelp/dev-requirements.depends
 	@rm -f ./envhelp/test-requirements.depends
@@ -60,23 +67,25 @@ docs: ./envhelp/docs.depends
 
 .PHONY: major
 major:
-	BUMP=major make dist
+	BUMP=major make bump-release
+	make dist
 
 .PHONY: minor
 minor:
-	BUMP=minor make dist
+	BUMP=minor make bump-release
+	make dist
 
 .PHONY: patch
 patch:
-	BUMP=patch make dist
+	BUMP=patch make bump-release
+	make dist
 
 .PHONY: dist
-dist: ./envhelp/local.depends
-	$(eval VERSION = $(shell ./envhelp/lpython ./envhelp/scripts/dist_version.py $(BUMP)))
-	@if [ -z "$(VERSION)" ]; then exit 1; fi
-	make build
-	git add .
-	git commit -m "Release $(VERSION)"
+dist: ./envhelp/local.depends build
+
+.PHONY: distclean
+distclean:
+	@rm -rf ./dist
 
 .PHONY: test
 test: ./envhelp/local.depends ./envhelp/test-requirements.depends
@@ -126,7 +135,7 @@ development: ./envhelp/local.depends build-css build-apps-css
 	python3 -m venv ./envhelp/venv
 
 ./envhelp/nvm/nvm.sh: ./envhelp/venv/pyvenv.cfg
-	@./envhelp/lpython ./envhelp/scripts/provision_npm.py $(NVM_VERSION)
+	@$(LOCAL_PYTHON_BIN) ./envhelp/scripts/provision_npm.py $(NVM_VERSION)
 
 ./node_modules/:
 	@echo "installing npm packages"
@@ -185,11 +194,11 @@ local: development
 
 .PHONY: local-backend
 local-backend: ./envhelp/local.depends
-	./envhelp/venv/bin/python -m flask --app ./devserver/devserver.py run --port 8881
+	@$(LOCAL_PYTHON_BIN) -m flask --app ./devserver/devserver.py run --port 8881
 
 .PHONY: local-frontend
 local-frontend: ./envhelp/local.depends
-	./envhelp/lpython ./envhelp/scripts/serve_http.py
+	@$(LOCAL_PYTHON_BIN) ./envhelp/scripts/serve_http.py
 
 .PHONY: watch-css
 watch-css: ./envhelp/local.depends
