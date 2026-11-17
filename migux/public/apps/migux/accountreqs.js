@@ -402,7 +402,6 @@ export const App = AccountRequestsApp;
         }
         return computedValue(_someTruthyValue, observing);
       },
-      selected_tab_index: 0,
     },
     forms: {
       account_requests: {

@@ -34,12 +34,7 @@
             </div>
           </div>
           <div class="modal-body" id="accountreqs-modal-body">
-            <ul class="Tabs" data-bind-component="Tabs" data-bind-component-observe="selected_tab_index">
-              <li class="TabsItem">Account Requests</li>
-              <li class="TabsItem">Edit Account Request</li>
-            </ul>
-            <form name="account_requests" data-bind-form="DEFINED" data-bind-css="{ TabsPanel--active: $() === 0 }"
-              data-bind-css-watch="selected_tab_index" class="account_requests TabsPanel" id="account_requests">
+            <form name="account_requests" data-bind-form="DEFINED" class="account_requests" id="account_requests">
               <h5>
                 Account Requests (<span data-bind-observe="count"></span> of
                 <span data-bind-observe="summary_total"></span>)
@@ -145,20 +140,25 @@
                 </thead>
                 <tbody data-bind-observe-html="results" data-bind-array="results_rows" data-bind-array-each="tr"></tbody>
               </table>
-              <div data-bind-observe="results_placeholder" data-bind-show="results_placeholder"></div>
+              <div data-bind-observe-html="results_placeholder" data-bind-show="results_placeholder"></div>
               <div class="tab-actions">
                 <span class="tab-actions__grabheight"></span>
                 <span class="tab-actions__error"></span>
                 <div class="tab-actions__controls">
-                  <button class="btn btn-secondary"
+                  <button
+                    class="btn btn-secondary"
                     data-bind-onclick="rejectRequest">
                     Reject
                   </button>
-                  <button data-bind-show="account_request_state_selected_requested" class="btn btn-primary"
+                  <button
+                    class="btn btn-primary"
+                    data-bind-show="account_request_state_selected_requested"
                     data-bind-onclick="forwardRequest">
                     Forward
                   </button>
-                  <button data-bind-show="account_request_state_selected_accepted" class="btn btn-primary"
+                  <button
+                    class="btn btn-primary"
+                    data-bind-show="account_request_state_selected_accepted"
                     data-bind-onclick="createUserRequest">
                     Create user
                   </button>
