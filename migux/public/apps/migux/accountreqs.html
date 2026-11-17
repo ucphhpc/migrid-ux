@@ -9,7 +9,7 @@
 </head>
 
 <body data-migrole="app" data-migapp="accountreqs">
-  <div name="csrf_tokens" data-bind-observe="csrf_tokens" data-bind-array="csrf_tokens_entries"
+  <div name="csrf_tokens" data-bind-observe-html="csrf_tokens" data-bind-array="csrf_tokens_entries"
     data-bind-array-each="div">
   </div>
   <div class="modal fade show" tabindex="-1" id="accountreqs-modal" aria-labelledby="accountreqs-modal-label"
@@ -143,7 +143,7 @@
                     </th>
                   </tr>
                 </thead>
-                <tbody data-bind-observe="results" data-bind-array="results_rows" data-bind-array-each="tr"></tbody>
+                <tbody data-bind-observe-html="results" data-bind-array="results_rows" data-bind-array-each="tr"></tbody>
               </table>
               <div data-bind-observe="results_placeholder" data-bind-show="results_placeholder"></div>
               <div class="tab-actions">
