@@ -284,3 +284,48 @@ def fetch():
         return create_handler_response(404, error="Not found")
 
     return create_handler_response(200, data=accreq)
+
+
+@blueprint.post("/save")
+def save():
+    """
+    Request handler: POST /accountreqs/save
+    """
+
+    payload = request.json
+    expected_token = make_csrf_token("POST", "/accountreqs/save")
+
+    is_valid, error = validate_csrf_token(payload, expected_token)
+    if not is_valid:
+        return create_handler_response(403, error=error)
+
+    accreq_id = payload.get("account_request_id")
+    if accreq_id is None:
+        return create_handler_response(422, error="No account request selected")
+
+    try:
+        update_data = {
+            "full_name": payload["full_name"],
+            "email": payload["email"],
+            "peers_email": payload["peers_email"],
+            "peers_full_name": payload["peers_full_name"],
+            "comment": payload["comment"],
+        }
+    except KeyError as err:
+        return create_handler_response(
+            422, error="Missing {!r}".format(err.args[0])
+        )
+
+    accreq = next(
+        (
+            entry
+            for entry in EXAMPLE_DATA["GET /"]
+            if entry["account_request_id"] == accreq_id
+        ),
+        None,
+    )
+    if accreq is None:
+        return create_handler_response(404, error="Not found")
+
+    accreq.update(update_data)
+    return create_handler_response(200, message="Saved account request")

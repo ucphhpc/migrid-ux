@@ -61,6 +61,13 @@ export class AccountRequestsApp extends AppBase {
     )
       return;
 
+    this.editClose();
+  }
+
+  editClose() {
+    const namespace = this.state.namespace("__app__");
+    const editNamespace = this.state.formState("edit_account_request");
+    editNamespace.changed_old_data(null);
     namespace.edit_account_request_show(false);
   }
 
@@ -90,6 +97,7 @@ export class AccountRequestsApp extends AppBase {
         }
         const data = result.data;
 
+        editNamespace.account_request_id(accreq_id);
         editNamespace.full_name(data.full_name);
         editNamespace.full_name_error("");
         editNamespace.email(data.email);
@@ -112,7 +120,36 @@ export class AccountRequestsApp extends AppBase {
       });
   }
 
-  editSave() {}
+  editSave() {
+    const editNamespace = this.state.formState("edit_account_request");
+
+    let requestOptions = {
+      method: "POST",
+      data: {
+        account_request_id: editNamespace.account_request_id(),
+        ...this.editData(),
+      },
+    };
+
+    const csrfToken = this.getCsrfToken("POST", "/accountreqs/save");
+    if (csrfToken) {
+      requestOptions.data.csrf_token = csrfToken.csrf_token();
+    }
+
+    return this.request("/accountreqs/save", requestOptions)
+      .then(async (res) => {
+        const result = await res.json();
+        if (typeof result.error === "string" && result.error) {
+          throw new Error(result.error);
+        }
+
+        this.editClose();
+        await this.searchRequest();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   editData() {
     const editNamespace = this.state.formState("edit_account_request");
@@ -129,6 +166,10 @@ export class AccountRequestsApp extends AppBase {
 
   editInputChanged() {
     const editNamespace = this.state.formState("edit_account_request");
+    if (editNamespace.changed_old_data() == null) {
+      return; // currently initializing form state
+    }
+
     editNamespace.unchanged(!this.editDataChanged());
   }
 
@@ -449,6 +490,7 @@ AccountRequestsApp.CONST_STATE_CHANGE_REQUESTS = [
   "method=POST&operation=/accountreqs/fetch",
   "method=POST&operation=/accountreqs/forward",
   "method=POST&operation=/accountreqs/reject",
+  "method=POST&operation=/accountreqs/save",
 ];
 
 export const App = AccountRequestsApp;
@@ -572,6 +614,8 @@ export const App = AccountRequestsApp;
         results_placeholder: observedHtml(NO_VALUE),
       },
       edit_account_request: {
+        account_request_id: null,
+
         full_name: "",
         full_name_error: "",
         email: "",
