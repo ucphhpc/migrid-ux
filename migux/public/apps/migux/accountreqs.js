@@ -50,6 +50,102 @@ export class AccountRequestsApp extends AppBase {
       });
   }
 
+  editCancel() {
+    const namespace = this.state.namespace("__app__");
+
+    if (
+      this.editDataChanged() &&
+      !window.confirm(
+        "There are unsaved changes, are you sure you want to cancel editing?",
+      )
+    )
+      return;
+
+    namespace.edit_account_request_show(false);
+  }
+
+  editOpen(_, entry) {
+    const namespace = this.state.namespace("__app__");
+
+    const editNamespace = this.state.formState("edit_account_request");
+    const accreq_id = entry.account_request_id();
+
+    const requestOptions = {
+      method: "POST",
+      data: {
+        account_request_id: accreq_id,
+      },
+    };
+
+    const csrfToken = this.getCsrfToken("POST", "/accountreqs/fetch");
+    if (csrfToken) {
+      requestOptions.data.csrf_token = csrfToken.csrf_token();
+    }
+
+    this.request("/accountreqs/fetch", requestOptions, editNamespace)
+      .then(async (resp) => {
+        const result = await resp.json();
+        if (typeof result.error === "string" && res.error) {
+          throw new Error(result.error);
+        }
+        const data = result.data;
+
+        editNamespace.full_name(data.full_name);
+        editNamespace.full_name_error("");
+        editNamespace.email(data.email);
+        editNamespace.email_error("");
+        editNamespace.peers_full_name(data.peers_full_name);
+        editNamespace.peers_full_name_error("");
+        editNamespace.peers_email(data.peers_email);
+        editNamespace.peers_email_error("");
+        editNamespace.comment(data.comment);
+        editNamespace.comment_error("");
+        editNamespace.auth_access("");
+        editNamespace.auth_access_error("");
+        editNamespace.unchanged(true);
+        editNamespace.changed_old_data(this.editData()); // store data for change comparison
+
+        namespace.edit_account_request_show(true);
+      })
+      .catch(() => {
+        // ignore
+      });
+  }
+
+  editSave() {}
+
+  editData() {
+    const editNamespace = this.state.formState("edit_account_request");
+
+    return {
+      full_name: editNamespace.full_name(),
+      email: editNamespace.email(),
+      peers_full_name: editNamespace.peers_full_name(),
+      peers_email: editNamespace.peers_email(),
+      comment: editNamespace.comment(),
+      auth_access: "",
+    };
+  }
+
+  editInputChanged() {
+    const editNamespace = this.state.formState("edit_account_request");
+    editNamespace.unchanged(!this.editDataChanged());
+  }
+
+  editDataChanged() {
+    const editNamespace = this.state.formState("edit_account_request");
+    const oldData = editNamespace.changed_old_data();
+    const currentData = this.editData();
+
+    for (let key of Object.keys(oldData)) {
+      if (currentData[key] != oldData[key]) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   searchRequest() {
     const namespace = this.state.formState("account_requests");
     const includeColumns = ["full_name", "email"];
@@ -350,6 +446,7 @@ AccountRequestsApp.CONST_ACCOUNT_REQUESTS_LISTING_COLNAMES = [
 
 AccountRequestsApp.CONST_STATE_CHANGE_REQUESTS = [
   "method=POST&operation=/accountreqs/create_user",
+  "method=POST&operation=/accountreqs/fetch",
   "method=POST&operation=/accountreqs/forward",
   "method=POST&operation=/accountreqs/reject",
 ];
@@ -402,6 +499,8 @@ export const App = AccountRequestsApp;
         }
         return computedValue(_someTruthyValue, observing);
       },
+      disable_edit_close: false,
+      edit_account_request_show: false,
     },
     forms: {
       account_requests: {
@@ -471,6 +570,23 @@ export const App = AccountRequestsApp;
           },
         }),
         results_placeholder: observedHtml(NO_VALUE),
+      },
+      edit_account_request: {
+        full_name: "",
+        full_name_error: "",
+        email: "",
+        email_error: "",
+        peers_full_name: "",
+        peers_full_name_error: "",
+        peers_email: "",
+        peers_email_error: "",
+        comment: "",
+        comment_error: "",
+        auth_access: "",
+        auth_access_error: "",
+
+        unchanged: true,
+        changed_old_data: null,
       },
     },
   };

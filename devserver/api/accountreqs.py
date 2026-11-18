@@ -254,3 +254,33 @@ def create_user():
         400 if errors else 200,
         data={"forwarded": successes, "errors": errors},
     )
+
+
+@blueprint.post("/fetch")
+def fetch():
+    """
+    Request handler: POST /accountreqs/fetch
+    """
+    payload = request.json
+    expected_token = make_csrf_token("POST", "/accountreqs/fetch")
+
+    is_valid, error = validate_csrf_token(payload, expected_token)
+    if not is_valid:
+        return create_handler_response(403, error=error)
+
+    accreq_id = payload.get("account_request_id")
+    if accreq_id is None:
+        return create_handler_response(422, error="No account request selected")
+
+    accreq = next(
+        (
+            entry
+            for entry in EXAMPLE_DATA["GET /"]
+            if entry["account_request_id"] == accreq_id
+        ),
+        None,
+    )
+    if accreq is None:
+        return create_handler_response(404, error="Not found")
+
+    return create_handler_response(200, data=accreq)

@@ -12,6 +12,7 @@
   <div name="csrf_tokens" data-bind-observe-html="csrf_tokens" data-bind-array="csrf_tokens_entries"
     data-bind-array-each="div">
   </div>
+
   <div class="modal fade show" tabindex="-1" id="accountreqs-modal" aria-labelledby="accountreqs-modal-label"
     style="display: block" aria-modal="true" role="dialog">
     <div class="capture-user-clicks">
@@ -29,7 +30,8 @@
             </div>
             <div class="modal-subtitle">
               <p class="modal-subtitle">
-                Here you can manage account requests. Reject, forward, and create user.
+                Here you can manage account requests. Reject requests, forward them to a peer contact, and finally the
+                create user.
               </p>
             </div>
           </div>
@@ -86,7 +88,7 @@
                       <strong>Pending</strong> if it has been forwarded, but not
                       yet accepted by the peer contact.<br />
                       <strong>Accepted</strong> if it has been accepted by the
-                      peer contact, but not yet created by an supporter or
+                      peer contact, but not yet created by a supporter or
                       operator.
                     </div>
                   </span>
@@ -165,6 +167,8 @@
                 </div>
               </div>
             </form>
+
+
           </div>
           <div class="modal-footer" id="accountreqs-modal-footer">
             <button class="btn btn-light" data-bind-disabled="disable_close" data-bind-onclick="onClose" type="button">
@@ -174,6 +178,149 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="modal fade show" data-bind-show="edit_account_request_show">
+    <form name="edit_account_request" data-bind-form="DEFINED">
+      <div class="capture-user-clicks">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <div class="modal-title">
+                <div class="modal-title-msg">
+                  <h2>Edit Account Request</h2>
+                </div>
+                <div class="modal-title-buttons">
+                  <button class="modal-close CloseButton" data-bind-onclick="editCancel"
+                    aria-label="Cancel"></button>
+                </div>
+              </div>
+              <div class="modal-subtitle">
+                <p class="modal-subtitle">
+                  Edit the selected account request.
+                </p>
+              </div>
+            </div>
+            <div class="modal-body">
+              <div class="fields-grid">
+                <div>
+                  <label class="form-label">Full Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    aria-label="Full Name"
+                    name="full_name"
+                    placeholder="Full name (Required)"
+                    data-bind-onchange="editInputChanged"
+                    data-bind-observe="full_name"
+                  />
+                  <span
+                    class="form-label__error form-label__error--compensate"
+                    data-bind-observe="full_name_error"
+                  ></span>
+                </div>
+
+                <div>
+                  <label class="form-label">E-mail</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    aria-label="E-mail"
+                    name="email"
+                    placeholder="E-mail (Required)"
+                    data-bind-onchange="editInputChanged"
+                    data-bind-observe="email"
+                  />
+                  <span
+                    class="form-label__error form-label__error--compensate"
+                    data-bind-observe="email_error"
+                  ></span>
+                </div>
+
+                <div>
+                  <label class="form-label">Peer's Full Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    aria-label="Peer's Full Name"
+                    name="peers_full_name"
+                    placeholder="Peer's full name (Required)"
+                    data-bind-onchange="editInputChanged"
+                    data-bind-observe="peers_full_name"
+                  />
+                  <span
+                    class="form-label__error form-label__error--compensate"
+                    data-bind-observe="peers_full_name_error"
+                  ></span>
+                </div>
+
+                <div>
+                  <label class="form-label">Peer's E-mail</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    aria-label="Peer's E-mail"
+                    name="peers_email"
+                    placeholder="Peer's e-mail (Required)"
+                    data-bind-onchange="editInputChanged"
+                    data-bind-observe="peers_email"
+                  />
+                  <span
+                    class="form-label__error form-label__error--compensate"
+                    data-bind-observe="peers_email_error"
+                  ></span>
+                </div>
+
+                <div>
+                  <label class="form-label">Comment</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    aria-label="Comment"
+                    name="comment"
+                    placeholder="Comment"
+                    data-bind-onchange="editInputChanged"
+                    data-bind-observe="comment"
+                  />
+                  <span
+                    class="form-label__error form-label__error--compensate"
+                    data-bind-observe="comment_error"
+                  ></span>
+                </div>
+
+                <div>
+                  <label class="form-label">Auth Access</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    aria-label="Auth Access"
+                    name="auth_access"
+                    placeholder="Auth access"
+                    data-bind-onchange="editInputChanged"
+                    data-bind-observe="auth_access"
+                  />
+                  <span
+                    class="form-label__error form-label__error--compensate"
+                    data-bind-observe="auth_access_error"
+                  ></span>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-light" data-bind-onclick="editCancel" type="button">
+                Cancel
+              </button>
+              <button
+                class="btn btn-primary"
+                data-bind-disabled="unchanged"
+                data-bind-onclick="editSave">
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
 </body>
 

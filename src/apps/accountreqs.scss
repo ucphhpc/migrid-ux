@@ -111,6 +111,22 @@
     }
   }
 
+  .fields-grid {
+    // margin-top: 1em;
+    display: grid;
+    grid-template-columns: 50% 50%;
+
+    .form-label {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .fields-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
   .fields-horizontal {
     --gutter-x: 1.5rem;
     --gutter-y: 1.5rem;
@@ -140,5 +156,9 @@
       display: block;
       overflow-x: auto;
     }
+  }
+
+  .show {
+    display: unset;
   }
 }
