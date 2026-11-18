@@ -1,0 +1,138 @@
+[
+  {
+    "name": "usagestats-1789569901",
+    "timestamp": "2026-09-16T16:45:01",
+    "disks": [
+      {
+        "filesystem": "10.120.10.90@tcp:10.120.10.91@tcp:/science/test.erda.dk",
+        "k_blocks": 1224400067584,
+        "used": 635306174464,
+        "available": 589093744640,
+        "use_percent": 52,
+        "mounted_on": "/home/mig/state/user_home"
+      }
+    ],
+    "total_usage": {
+      "all_users": 5,
+      "active_users": 5,
+      "vgrids": 1,
+      "archives": 1
+    },
+    "weekly_usage": {
+      "all_users": 0,
+      "active_users": 0,
+      "vgrids": 0,
+      "archives": 0,
+      "register_users": 0,
+      "expire_users": 0
+    }
+  },
+  {
+    "name": "usagestats-1754576881",
+    "timestamp": "2025-08-07T16:28:01",
+    "disks": [
+      {
+        "filesystem": "/dev/vda5",
+        "k_blocks": 32356332,
+        "used": 11800612,
+        "available": 20555720,
+        "use_percent": "37",
+        "mounted_on": "/etc/rsyslog.d"
+      },
+      {
+        "filesystem": "/dev/vdc1",
+        "k_blocks": 33487872,
+        "used": 2063856,
+        "available": 31424016,
+        "use_percent": "8",
+        "mounted_on": "/var/log"
+      },
+      {
+        "filesystem": "10.120.10.90@tcp:10.120.10.91@tcp:/science/test.erda.dk",
+        "k_blocks": 1224400067584,
+        "used": 635306174464,
+        "available": 589093744640,
+        "use_percent": 52,
+        "mounted_on": "/home/mig/state/user_home"
+      },
+      {
+        "filesystem": "/dev/vdb1",
+        "k_blocks": 33487872,
+        "used": 306316,
+        "available": 33181556,
+        "use_percent": "1",
+        "mounted_on": "/home/mig/state/log"
+      }
+    ],
+    "total_usage": {
+      "all_users": 5,
+      "active_users": 5,
+      "vgrids": 1,
+      "archives": 1
+    },
+    "weekly_usage": {
+      "all_users": 0,
+      "active_users": 0,
+      "vgrids": 0,
+      "archives": 0,
+      "register_users": 0,
+      "expire_users": 0
+    }
+  },
+  {
+    "name": "usagestats-1789569901",
+    "timestamp": "2026-09-16T16:45:01",
+    "disks": [
+      {
+        "filesystem": "10.120.10.90@tcp:10.120.10.91@tcp:/science/test.erda.dk",
+        "k_blocks": 1224400067584,
+        "used": 635306174464,
+        "available": 589093744640,
+        "use_percent": 52,
+        "mounted_on": "/home/mig/state/user_home"
+      }
+    ],
+    "total_usage": {
+      "all_users": 5,
+      "active_users": 5,
+      "vgrids": 1,
+      "archives": 1
+    },
+    "weekly_usage": {
+      "all_users": 0,
+      "active_users": 0,
+      "vgrids": 0,
+      "archives": 0,
+      "register_users": 0,
+      "expire_users": 0
+    }
+  },
+  {
+    "name": "usagestats-1789569901",
+    "timestamp": "2026-09-16T16:45:01",
+    "disks": [
+      {
+        "filesystem": "10.120.10.90@tcp:10.120.10.91@tcp:/science/test.erda.dk",
+        "k_blocks": 1224400067584,
+        "used": 635306174464,
+        "available": 589093744640,
+        "use_percent": 52,
+        "mounted_on": "/home/mig/state/user_home"
+      }
+    ],
+    "total_usage": {
+      "all_users": 5,
+      "active_users": 5,
+      "vgrids": 1,
+      "archives": 1
+    },
+    "weekly_usage": {
+      "all_users": 0,
+      "active_users": 0,
+      "vgrids": 0,
+      "archives": 0,
+      "register_users": 0,
+      "expire_users": 0
+    }
+  }
+]

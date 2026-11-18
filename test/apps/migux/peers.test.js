@@ -15,101 +15,33 @@
 # --- END_HEADER ---
 */
 import { JSDOM } from "jsdom";
-import * as fsAsync from "fs/promises";
-import * as path from "path";
 import * as sinon from "sinon";
 
 import {
-  AssertionError,
   assertFalse,
   assertTrue,
   assertEqual,
   assertKeys,
 } from "../../support/assertions.js";
 import { browserHooksEach, grabBrowserGlobals } from "../../support/browser.js";
+import { loadTextualFixture, loadPublicFile } from "../../support/files.js";
 
 import { AppBase } from "../../../lib/app.js";
 import { NO_VALUE } from "../../../lib/observable.js";
 import { createNamespacedState as createState } from "../../../lib/state.js";
 
-const SCRIPT_DIR = path.dirname(import.meta.url.replace("file://", ""));
-const ROOT_DIR = path.join(SCRIPT_DIR, "../../..");
-
 import { bootstrap, PeersApp } from "../../../migux/public/apps/migux/peers.js";
 
-function loadTextualFixture(fixtureFilename) {
-  const fixureFile = path.join(ROOT_DIR, "test", "fixtures", fixtureFilename);
-  return fsAsync.readFile(fixureFile, "utf8");
-}
+import { makeFakeFetch, fakeResponse } from "./fakefetch.js";
 
 const TEST_SEARCH_ACCEPTED_RESULT = await loadTextualFixture(
-  "fragment_accepted.html",
+  "peers/fragment_accepted.html",
 );
 const TEST_SEARCH_ACCEPTED_RESULT_TOTAL = 2;
 const TEST_SEARCH_REQUESTED_RESULT = await loadTextualFixture(
-  "fragment_requested.html",
+  "peers/fragment_requested.html",
 );
 const TEST_SEARCH_REQUESTED_RESULT_TOTAL = 3;
-
-function makeFakeFetch({ body = null, contentType = "text/html" } = {}) {
-  const res = {
-    status: 200,
-    headers: new Headers({
-      "content-type": contentType,
-    }),
-    json() {
-      throw new Error("UNSPECIFIED");
-    },
-    text() {
-      throw new Error("UNSPECIFIED");
-    },
-    get ok() {
-      return 200 <= res.status && res.status < 299;
-    },
-  };
-  const stub = sinon.stub().named("fakeFetch").resolves(res);
-  stub.getCallQueryArgs = (callIndex) => {
-    const [url, fetchOptions] = stub.getCall(callIndex).args;
-    if (fetchOptions.method !== "GET") {
-      throw new AssertionError("query string unavilable for non-GET request");
-    }
-
-    let parsedUrl;
-    try {
-      parsedUrl = new URL(url);
-    } catch (e) {
-      if (e.message === "Invalid URL") {
-        // assume we have only a path
-        const prefixedUrl = `http://testhost${url}`;
-        parsedUrl = new URL(prefixedUrl);
-      } else {
-        throw e;
-      }
-    }
-
-    const queryArgs = {};
-    for (const [k, v] of parsedUrl.searchParams.entries()) {
-      queryArgs[k] = v;
-    }
-    return queryArgs;
-  };
-  stub.programResponse = ({ status = null, body = null }) => {
-    if (status !== null) {
-      res.status = status;
-    }
-
-    if (contentType === "application/json") {
-      res.json = () => Promise.resolve(body);
-    } else {
-      if (body === null) throw new Error("fakeFetch: textual body is required");
-      res.text = () => Promise.resolve(body);
-    }
-  };
-
-  stub.programResponse({ body });
-
-  return stub;
-}
 
 describe("apps/peers", function () {
   before(async () => {
@@ -137,17 +69,9 @@ describe("apps/peers", function () {
 
   describe("when listing accepted peers", () => {
     it("should issue a request for an empty search term", async () => {
-      const makeFakeRes = () => {
-        const res = {
-          ok: true,
-          status: 200,
-          text() {
-            return Promise.resolve(TEST_SEARCH_REQUESTED_RESULT);
-          },
-        };
-        return Promise.resolve(res);
-      };
-      const fakeFetch = sinon.stub().returns(makeFakeRes());
+      const fakeFetch = sinon
+        .stub()
+        .returns(fakeResponse(TEST_SEARCH_REQUESTED_RESULT));
       const state = createState(AppBase.definition(PeersApp));
       const instance = new PeersApp(state, { _fetch: fakeFetch });
 
@@ -182,17 +106,9 @@ describe("apps/peers", function () {
     });
 
     it("should clear the results while searching", async () => {
-      const makeFakeRes = () => {
-        const res = {
-          ok: true,
-          status: 200,
-          text() {
-            return Promise.resolve(TEST_SEARCH_REQUESTED_RESULT);
-          },
-        };
-        return Promise.resolve(res);
-      };
-      const fakeFetch = sinon.stub().returns(makeFakeRes());
+      const fakeFetch = sinon
+        .stub()
+        .returns(fakeResponse(TEST_SEARCH_REQUESTED_RESULT));
       const state = createState(AppBase.definition(PeersApp));
       const namespace = state.formState("peers_accepted");
       const instance = new PeersApp(state, { _fetch: fakeFetch });
@@ -824,10 +740,7 @@ describe("apps/peers", function () {
     before(async () => {
       const jsdom = new JSDOM("<!DOCTYPE html><html></html>");
       const DOMParser = jsdom.window.DOMParser;
-      const appFileHtml = await fsAsync.readFile(
-        path.join(ROOT_DIR, "public/apps/migux/peers.html"),
-        "utf8",
-      );
+      const appFileHtml = await loadPublicFile("public/apps/migux/peers.html");
 
       const dom = new DOMParser().parseFromString(appFileHtml, "text/html");
       const scriptEls = dom.querySelectorAll("script");

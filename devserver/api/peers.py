@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # --- BEGIN_HEADER ---
 #
@@ -26,7 +25,13 @@ from flask import request
 
 import devserver.common as server_common
 import migux.apps.peers as migux_apps_peers
-from devserver.common import make_csrf_token
+from devserver.common import (
+    create_handler_response,
+    extract_csrf_tokens_from_request,
+    make_csrf_token,
+    unconcatify,
+    validate_csrf_token,
+)
 
 EXAMPLE_DATA = {
     "GET /accepted": server_common.import_example_data("peers/accepted.json"),
@@ -55,14 +60,6 @@ def _fill_distinguished_name(user):
     return distinguished_name
 
 
-def _unconcatify(value, sep):
-    assert isinstance(value, str)
-    result = value.split(sep)
-    if len(result) == 1 and result[0] == "":
-        return []
-    return result
-
-
 def extract_csv_content_and_header(csv_input):
     """
     Extracts the CSV header and content from the given CSV input.
@@ -70,7 +67,7 @@ def extract_csv_content_and_header(csv_input):
     and content is a list of lists of strings.
     """
     # Parse CSV text
-    csv_lines = _unconcatify(csv_input, "\n")
+    csv_lines = unconcatify(csv_input, "\n")
     if not csv_lines:
         return {}, 400
 
@@ -78,29 +75,6 @@ def extract_csv_content_and_header(csv_input):
     header = [col.strip() for col in csv_lines[0].split(";")]
 
     return header, csv_lines
-
-
-def create_handler_response(
-    status, message=None, error=None, **ui_response_kwargs
-):
-    """
-    A helper function to create route handler responses.
-    """
-    return {"message": message, "error": error, **ui_response_kwargs}, status
-
-
-def _validate_csrf_token(payload, expected_token):
-    """
-    Validates the csrf_token from the JSON payload.
-    Returns a tuple of (is_valid, error_message)
-    """
-    if "csrf_token" not in payload:
-        return False, "Missing csrf_token in request payload"
-
-    if payload["csrf_token"] != expected_token:
-        return False, "Invalid csrf_token"
-
-    return True, None
 
 
 def _create_form_response(payload, simulate_error=False):
@@ -139,7 +113,7 @@ def migux_apps_peers__GET_accepted():
     request_info = SimpleNamespace(
         args={
             "query": request.values.get("query"),
-            "fields": _unconcatify(request.values.get("fields", ""), ","),
+            "fields": unconcatify(request.values.get("fields", ""), ","),
             "kind": request.values.get("kind", ""),
         }
     )
@@ -164,7 +138,7 @@ def migux_apps_peers__GET_requested():
     request_info = SimpleNamespace(
         args={
             "query": request.values.get("query"),
-            "fields": _unconcatify(request.values.get("fields", ""), ","),
+            "fields": unconcatify(request.values.get("fields", ""), ","),
         }
     )
     example_data = EXAMPLE_DATA["GET /requested"]
@@ -182,7 +156,7 @@ def migux_apps_peers__POST_accepted_delete():
     payload = request.json
     expected_token = make_csrf_token("POST", "/peers/accepted/delete")
 
-    is_valid, error = _validate_csrf_token(payload, expected_token)
+    is_valid, error = validate_csrf_token(payload, expected_token)
     if not is_valid:
         return create_handler_response(403, error=error)
 
@@ -205,7 +179,7 @@ def migux_apps_peers__POST_accepted_import():
     payload = request.json
     expected_token = make_csrf_token("POST", "/peers/accepted/import")
 
-    is_valid, error = _validate_csrf_token(payload, expected_token)
+    is_valid, error = validate_csrf_token(payload, expected_token)
     if not is_valid:
         return create_handler_response(403, error=error)
 
@@ -273,7 +247,7 @@ def migux_apps_peers__POST_accepted_fetch():
 
     expected_token = make_csrf_token("POST", "/peers/accepted/fetch")
 
-    is_valid, error = _validate_csrf_token(payload, expected_token)
+    is_valid, error = validate_csrf_token(payload, expected_token)
     if not is_valid:
         return create_handler_response(403, error=error)
 
@@ -304,7 +278,7 @@ def migux_apps_peers__POST_accepted_update():
 
     expected_token = make_csrf_token("POST", "/peers/accepted/update")
 
-    is_valid, error = _validate_csrf_token(payload, expected_token)
+    is_valid, error = validate_csrf_token(payload, expected_token)
     if not is_valid:
         return create_handler_response(403, error=error)
 
@@ -336,16 +310,16 @@ def migux_apps_peers__POST_accepted_update():
     return create_handler_response(200, **found_peer)
 
 
-def migux_apps_peers__POST_accepted_send_invitation():
+def migux_apps_peers__POST_send_invitation():
     """
-    Request handler: POST /peers/accepted/send_invitation
+    Request handler: POST /peers/send_invitation
     """
 
     payload = request.json
 
-    expected_token = make_csrf_token("POST", "/peers/accepted/send_invitation")
+    expected_token = make_csrf_token("POST", "/peers/send_invitation")
 
-    is_valid, error = _validate_csrf_token(payload, expected_token)
+    is_valid, error = validate_csrf_token(payload, expected_token)
     if not is_valid:
         return create_handler_response(403, error=error)
 
@@ -378,7 +352,7 @@ def migux_apps_peers__POST_requested_accept():
 
     expected_token = make_csrf_token("POST", "/peers/requested/accept")
 
-    is_valid, error = _validate_csrf_token(payload, expected_token)
+    is_valid, error = validate_csrf_token(payload, expected_token)
     if not is_valid:
         return create_handler_response(403, error=error)
 
@@ -412,7 +386,7 @@ def migux_apps_peers__POST_requested_delete():
 
     expected_token = make_csrf_token("POST", "/peers/requested/delete")
 
-    is_valid, error = _validate_csrf_token(payload, expected_token)
+    is_valid, error = validate_csrf_token(payload, expected_token)
     if not is_valid:
         return create_handler_response(403, error=error)
 
@@ -437,7 +411,7 @@ def migux_apps_peers__POST_new():
 
     expected_token = make_csrf_token("POST", "/peers/new")
 
-    is_valid, error = _validate_csrf_token(payload, expected_token)
+    is_valid, error = validate_csrf_token(payload, expected_token)
     if not is_valid:
         return create_handler_response(403, error=error)
 
@@ -472,19 +446,8 @@ def migux_apps_peers__GET_csrf_tokens():
     Request handler: GET /csrf_tokens
     """
     template_route = migux_apps_peers.TEMPLATE_ROUTES["GET /csrf_tokens"]
-    request_uri = request.values.get("requests", [])
-    request_objects = list(request_uri.split(","))
 
-    csrf_tokens = []
-    for request_object in request_objects:
-        method_obj, operation_obj = request_object.split("&")
-        method = method_obj.split("=")[1]
-        operation = operation_obj.split("=")[1]
-
-        token = make_csrf_token(method, operation)
-        csrf_tokens.append(
-            {"token": token, "method": method, "operation": operation}
-        )
+    csrf_tokens = extract_csrf_tokens_from_request(request)
 
     # We artificially create the request_info here to align with the
     # render_app_templates expectations
@@ -501,7 +464,7 @@ def migux_apps_peers__GET_csrf_tokens():
 ROUTES = {
     "POST /new": migux_apps_peers__POST_new,
     "GET /summary": migux_apps_peers__GET_summary,
-    "POST /send_invitation": migux_apps_peers__POST_accepted_send_invitation,
+    "POST /send_invitation": migux_apps_peers__POST_send_invitation,
     "GET /requested": migux_apps_peers__GET_requested,
     "POST /requested/accept": migux_apps_peers__POST_requested_accept,
     "POST /requested/delete": migux_apps_peers__POST_requested_delete,

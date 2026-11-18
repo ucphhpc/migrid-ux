@@ -1,0 +1,89 @@
+.AdminApp {
+  // Components
+  @import "../components/Tabs.scss";
+  @import "../components/modal.scss";
+  @import "../components/form.scss";
+
+  .icon-button {
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .server-daemons {
+    .daemon-status {
+      font-weight: bold;
+
+      &.running {
+        color: green;
+      }
+
+      &.not_running {
+        color: rgb(173, 0, 0);
+      }
+    }
+
+    .daemon-pid {
+      color: white;
+      font-size: 0.8rem;
+      background-color: rgb(94, 107, 145);
+      border-radius: 5px;
+      margin-right: 2px;
+      padding: 2px;
+    }
+  }
+
+  .server-logs {
+    resize: vertical;
+    height: 300px;
+    overflow-y: scroll;
+
+    thead {
+      position: sticky;
+      top: 0;
+    }
+
+    .log-timestamp {
+      color: grey;
+    }
+
+    .log-level {
+      font-weight: bold;
+
+      &.info {
+        color: rgb(19, 19, 184);
+      }
+
+      &.warning {
+        color: rgb(180, 117, 0);
+      }
+
+      &.error {
+        color: rgb(173, 0, 0);
+      }
+
+      &.debug {
+        color: rgb(167, 0, 167);
+      }
+    }
+  }
+
+  [data-bind-observe="server_logs_placeholder"],
+  [data-bind-observe="server_daemons_placeholder"],
+  [data-bind-observe="stats_placeholder"] {
+    flex-grow: 1;
+    /* fill the height */
+    width: 100%;
+
+    align-content: center;
+    text-align: center;
+  }
+
+  form {
+    padding-top: 16px;
+  }
+}
