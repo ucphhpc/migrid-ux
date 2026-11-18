@@ -51,8 +51,6 @@ export class AccountRequestsApp extends AppBase {
   }
 
   editCancel() {
-    const namespace = this.state.namespace("__app__");
-
     if (
       this.editDataChanged() &&
       !window.confirm(
@@ -92,7 +90,7 @@ export class AccountRequestsApp extends AppBase {
     this.request("/accountreqs/fetch", requestOptions, editNamespace)
       .then(async (resp) => {
         const result = await resp.json();
-        if (typeof result.error === "string" && res.error) {
+        if (typeof result.error === "string" && result.error) {
           throw new Error(result.error);
         }
         const data = result.data;
