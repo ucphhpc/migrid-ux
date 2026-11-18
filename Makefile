@@ -209,3 +209,7 @@ watch-css: ./envhelp/local.depends
 		./src/apps/peers.scss:./migux/public/apps/migux/peers.css \
 		./src/apps/accountreqs.scss:./migux/public/apps/migux/accountreqs.css \
 		./src/apps/admin.scss:./migux/public/apps/migux/admin.css
+
+.PHONY: watch-local
+watch-local:
+	find src migux devserver -regex '.*\.\(py\|js\|html\|json\|scss\|jinja\)$$' | entr -rs 'echo "$$(tput bold)Changed: $$0$$(tput sgr0)"; make local'
